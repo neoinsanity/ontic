@@ -5,7 +5,21 @@ class _CoreType(dict):
         self.__dict__ = self
 
 
-class PropertySchema(_CoreType):
+class BaseType(_CoreType):
+    _OOK_SCHEMA = dict()
+
+    @classmethod
+    def get_schema(cls):
+        """
+
+        :return: The schema metadata definition for the BaseType derived
+            child type.
+        :rtype: ook.object_type.BaseType.
+        """
+        return cls._OOK_SCHEMA
+
+
+class PropertySchema(BaseType):
     """
     {
         type: datetime, date, time, str, int, float, bool, dict, set, list,
@@ -21,31 +35,23 @@ class PropertySchema(_CoreType):
 
     }
     """
-    _OOK_SCHEMA = _CoreType({
-        'type': _CoreType({
+    _OOK_SCHEMA = BaseType({
+        'type': BaseType({
             'type': 'str',
             'required': False,
+            'enum': {'bool', 'dict', 'float', 'int', 'list', 'set', 'str'}
         }),
-        'required': _CoreType({
+        'required': BaseType({
             'type': 'bool',
-            'required': False
+            'required': False,
+        }),
+        'enum': BaseType({
+            'type': 'set',
+            'required': False,
         }),
     })
 
 
-class SchemaType(_CoreType):
+class SchemaType(BaseType):
     pass
 
-
-class BaseType(_CoreType):
-    _OOK_SCHEMA = SchemaType()
-
-    @classmethod
-    def get_schema(cls):
-        """
-
-        :return: The schema metadata definition for the BaseType derived
-            child type.
-        :rtype: ook.object_type.BaseType.
-        """
-        return cls._OOK_SCHEMA

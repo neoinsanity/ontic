@@ -46,11 +46,10 @@ class PropertySchemaTest(base_test_case.BaseTestCase):
         # Create the type
         ook_type = object_tools.create_ook_type('Typer', schema)
         self.assertIsNotNone(ook_type)
+        object_tools.validate_schema(ook_type.get_schema())
 
         # Create object of type
         ook_object = ook_type()
-        self.assertIsInstance(ook_object, ook_type)
-        self.assertDictEqual(schema, ook_type.get_schema())
 
         # Validate an empty object.
         object_tools.validate_object(ook_object)
@@ -65,36 +64,58 @@ class PropertySchemaTest(base_test_case.BaseTestCase):
         ook_object.str_property = 'some_string'
         object_tools.validate_object(ook_object)
 
-        # Validate with known bad type.
+        # Validate with known bad data.
         ook_object.bool_property = 'Dog'
+        self.assertRaises(ValueError, object_tools.validate_object, ook_object)
+
+    def test_required_setting(self):
+        schema = {
+            'some_property': {'required': True}
+        }
+
+        # Create the type
+        ook_type = object_tools.create_ook_type('Requirer', schema)
+        self.assertIsNotNone(ook_type)
+        object_tools.validate_schema(ook_type.get_schema())
+
+        # Create object of type
+        ook_object = ook_type()
+
+        # Validate an empty object, which should cause ValueError
+        self.assertRaises(ValueError, object_tools.validate_object, ook_object)
+
+        # Validate with data
+        ook_object.some_property = 'Something'
+
+
+    def test_enum_setting(self):
+        schema = {
+            'enum_property': {'enum': {'some_value', 99}}
+        }
+
+        # Create the type
+        ook_type = object_tools.create_ook_type('Enumer', schema)
+        self.assertIsNotNone(ook_type)
+        object_tools.validate_schema(ook_type.get_schema())
+
+        # Create object of type
+        ook_object = ook_type()
+
+        # Validate an empty object
+        object_tools.validate_object(ook_object)
+
+        # Validate a good setting
+        ook_object.enum_property = 99
+        object_tools.validate_object(ook_object)
+
+        # Validate a bad setting
+        ook_object.enum_property = 'bad, bad, bad'
         self.assertRaises(ValueError, object_tools.validate_object, ook_object)
 
 
 class ObjectToolsTest(base_test_case.BaseTestCase):
     def _test_email_template_validation(self):
         """General EmailTemplate validation suite."""
-
-        # No key value error.
-        self.assertRaises(ValueError, object_tools.validate_object,
-                          TestType({
-                              'key': None,
-                              'description': 'This is a good email template.',
-                              'to': {'someone@xcorp.com', 'manager@xcorp.com'},
-                              'cc': {'coworker@xcorp.com'},
-                              'subject': 'The subject line for the email.',
-                              'body': 'A body of good text for our good email.',
-                          }))
-
-        # Invalid type.
-        self.assertRaises(ValueError, object_tools.validate_object,
-                          TestType({
-                              'key': 32,
-                              'description': 'This is a good email template.',
-                              'to': {'someone@xcorp.com', 'manager@xcorp.com'},
-                              'cc': {'coworker@xcorp.com'},
-                              'subject': 'The subject line for the email.',
-                              'body': 'A body of good text for our good email.',
-                          }))
 
         # Minimal key length value error.
         self.assertRaises(ValueError, object_tools.validate_object,

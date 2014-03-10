@@ -3,7 +3,7 @@ import re
 from object_type import BaseType, PropertySchema, SchemaType
 
 #: The `type_map` converts the string declaration of attribute type.
-type_map = {
+type_map = BaseType({
     'bool': bool,
     'dict': dict,
     'float': float,
@@ -11,7 +11,7 @@ type_map = {
     'list': list,
     'set': set,
     'str': basestring,
-}
+})
 
 collection_type_set = {dict, list, set}
 
@@ -43,7 +43,26 @@ def create_ook_type(name, schema):
 
     ook_type._OOK_SCHEMA = finalized_schema
 
+    validate_object(finalized_schema)
+
     return ook_type
+
+
+def validate_schema(the_schema):
+    """
+
+    :param the_schema:
+    :type the_schema: dict|ook.object_type.SchemaType
+    :return:
+    :rtype:
+    """
+    if not isinstance(the_schema, SchemaType):
+        if isinstance(the_schema, dict) or isinstance(the_schema, BaseType):
+            the_schema = SchemaType(the_schema)
+        else:
+            raise ValueError('"the_schema" argument must be of type dict, BaseType, or SchemaType')
+
+    validate_object(the_schema)
 
 
 def validate_object(the_object):
@@ -62,13 +81,22 @@ def validate_object(the_object):
     value_errors = []
 
     for key, metadata in the_object.get_schema().iteritems():
+        required = metadata.get('required', False)
         value = the_object.get(key, None)
         value_type = type_map.get(metadata.get('type', None), None)
         item_type = type_map.get(metadata.get('item_type', None), None)
 
         # required: True | False
-        if metadata.get('required', False) and value is None:
+        if required and value is None:
             value_errors.append('The value for "%s" is required.' % key)
+
+        # check for enumeration on non collection types
+        if hasattr(metadata, 'enum'):
+            if required or (not required and value is not None):
+                if not value in metadata.enum:
+                    value_errors.append(
+                        'The value "%s" for "%s" must be in enumeration "%s".' %
+                        (value, key, metadata.enum))
 
         # check if there is a value_type to continue processing
         if value_type and value is not None:
@@ -101,6 +129,11 @@ def validate_value(key, metadata, value_type, value, value_errors):
     :return:
     :rtype:
     """
+    # enum
+    if hasattr(metadata, 'enum'):
+        if not value in metadata.enum:
+            value_errors.append(
+                'The value for "%s" must be in enumeration "%s".' % (key, metadata.enum))
     # min
     if hasattr(metadata, 'min'):
         if ((value_type is basestring or value_type in collection_type_set)
