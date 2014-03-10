@@ -1,3 +1,4 @@
+"""Testing suite for object_tools module."""
 import base_test_case
 
 from ook import object_tools
@@ -145,7 +146,6 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
 
         # Validate with data
         ook_object.some_property = 'Something'
-
 
     def test_enum_setting(self):
         """Validate 'enum' schema setting."""

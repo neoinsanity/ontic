@@ -1,8 +1,16 @@
+"""Utility test cases for testing Ook."""
 import unittest
 
 
 class BaseTestCase(unittest.TestCase):
+    """BaseTest case has methods to test Ook features and functionality."""
+
     def assert_dynamic_accessing(self, ook_object):
+        """Assert that ook_object exhibits dynamic property accessing.
+
+        :param ook_object: Ook object to validate for dynamic access.
+        :type ook_object: ook.object_type.BaseType
+        """
         # Assignment by attribute
         ook_object.attr1 = 1
         self.assertEqual(1, ook_object.attr1)
@@ -22,5 +30,3 @@ class BaseTestCase(unittest.TestCase):
         # Retrieval failures follow expected interface behavior
         self.assertRaises(AttributeError, getattr, ook_object, 'no_attribute')
         self.assertRaises(KeyError, lambda: ook_object['bad_key'])
-
-        self.assertDictEqual(dict(), ook_object.get_schema())

@@ -222,7 +222,7 @@ latex_documents = [
 # (source start file, name, description, authors, manual section).
 man_pages = [
     ('index', 'OoK', u'OoK Documentation',
-     [u'Raul Gonzalez'], 1)
+     [u'Neo Dasien'], 1)
 ]
 
 # If true, show URL addresses after external links.

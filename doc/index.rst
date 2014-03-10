@@ -1,17 +1,23 @@
+Welcome to Ook
+===============
 
-Welcome to OoK
-======================
-
-*OoK* is and data object handling framework. It aids with schema validation,
+*Ook* is and data object handling framework. It aids with schema validation,
 attribute filtering.
 
 Table of Contents
 ------------------
 .. toctree::
-    :maxdepth: 1
+  :maxdepth: 1
 
-    ook
+  ook
 
+API Specification
+------------------
+.. toctree::
+  :maxdepth: 1
+
+  ook.object_type
+  ook.object_tools
 
 Indices and Tables
 ===================
