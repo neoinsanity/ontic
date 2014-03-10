@@ -318,3 +318,28 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
                                 'The value for "dict_max_property" fails the maximum length of 1',
                                 object_tools.validate_object, ook_object)
         ook_object.dict_max_property = {'some_key': 'one_item'}
+
+    def test_regex_setting(self):
+        """Validate 'regex' schema setting."""
+        schema = {
+            'b_only_property': {'type': 'str', 'regex': '^b+'}
+        }
+
+        ook_type = object_tools.create_ook_type('Regexer', schema)
+        self.assertIsNotNone(ook_type)
+        object_tools.validate_schema(ook_type.get_schema())
+
+        ook_object = ook_type()
+
+        # None test, with no required fields
+        object_tools.validate_object(ook_object)
+
+        # Good test
+        ook_object.b_only_property = 'bbbbbb'
+        object_tools.validate_object(ook_object)
+
+        # Bad test
+        ook_object.b_only_property = 'aaaaaa'
+        self.assertRaisesRegexp(ValueError,
+                                'Value \"aaaaaa\" for b_only_property does not meet regex: \^b\+',
+                                object_tools.validate_object, ook_object)

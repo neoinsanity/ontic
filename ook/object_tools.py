@@ -13,6 +13,7 @@ type_map = BaseType({
     'str': basestring,
 })
 
+#: The `collection_type_set` is the set of supported collection types.
 collection_type_set = {dict, list, set}
 
 
@@ -58,6 +59,9 @@ def validate_property(the_property):
     if not isinstance(the_property, PropertySchema):
         if isinstance(the_property, dict) or isinstance(the_property, BaseType):
             the_property = PropertySchema(the_property)
+        else:
+            raise ValueError(
+                '"the_property" argument must be of type dict, BaseType, or PropertyType.')
 
     validate_object(the_property)
 
@@ -177,8 +181,8 @@ def validate_value(key, metadata, value_type, value, value_errors):
         if value_type is basestring and value is not '':
             if not re.match(metadata.regex, value):
                 value_errors.append(
-                    'Value for %s does not meet regex: %s' %
-                    (key, metadata.regex))
+                    'Value "%s" for %s does not meet regex: %s' %
+                    (value, key, metadata.regex))
         if value_type in {list, set}:
             for item_value in value:
                 if not re.match(metadata.regex, item_value):
