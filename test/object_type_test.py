@@ -8,8 +8,3 @@ class BaseTypeTest(base_test_case.BaseTestCase):
         """BaseType property access as a Dict and an Attribute."""
         base_object = object_type.BaseType()
         self.assert_dynamic_accessing(base_object)
-
-
-class SchemaTestCase(base_test_case.BaseTestCase):
-    def test_bad_argument(self):
-        """Test"""
