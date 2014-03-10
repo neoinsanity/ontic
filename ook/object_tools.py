@@ -35,19 +35,31 @@ def create_ook_type(name, schema):
 
     ook_type = type(name, (BaseType, ), dict())
 
-    #todo: raul - add the actual validation of the schema
     finalized_schema = SchemaType()
 
     for key, value in schema.iteritems():
-        finalized_schema[key] = PropertySchema(value)
-
-    validate_schema(finalized_schema)
+        propertySchema = PropertySchema(value)
+        validate_object(propertySchema)
+        finalized_schema[key] = propertySchema
 
     ook_type._OOK_SCHEMA = finalized_schema
 
-    validate_object(finalized_schema)
-
     return ook_type
+
+
+def validate_property(the_property):
+    """
+
+    :param the_property:
+    :type the_property:
+    :return:
+    :rtype:
+    """
+    if not isinstance(the_property, PropertySchema):
+        if isinstance(the_property, dict) or isinstance(the_property, BaseType):
+            the_property = PropertySchema(the_property)
+
+    validate_object(the_property)
 
 
 def validate_schema(the_schema):
@@ -62,9 +74,14 @@ def validate_schema(the_schema):
         if isinstance(the_schema, dict) or isinstance(the_schema, BaseType):
             the_schema = SchemaType(the_schema)
         else:
-            raise ValueError('"the_schema" argument must be of type dict, BaseType, or SchemaType')
+            raise ValueError(
+                '"the_schema" argument must be of type dict, BaseType, or SchemaType,')
 
-    validate_object(the_schema)
+    #todo: raul - validation should happen like this, but will defer until nested validation.
+    # validate_object(the_schema)
+
+    for property in the_schema.values():
+        validate_property(property)
 
 
 def validate_object(the_object):
@@ -77,8 +94,8 @@ def validate_object(the_object):
     """
 
     if not isinstance(the_object, BaseType):
-        raise ValueError('Validation can only support validation of objects '
-                         'derived from ook.BaseType')
+        raise ValueError(
+            'Validation can only support validation of objects derived from ook.BaseType.')
 
     value_errors = []
 
@@ -97,8 +114,8 @@ def validate_object(the_object):
             if required or (not required and value is not None):
                 if not value in metadata.enum:
                     value_errors.append(
-                        'The value "%s" for "%s" must be in enumeration "%s".' %
-                        (value, key, metadata.enum))
+                        'The value "%s" for "%s" not in enumeration %s.' %
+                        (value, key, list(metadata.enum)))
 
         # check if there is a value_type to continue processing
         if value_type and value is not None:

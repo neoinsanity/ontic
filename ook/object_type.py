@@ -57,6 +57,11 @@ class PropertySchema(BaseType):
             'type': float,
             'required': False,
         }),
+        'regex': BaseType({
+            'type': 'str',
+            'required': False,
+            'min': 1,
+        })
     })
 
 
