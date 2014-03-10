@@ -1,7 +1,7 @@
 import base_test_case
 
 from ook import object_tools
-from ook.object_type import BaseType
+from ook.object_type import BaseType, SchemaType
 
 
 class TestType(BaseType):
@@ -29,6 +29,24 @@ class ObjectToolsCreateOokTypeTest(base_test_case.BaseTestCase):
         ook_object = ook_type()
         self.assert_dynamic_accessing(ook_object)
         self.assertIsInstance(ook_object, ook_type)
+
+
+class SchemaTestCase(base_test_case.BaseTestCase):
+    def test_bad_validate_schema(self):
+        self.assertRaises(ValueError, object_tools.validate_schema, "not a schema")
+
+        schema = {'some_attribute': {'type': 'int'}}
+
+        # Dict test
+        object_tools.validate_schema(schema)
+
+        # BaseType test
+        base_type_schema = BaseType(schema)
+        object_tools.validate_schema(base_type_schema)
+
+        # SchemaType test
+        schema_type_schea = SchemaType(schema)
+        object_tools.validate_schema(schema_type_schea)
 
 
 class PropertySchemaTest(base_test_case.BaseTestCase):
@@ -67,6 +85,13 @@ class PropertySchemaTest(base_test_case.BaseTestCase):
         # Validate with known bad data.
         ook_object.bool_property = 'Dog'
         self.assertRaises(ValueError, object_tools.validate_object, ook_object)
+
+    def test_type_bad_setting(self):
+        schema = {
+            'some_property': {'type': 'Unknown'}
+        }
+        # Create the type
+        ook_type = object_tools.create_ook_type('Dummy', schema)
 
     def test_required_setting(self):
         schema = {

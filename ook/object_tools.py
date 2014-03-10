@@ -41,6 +41,8 @@ def create_ook_type(name, schema):
     for key, value in schema.iteritems():
         finalized_schema[key] = PropertySchema(value)
 
+    validate_schema(finalized_schema)
+
     ook_type._OOK_SCHEMA = finalized_schema
 
     validate_object(finalized_schema)
