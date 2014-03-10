@@ -49,6 +49,14 @@ class PropertySchema(BaseType):
             'type': 'set',
             'required': False,
         }),
+        'min': BaseType({
+            'type': float,
+            'required': False,
+        }),
+        'max': BaseType({
+            'type': float,
+            'required': False,
+        }),
     })
 
 
