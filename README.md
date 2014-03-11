@@ -1,5 +1,5 @@
-Ook
-====
+Ook 0.0.1
+==========
 
 **Objects of Knowledge**
 
