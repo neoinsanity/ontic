@@ -6,23 +6,27 @@ Usage
 The **object_type** module allows for the construction of **Ook** data types. A complete
 configured data type definition would be constructed as::
 
-    >>> class MyType(BaseType):
-    >>>     _OOK_SCHEMA = SchemaType({
-    >>>         'some_property': PropertyType({
-    >>>             'type': 'int',
-    >>>             'required': True,
-    >>>         }),
-    >>>         'other_property': PropertyType({
-    >>>             'type': 'str',
-    >>>             'required': False,
-    >>>             'enum': {'Enum1', 'Enum2', 'Enum3'}
-    >>>         }),
-    >>>     })
-    >>>
-    >>> my_object = MyType()
-    >>> my_object.some_property = 7
-    >>> # or
-    >>> my_object['some_property'] = 7
+
+    class MyType(BaseType):
+        _OOK_SCHEMA = SchemaType({
+            'some_property': PropertyType({
+                'type': 'int',
+                'required': True,
+            }),
+            'other_property': PropertyType({
+                'type': 'str',
+                'required': False,
+                'enum': {'Enum1', 'Enum2', 'Enum3'}
+            }),
+        })
+
+    my_object = MyType()
+    my_object.some_property = 7
+    # or
+    my_object['some_property'] = 7
+
+Classes
+--------
 """
 
 
