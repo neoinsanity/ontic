@@ -45,7 +45,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'OoK'
+project = u'Ook'
 copyright = u'2014, Neo Dasein'
 
 # The version info for the project you're documenting, acts as replacement for
@@ -172,7 +172,7 @@ html_static_path = ['.static']
 #html_file_suffix = None
 
 # Output file base name for HTML help builder.
-htmlhelp_basename = 'OoKdoc'
+htmlhelp_basename = 'Ookdoc'
 
 
 # -- Options for LaTeX output --------------------------------------------------
@@ -191,7 +191,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-    ('index', 'Ook.tex', u'OoK Documentation',
+    ('index', 'Ook.tex', u'Ook Documentation',
      u'Neo Dasein', 'manual'),
 ]
 
@@ -221,8 +221,8 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'OoK', u'OoK Documentation',
-     [u'Raul Gonzalez'], 1)
+    ('index', 'Ook', u'Ook Documentation',
+     [u'Neo Dasien'], 1)
 ]
 
 # If true, show URL addresses after external links.
@@ -235,8 +235,8 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    ('index', 'OoK', u'OoK Documentation',
-     u'Neo Dasein', 'OoK', 'Object of Knowledge.',
+    ('index', 'k', u'Ook Documentation',
+     u'Neo Dasein', 'Ook', 'Object of Knowledge.',
      'Miscellaneous'),
 ]
 
