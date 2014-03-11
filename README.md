@@ -1,5 +1,5 @@
 Ook
-===+
+====
 
 **Objects of Knowledge**
 
