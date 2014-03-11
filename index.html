@@ -1,0 +1,203 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Object of Knowledge (Ook) &mdash; Ook 0.0.1 Documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/sidebar.js"></script>
+    <link rel="top" title="Ook 0.0.1 Documentation" href="#" />
+    <link rel="next" title="object_type Classes" href="ook.object_type.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="ook.object_type.html" title="object_type Classes"
+             accesskey="N">next</a> |</li>
+        <li><a href="#">Ook 0.0.1 Documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="object-of-knowledge-ook">
+<h1>Object of Knowledge (Ook)<a class="headerlink" href="#object-of-knowledge-ook" title="Permalink to this headline">¶</a></h1>
+<p>The goal of <strong>Ook</strong> is to provide a pure data object that is flexible to use in a python
+environment. The motivation is to make it simple to utilize in a development environment that
+interfaces with external services and third-party tools, but not require an extensive library to
+convert objects.</p>
+<p>To that end <strong>Ook</strong> objects can be accessed through attribute access or via dictionary key access
+. The theory is that most third party libraries, from JSON to NoSql, take some form of the dict as
+input. Attribute access is easier to type when writing code, hence the attribute access. By way of
+example:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">an_object</span> <span class="o">=</span> <span class="n">ook</span><span class="o">.</span><span class="n">object_type</span><span class="o">.</span><span class="n">BaseType</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">an_object</span><span class="p">[</span><span class="s">&#39;property1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">an_object</span><span class="o">.</span><span class="n">property1</span> <span class="o">==</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">an_object</span><span class="o">.</span><span class="n">property2</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">an_object</span><span class="p">[</span><span class="s">&#39;property2] == 2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">an_object</span><span class="p">)</span>  <span class="c"># an_object implements dict.</span>
+<span class="go">  &#39;{&quot;property1&quot;: 1, &quot;property2&quot;: 2}&#39;</span>
+</pre></div>
+</div>
+<p>As <strong>Ook</strong> objects are designed to be utilized as pure data objects,
+they implement the python <em>dict</em> interface. So anywhere you can use pass a dict object,
+you can pass an <strong>Ook</strong> object. <strong>Ook</strong> objects can even be initialize with a dictionary,
+as exampled below:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">an_object</span> <span class="o">=</span> <span class="n">ook</span><span class="o">.</span><span class="n">object_type</span><span class="o">.</span><span class="n">BaseType</span><span class="p">({</span><span class="s">&#39;the_property&#39;</span><span class="p">:</span><span class="s">&#39;the_value&#39;</span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">an_object</span><span class="o">.</span><span class="n">the_property</span> <span class="o">=</span> <span class="s">&#39;the_value&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">an_object</span><span class="p">[</span><span class="s">&#39;the_property&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;the_value&#39;</span>
+</pre></div>
+</div>
+<p>In addition <strong>Ook</strong> provides schema and validation features to aid in working with data
+representations. Schemas and corresponding types can be generated at runtime,
+or types can be defined as classes that derive from the <strong>Ook</strong> <em>BaseType</em>. Here&#8217;s some quick
+examples:</p>
+<div class="highlight-python"><pre>Class definition of an Ook type with schema.
+&gt;&gt;&gt; class MyType(ook.object_type.BaseType):
+...   _OOK_SCHEMA = {'the_property':{'required':True}}
+&gt;&gt;&gt; my_object = MyType()
+&gt;&gt;&gt; ook.object_tools.validate_object(my_object)
+  Traceback (most recent call last):
+    File "&lt;stdin&gt;", line 1, in &lt;module&gt;
+    File "ook/object_tools.py", line 137, in validate_object
+      raise ValueError(str.join(' \n-- ', value_errors))
+  ValueError: The value for "the_property" is required.
+&gt;&gt;&gt; my_object.the_property = 99
+&gt;&gt;&gt; ook.object_tools.validate_object(my_object)
+
+and dynamic definition of Ook type with schema.
+
+&gt;&gt;&gt; my_type = ook.object_tools.create_ook_type(
+...   'MyType', {'the_property':{'required':True}})
+&gt;&gt;&gt; my_object = my_type()
+&gt;&gt;&gt; ook.object_tools.validate_object(my_object)
+  Traceback (most recent call last):
+    File "&lt;stdin&gt;", line 1, in &lt;module&gt;
+    File "ook/object_tools.py", line 137, in validate_object
+      raise ValueError(str.join(' \n-- ', value_errors))
+  ValueError: The value for "the_property" is required.
+&gt;&gt;&gt; my_object['the_property'] = 'Some value'
+&gt;&gt;&gt; ook.object_tools.validate_object(my_object)</pre>
+</div>
+<p><strong>Very Important:</strong> The limitation to this approach is that <strong>Ook</strong> objects should not be monkey
+patched with any public methods.</p>
+<p><em>Share and Enjoy</em>.</p>
+<div class="section" id="api-specification">
+<h2>API Specification<a class="headerlink" href="#api-specification" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ook.object_type.html">object_type Classes</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ook.object_type.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ook.object_type.html#classes">Classes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ook.object_tools.html">object_tools API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ook.object_tools.html#usage">Usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ook.object_tools.html#method-definitions">Method Definitions</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="section" id="indices-and-tables">
+<h1>Indices and Tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<ul class="simple">
+<li><a class="reference internal" href="genindex.html"><em>Index</em></a></li>
+<li><a class="reference internal" href="py-modindex.html"><em>Module Index</em></a></li>
+<li><a class="reference internal" href="search.html"><em>Search Page</em></a></li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="#">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Object of Knowledge (Ook)</a><ul>
+<li><a class="reference internal" href="#api-specification">API Specification</a><ul>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and Tables</a></li>
+</ul>
+
+  <h4>Next topic</h4>
+  <p class="topless"><a href="ook.object_type.html"
+                        title="next chapter">object_type Classes</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/index.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="ook.object_type.html" title="object_type Classes"
+             >next</a> |</li>
+        <li><a href="#">Ook 0.0.1 Documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Neo Dasein.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.
+    </div>
+  </body>
+</html>

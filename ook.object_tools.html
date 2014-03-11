@@ -1,0 +1,264 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>object_tools API &mdash; Ook 0.0.1 Documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/sidebar.js"></script>
+    <link rel="top" title="Ook 0.0.1 Documentation" href="index.html" />
+    <link rel="prev" title="object_type Classes" href="ook.object_type.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="ook.object_type.html" title="object_type Classes"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Ook 0.0.1 Documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="module-ook.object_tools">
+<span id="object-tools-api"></span><h1>object_tools API<a class="headerlink" href="#module-ook.object_tools" title="Permalink to this headline">¶</a></h1>
+<p>The <strong>object_tools</strong> provides the methods to create and validate <strong>Ook</strong> types and objects.</p>
+<div class="section" id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<p>There are two basic operations provided by <strong>object_tools</strong>; schema definition and object
+handling. Schema definition entails type creation and validation.</p>
+<div class="section" id="schema-tools">
+<h3>Schema Tools<a class="headerlink" href="#schema-tools" title="Permalink to this headline">¶</a></h3>
+<p>To validate a schema definition, utilize the <a class="reference internal" href="#ook.object_tools.validate_schema" title="ook.object_tools.validate_schema"><tt class="xref py py-meth docutils literal"><span class="pre">validate_schema()</span></tt></a> method.</p>
+<p>Schema are composed of <a class="reference internal" href="ook.object_type.html#ook.object_type.PropertySchema" title="ook.object_type.PropertySchema"><tt class="xref py py-class docutils literal"><span class="pre">PropertySchema</span></tt></a> objects. If there is a need,
+individual <strong>PropertySchema</strong> objects can be validated individually with the
+<a class="reference internal" href="#ook.object_tools.validate_property" title="ook.object_tools.validate_property"><tt class="xref py py-meth docutils literal"><span class="pre">validate_property()</span></tt></a> method.</p>
+<p>To create a python type for a given <a class="reference internal" href="ook.object_type.html#ook.object_type.SchemaType" title="ook.object_type.SchemaType"><tt class="xref py py-class docutils literal"><span class="pre">SchemaType</span></tt></a> utilize the
+<a class="reference internal" href="#ook.object_tools.create_ook_type" title="ook.object_tools.create_ook_type"><tt class="xref py py-meth docutils literal"><span class="pre">create_ook_type()</span></tt></a> method. <strong>Ook</strong> object instances created by a generated
+type are child classes of the <tt class="xref py py-class docutils literal"><span class="pre">object_types</span></tt> class.</p>
+</div>
+<div class="section" id="object-tools">
+<h3>Object Tools<a class="headerlink" href="#object-tools" title="Permalink to this headline">¶</a></h3>
+<p><strong>Ook</strong> objects created by either subclassing <a class="reference internal" href="ook.object_type.html#ook.object_type.BaseType" title="ook.object_type.BaseType"><tt class="xref py py-class docutils literal"><span class="pre">BaseType</span></tt></a> or via
+<a class="reference internal" href="#ook.object_tools.create_ook_type" title="ook.object_tools.create_ook_type"><tt class="xref py py-meth docutils literal"><span class="pre">create_ook_type()</span></tt></a>, will need to be validated. Utilize the
+<strong>Ook</strong> object <a class="reference internal" href="#ook.object_tools.validate_object" title="ook.object_tools.validate_object"><tt class="xref py py-meth docutils literal"><span class="pre">validate_object()</span></tt></a> method for validation.</p>
+<p>If the need should arise for validation of an <strong>Ook</strong> object by value, utilize the
+<a class="reference internal" href="#ook.object_tools.validate_value" title="ook.object_tools.validate_value"><tt class="xref py py-meth docutils literal"><span class="pre">validate_value()</span></tt></a> method.</p>
+</div>
+</div>
+<div class="section" id="method-definitions">
+<h2>Method Definitions<a class="headerlink" href="#method-definitions" title="Permalink to this headline">¶</a></h2>
+<dl class="staticmethod">
+<dt id="ook.object_tools.create_ook_type">
+<em class="property">static </em><tt class="descclassname">object_tools.</tt><tt class="descname">create_ook_type</tt><big>(</big><em>name</em>, <em>schema</em><big>)</big><a class="headerlink" href="#ook.object_tools.create_ook_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Create an <strong>Ook</strong> type to generate objects with a given schema.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<em>str</em>) &#8211; The name to apply to the created class, with object_type.BaseType as parent.</li>
+<li><strong>schema</strong> (<em>dict</em>) &#8211; A representation of the schema in dictionary format.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A class whose base is object_type.BaseType.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first">ClassType</p>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Raises ValueError:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><p class="first last">String name required. Dict or SchemaType schema required.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ook.object_tools.validate_object">
+<em class="property">static </em><tt class="descclassname">object_tools.</tt><tt class="descname">validate_object</tt><big>(</big><em>the_object</em><big>)</big><a class="headerlink" href="#ook.object_tools.validate_object" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method that will validate if an object meets the schema requirements.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>the_object</strong> (<a class="reference internal" href="ook.object_type.html#ook.object_type.BaseType" title="ook.object_type.BaseType"><em>ook.object_type.BaseType</em></a>) &#8211; An object instance whose type is a child class of
+<a class="reference internal" href="ook.object_type.html#ook.object_type.BaseType" title="ook.object_type.BaseType"><tt class="xref py py-class docutils literal"><span class="pre">BaseType</span></tt></a></td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Raises ValueError:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="simple">
+<li><em>the_object</em> is not a <a class="reference internal" href="ook.object_type.html#ook.object_type.BaseType" title="ook.object_type.BaseType"><tt class="xref py py-class docutils literal"><span class="pre">BaseType</span></tt></a>.</li>
+<li>A property of <em>the_object</em> does not meet schema requirements.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ook.object_tools.validate_property">
+<em class="property">static </em><tt class="descclassname">object_tools.</tt><tt class="descname">validate_property</tt><big>(</big><em>the_property</em><big>)</big><a class="headerlink" href="#ook.object_tools.validate_property" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to validate if a schema property object is a valid definition.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>the_property</strong> &#8211; The object to be validated as a <a class="reference internal" href="ook.object_type.html#ook.object_type.PropertySchema" title="ook.object_type.PropertySchema"><tt class="xref py py-class docutils literal"><span class="pre">PropertySchema</span></tt></a>
+candidate.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Raises ValueError:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><em>the_property</em> is  not dict, <a class="reference internal" href="ook.object_type.html#ook.object_type.BaseType" title="ook.object_type.BaseType"><tt class="xref py py-class docutils literal"><span class="pre">BaseType</span></tt></a>
+or <a class="reference internal" href="ook.object_type.html#ook.object_type.PropertySchema" title="ook.object_type.PropertySchema"><tt class="xref py py-class docutils literal"><span class="pre">PropertySchema</span></tt></a>.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ook.object_tools.validate_schema">
+<em class="property">static </em><tt class="descclassname">object_tools.</tt><tt class="descname">validate_schema</tt><big>(</big><em>the_schema</em><big>)</big><a class="headerlink" href="#ook.object_tools.validate_schema" title="Permalink to this definition">¶</a></dt>
+<dd><p>Determine if a schema definition is a valid <a class="reference internal" href="ook.object_type.html#ook.object_type.SchemaType" title="ook.object_type.SchemaType"><tt class="xref py py-class docutils literal"><span class="pre">SchemaType</span></tt></a> candidate.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>the_schema</strong> (<em>dict|ook.object_type.SchemaType</em>) &#8211; The schema definition candidate.</td>
+</tr>
+<tr class="field-even field"><th class="field-name" colspan="2">Raises ValueError:</th></tr>
+<tr class="field-even field"><td>&nbsp;</td><td class="field-body"><ul class="simple">
+<li><em>the_schema</em> is not a dict, <strong>BaseType</strong>, or <em>SchemaType</em>.</li>
+<li><em>the_schema</em> is not a valid <strong>Ook</strong> schema definition.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="ook.object_tools.validate_value">
+<em class="property">static </em><tt class="descclassname">object_tools.</tt><tt class="descname">validate_value</tt><big>(</big><em>key</em>, <em>metadata</em>, <em>value_type</em>, <em>value</em>, <em>value_errors</em><big>)</big><a class="headerlink" href="#ook.object_tools.validate_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to validate an object value meets schema requirements.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>key</strong> &#8211; </li>
+<li><strong>metadata</strong> &#8211; </li>
+<li><strong>value_type</strong> &#8211; </li>
+<li><strong>value</strong> &#8211; </li>
+<li><strong>value_errors</strong> &#8211; </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">object_tools API</a><ul>
+<li><a class="reference internal" href="#usage">Usage</a><ul>
+<li><a class="reference internal" href="#schema-tools">Schema Tools</a></li>
+<li><a class="reference internal" href="#object-tools">Object Tools</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#method-definitions">Method Definitions</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="ook.object_type.html"
+                        title="previous chapter">object_type Classes</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/ook.object_tools.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> |</li>
+        <li class="right" >
+          <a href="ook.object_type.html" title="object_type Classes"
+             >previous</a> |</li>
+        <li><a href="index.html">Ook 0.0.1 Documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2014, Neo Dasein.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.
+    </div>
+  </body>
+</html>
