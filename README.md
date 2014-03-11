@@ -3,6 +3,11 @@ Ook
 
 **Objects of Knowledge**
 
+Documentation
+--------------
+
+For the latest documentation, visist http://neoinsanity.github.io/ook/
+
 Stable Ook and Installation
 ----------------------------
 
