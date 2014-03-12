@@ -32,21 +32,7 @@ If the need should arise for validation of an **Ook** object by value, utilize t
 """
 import re
 
-from object_type import BaseType, PropertySchema, SchemaType
-
-#: The `type_map` converts the string declaration of attribute type.
-type_map = {
-    'bool': bool,
-    'dict': dict,
-    'float': float,
-    'int': int,
-    'list': list,
-    'set': set,
-    'str': basestring,
-}
-
-#: The `collection_type_set` is the set of supported collection types.
-collection_type_set = {dict, list, set}
+from object_type import BaseType, CollectionTypeSet, PropertySchema, SchemaType, TypeMap
 
 
 def create_ook_type(name, schema):
@@ -103,8 +89,8 @@ def validate_object(the_object):
     for key, metadata in the_object.get_schema().iteritems():
         required = metadata.get('required', False)
         value = the_object.get(key, None)
-        value_type = type_map.get(metadata.get('type', None), None)
-        item_type = type_map.get(metadata.get('item_type', None), None)
+        value_type = TypeMap.get(metadata.get('type', None), None)
+        item_type = TypeMap.get(metadata.get('item_type', None), None)
 
         # required: True | False
         if required and value is None:
@@ -197,7 +183,7 @@ def validate_value(key, metadata, value_type, value, value_errors):
     """
     # min
     if hasattr(metadata, 'min'):
-        if ((value_type is basestring or value_type in collection_type_set)
+        if ((value_type is basestring or value_type in CollectionTypeSet)
             and len(value) < metadata.min):
             value_errors.append(
                 'The value for "%s" fails the minimum length of %s' %
@@ -209,7 +195,7 @@ def validate_value(key, metadata, value_type, value, value_errors):
 
     # max
     if hasattr(metadata, 'max'):
-        if ((value_type is basestring or value_type in collection_type_set)
+        if ((value_type is basestring or value_type in CollectionTypeSet)
             and len(value) > metadata.max):
             value_errors.append(
                 'The value for "%s" fails the maximum length of %s' %
