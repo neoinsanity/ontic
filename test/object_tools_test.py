@@ -2,7 +2,7 @@
 import base_test_case
 
 from ook import object_tools
-from ook.object_type import BaseType, SchemaType
+from ook.object_type import BaseType, PropertySchema, SchemaType
 
 
 class CreateOokTypeTest(base_test_case.BaseTestCase):
@@ -22,41 +22,13 @@ class CreateOokTypeTest(base_test_case.BaseTestCase):
 
     def test_create_ook_type(self):
         """The most simple and basic dynamic Ook."""
-        ook_type = object_tools.create_ook_type('Barebone', dict())
+        ook_type = object_tools.create_ook_type('Simple', dict())
 
         self.assertIsNotNone(ook_type)
 
         ook_object = ook_type()
         self.assert_dynamic_accessing(ook_object)
         self.assertIsInstance(ook_object, ook_type)
-
-
-class ValidateSchemaTestCase(base_test_case.BaseTestCase):
-    """Test object_tools.validate_schema method."""
-
-    def test_bad_validate_schema(self):
-        """ValueError testing of validate_schema."""
-        self.assertRaisesRegexp(
-            ValueError, '"the_schema" argument must be of type dict, BaseType, or SchemaType.',
-            object_tools.validate_schema, None)
-        self.assertRaisesRegexp(
-            ValueError, '"the_schema" argument must be of type dict, BaseType, or SchemaType.',
-            object_tools.validate_schema, "not a schema")
-
-    def test_validate_schema(self):
-        """Valid schema testing of validate_schema."""
-        schema = {'some_attribute': {'type': 'int'}}
-
-        # Dict test
-        object_tools.validate_schema(schema)
-
-        # BaseType test
-        base_type_schema = BaseType(schema)
-        object_tools.validate_schema(base_type_schema)
-
-        # SchemaType test
-        schema_type_schea = SchemaType(schema)
-        object_tools.validate_schema(schema_type_schea)
 
 
 class ValidateObjectTestCase(base_test_case.BaseTestCase):
@@ -86,7 +58,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         }
 
         # Create the type
-        ook_type = object_tools.create_ook_type('Typer', schema)
+        ook_type = object_tools.create_ook_type('TypeCheck', schema)
         self.assertIsNotNone(ook_type)
         object_tools.validate_schema(ook_type.get_schema())
 
@@ -132,7 +104,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         }
 
         # Create the type
-        ook_type = object_tools.create_ook_type('Requirer', schema)
+        ook_type = object_tools.create_ook_type('RequireCheck', schema)
         self.assertIsNotNone(ook_type)
         object_tools.validate_schema(ook_type.get_schema())
 
@@ -154,7 +126,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         }
 
         # Create the type
-        ook_type = object_tools.create_ook_type('Enumer', schema)
+        ook_type = object_tools.create_ook_type('EnumCheck', schema)
         self.assertIsNotNone(ook_type)
         object_tools.validate_schema(ook_type.get_schema())
 
@@ -187,7 +159,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
             'dict_min_property': {'type': 'dict', 'min': 1},
         }
 
-        ook_type = object_tools.create_ook_type('Miner', schema)
+        ook_type = object_tools.create_ook_type('MinCheck', schema)
         self.assertIsNotNone(ook_type)
         object_tools.validate_schema(ook_type.get_schema())
 
@@ -258,7 +230,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
             'dict_max_property': {'type': 'dict', 'max': 1},
         }
 
-        ook_type = object_tools.create_ook_type('Maxer', schema)
+        ook_type = object_tools.create_ook_type('MaxCheck', schema)
         self.assertIsNotNone(ook_type)
         object_tools.validate_schema(ook_type.get_schema())
 
@@ -325,7 +297,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
             'b_only_property': {'type': 'str', 'regex': '^b+'}
         }
 
-        ook_type = object_tools.create_ook_type('Regexer', schema)
+        ook_type = object_tools.create_ook_type('RegexCheck', schema)
         self.assertIsNotNone(ook_type)
         object_tools.validate_schema(ook_type.get_schema())
 
@@ -335,11 +307,74 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         object_tools.validate_object(ook_object)
 
         # Good test
-        ook_object.b_only_property = 'bbbbbb'
+        ook_object.b_only_property = 'b'
         object_tools.validate_object(ook_object)
 
         # Bad test
-        ook_object.b_only_property = 'aaaaaa'
+        ook_object.b_only_property = 'a'
         self.assertRaisesRegexp(ValueError,
-                                'Value \"aaaaaa\" for b_only_property does not meet regex: \^b\+',
+                                'Value \"a\" for b_only_property does not meet regex: \^b\+',
                                 object_tools.validate_object, ook_object)
+
+
+class ValidateValueCheck(base_test_case.BaseTestCase):
+    """Test object_tools.validate_value method."""
+
+    def test_bad_validate_value(self):
+        """ValueError testing of validate_value."""
+        self.assertRaisesRegexp(
+            ValueError,
+            '"property_schema" is not provided.',
+            object_tools.validate_value, 'some_value', None)
+
+        self.assertRaisesRegexp(
+            ValueError,
+            '"property_schema" is not of type dict, BaseType, or PropertySchema',
+            object_tools.validate_value, 'some_value', "can't be string")
+
+        self.assertRaisesRegexp(
+            ValueError,
+            'The value for "property" is not of type "int": some_value',
+            object_tools.validate_value, 'some_value', {'type': 'int'})
+
+
+    def test_validate_value(self):
+        """Valid value testing of validate_value."""
+        test_schema = {'type': 'str', 'required': True}
+        object_tools.validate_value("some value", test_schema)
+
+        test_base_type = BaseType(test_schema)
+        object_tools.validate_value('some_value', test_base_type)
+
+        test_property_schema = PropertySchema(test_schema)
+        object_tools.validate_value('some_value', test_property_schema)
+
+
+class ValidateSchemaTestCase(base_test_case.BaseTestCase):
+    """Test object_tools.validate_schema method."""
+
+    def test_bad_validate_schema(self):
+        """ValueError testing of validate_schema."""
+        self.assertRaisesRegexp(
+            ValueError,
+            '"property_schema" argument must be of type dict, BaseType, or SchemaType.',
+            object_tools.validate_schema, None)
+        self.assertRaisesRegexp(
+            ValueError,
+            '"property_schema" argument must be of type dict, BaseType, or SchemaType.',
+            object_tools.validate_schema, "not a schema")
+
+    def test_validate_schema(self):
+        """Valid schema testing of validate_schema."""
+        schema = {'some_attribute': {'type': 'int'}}
+
+        # Dict test
+        object_tools.validate_schema(schema)
+
+        # BaseType test
+        base_type_schema = BaseType(schema)
+        object_tools.validate_schema(base_type_schema)
+
+        # SchemaType test
+        schema_type_schema = SchemaType(schema)
+        object_tools.validate_schema(schema_type_schema)

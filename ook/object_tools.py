@@ -86,38 +86,13 @@ def validate_object(the_object):
 
     value_errors = []
 
-    for key, metadata in the_object.get_schema().iteritems():
-        required = metadata.get('required', False)
+    for key, property_schema in the_object.get_schema().iteritems():
         value = the_object.get(key, None)
-        value_type = TypeMap.get(metadata.get('type', None), None)
-        item_type = TypeMap.get(metadata.get('item_type', None), None)
 
-        # required: True | False
-        if required and value is None:
-            value_errors.append('The value for "%s" is required.' % key)
-
-        # check for enumeration on non collection types
-        if hasattr(metadata, 'enum'):
-            if required or (not required and value is not None):
-                if not value in metadata.enum:
-                    value_errors.append(
-                        'The value "%s" for "%s" not in enumeration %s.' %
-                        (value, key, list(metadata.enum)))
-
-        # check if there is a value_type to continue processing
-        if value_type and value is not None:
-            # type checking
-            if not isinstance(value, value_type):
-                value_errors.append(
-                    'The value for "%s" is not of type "%s": %s' %
-                    (key, metadata.type, str(value)))
-                continue  # don't assume successful testing based on value_type
-
-            #todo: raul - split this up into collection and single validation.
-            validate_value(key, metadata, value_type, value, value_errors)
+        _validate_value(key, property_schema, value, value_errors)
 
     if value_errors:
-        raise ValueError(str.join(' \n-- ', value_errors))
+        raise ValueError(str.join(' \n', value_errors))
 
 
 def validate_property(the_property):
@@ -129,49 +104,111 @@ def validate_property(the_property):
     :except ValueError: *the_property* is  not dict, :class:`~ook.object_type.BaseType`
         or :class:`~.ook.object_type.PropertySchema`.
     """
-    if not isinstance(the_property, PropertySchema):
-        if isinstance(the_property, dict) or isinstance(the_property, BaseType):
-            the_property = PropertySchema(the_property)
-        else:
-            raise ValueError(
-                '"the_property" argument must be of type dict, BaseType, or PropertySchema.')
+    if not isinstance(the_property, dict):
+        raise ValueError(
+            '"the_property" argument must be of type dict, BaseType, or PropertySchema.')
 
-    validate_object(the_property)
+    _confirm_property_schema(the_property)
 
 
-def validate_schema(the_schema):
+def validate_schema(property_schema):
     """Determine if a schema definition is a valid :class:`~ook.object_type.SchemaType` candidate.
 
-    :param the_schema: The schema definition candidate.
-    :type the_schema: dict|ook.object_type.SchemaType
+    :param property_schema: The schema definition candidate.
+    :type property_schema: dict|ook.object_type.SchemaType
     :except ValueError:
 
-        * *the_schema* is not a dict, **BaseType**, or *SchemaType*.
+        * *property_schema* is not a dict, **BaseType**, or *SchemaType*.
 
-        * *the_schema* is not a valid **Ook** schema definition.
+        * *property_schema* is not a valid **Ook** schema definition.
     """
-    if not isinstance(the_schema, SchemaType):
-        if isinstance(the_schema, dict) or isinstance(the_schema, BaseType):
-            the_schema = SchemaType(the_schema)
-        else:
-            raise ValueError(
-                '"the_schema" argument must be of type dict, BaseType, or SchemaType,')
+    if not isinstance(property_schema, dict):
+        raise ValueError(
+            '"property_schema" argument must be of type dict, BaseType, or SchemaType,')
 
-    #todo: raul - validation should happen like this, but will defer until nested validation.
-    # validate_object(the_schema)
-
-    for property in the_schema.values():
-        validate_property(property)
+    _generate_schema_from_dict(property_schema)
 
 
-#todo: raulg - This is going to get revamped in next rev.
-def validate_value(key, metadata, value_type, value, value_errors):
+def validate_value(value, property_schema):
+    """Validate a value against a given **PropertySchema**
+
+    :param value: The value to be validated against the given **PropertySchema**.
+    :type value: object
+    :param property_schema: The **PropertySchema** utilized for validation.
+    :type property_schema:  dict, ook.object_tools.BaseType, ook.object_tools.PropertySchema
+    :except ValueError:
+
+        - Responds with a value error if the validation is not successful.
+
+        - "property_schema" is not provided or not a dict, **BaseType**, or **PropertySchema**
+    """
+    if property_schema is None:
+        raise ValueError('"property_schema" is not provided.')
+    if not isinstance(property_schema, dict):
+        raise ValueError('"property_schema" is not of type dict, BaseType, or PropertySchema.')
+
+    if not isinstance(property_schema, PropertySchema):
+        property_schema = _confirm_property_schema(property_schema)
+
+    value_errors = []
+
+    _validate_value('property', property_schema, value, value_errors)
+
+    if value_errors:
+        raise ValueError(str.join(' \n', value_errors))
+
+
+def _validate_value(key, property_schema, value, value_errors):
+    """
+
+    :param key:
+    :type key:
+    :param property_schema:
+    :type property_schema:
+    :param value:
+    :type value:
+    :param value_errors:
+    :type value_errors:
+    :return:
+    :rtype:
+    """
+    required = property_schema.get('required', False)
+    value_type = TypeMap.get(property_schema.get('type', None), None)
+    item_type = TypeMap.get(property_schema.get('item_type', None), None)
+
+
+    # required: True | False
+    if required and value is None:
+        value_errors.append('The value for "%s" is required.' % key)
+
+    # check for enumeration on non collection types
+    if hasattr(property_schema, 'enum'):
+        if required or (not required and value is not None):
+            if not value in property_schema.enum:
+                value_errors.append(
+                    'The value "%s" for "%s" not in enumeration %s.' %
+                    (value, key, list(property_schema.enum)))
+
+    # check if there is a value_type to continue processing
+    if value_type and value is not None:
+        # type checking
+        if not isinstance(value, value_type):
+            value_errors.append(
+                'The value for "%s" is not of type "%s": %s' %
+                (key, property_schema.type, str(value)))
+            return  # don't assume successful testing based on value_type
+
+        #todo: raul - split this up into collection and single validation.
+        _non_none_value_validation(key, property_schema, value_type, value, value_errors)
+
+
+def _non_none_value_validation(key, property_schema, value_type, value, value_errors):
     """ Method to validate an object value meets schema requirements.
 
     :param key:
     :type key:
-    :param metadata:
-    :type metadata:
+    :param property_schema:
+    :type property_schema:
     :param value_type:
     :type value_type:
     :param value:
@@ -182,40 +219,64 @@ def validate_value(key, metadata, value_type, value, value_errors):
     :rtype:
     """
     # min
-    if hasattr(metadata, 'min'):
+    if hasattr(property_schema, 'min'):
         if ((value_type is basestring or value_type in CollectionTypeSet)
-            and len(value) < metadata.min):
+            and len(value) < property_schema.min):
             value_errors.append(
                 'The value for "%s" fails the minimum length of %s' %
-                (key, metadata.min))
-        elif (value_type is int or value_type is float) and value < metadata.min:
+                (key, property_schema.min))
+        elif (value_type is int or value_type is float) and value < property_schema.min:
             value_errors.append(
                 'The value of "%s" for "%s" is less than %s min.' %
-                (value, key, metadata.min))
+                (value, key, property_schema.min))
 
     # max
-    if hasattr(metadata, 'max'):
+    if hasattr(property_schema, 'max'):
         if ((value_type is basestring or value_type in CollectionTypeSet)
-            and len(value) > metadata.max):
+            and len(value) > property_schema.max):
             value_errors.append(
                 'The value for "%s" fails the maximum length of %s' %
-                (key, metadata.max))
-        elif (value_type is int or value_type is float) and value > metadata.max:
+                (key, property_schema.max))
+        elif (value_type is int or value_type is float) and value > property_schema.max:
             value_errors.append(
                 'The value of "%s" for "%s" is more than "%s" max.' %
-                (value, key, metadata.max))
+                (value, key, property_schema.max))
 
     # regex validation
-    if hasattr(metadata, 'regex'):
+    if hasattr(property_schema, 'regex'):
         if value_type is basestring and value is not '':
-            if not re.match(metadata.regex, value):
+            if not re.match(property_schema.regex, value):
                 value_errors.append(
                     'Value "%s" for %s does not meet regex: %s' %
-                    (value, key, metadata.regex))
+                    (value, key, property_schema.regex))
         if value_type in {list, set}:
             for item_value in value:
-                if not re.match(metadata.regex, item_value):
+                if not re.match(property_schema.regex, item_value):
                     value_errors.append(
                         'Value %s in %s does not meet regex: %s' %
-                        (item_value, key, metadata))
+                        (item_value, key, property_schema))
 
+
+def _generate_schema_from_dict(schema_dict):
+    """Generates a PropertySchema from a dict."""
+    schema_object = PropertySchema(schema_dict)
+    for key, property_schema in schema_dict.iteritems():
+        schema_object['key'] = _confirm_property_schema(property_schema)
+
+    return schema_dict
+
+
+def _confirm_property_schema(property_schema_candidate):
+    """
+
+    :param property_schema_candidate:
+    :type property_schema_candidate:
+    :return:
+    :rtype:
+    """
+    if not isinstance(property_schema_candidate, PropertySchema):
+        property_schema_candidate = PropertySchema(property_schema_candidate)
+
+    validate_object(property_schema_candidate)
+
+    return property_schema_candidate
