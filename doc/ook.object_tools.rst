@@ -10,7 +10,7 @@ Method Definitions
 
 .. automethod:: ook.object_tools.validate_object
 
-.. automethod:: ook.object_tools.validate_property
+.. automethod:: ook.object_tools.validate_property_schema
 
 .. automethod:: ook.object_tools.validate_schema
 

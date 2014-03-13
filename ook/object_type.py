@@ -25,6 +25,7 @@ configured data type definition would be constructed as::
     # or
     my_object['some_property'] = 7
 
+
 Classes
 --------
 
@@ -169,11 +170,11 @@ class PropertySchema(BaseType):
             'required': False,
             'min': 1,
         }),
-        'item_type': {
+        'item_type': BaseType({
             'type': 'str',
             'required': False,
             'enum': {'bool', 'dict', 'float', 'int', 'list', 'set', 'str'}
-        },
+        }),
         'item_min': BaseType({
             'type': float,
             'required': False,

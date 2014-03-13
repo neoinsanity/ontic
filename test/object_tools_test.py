@@ -5,7 +5,7 @@ from ook import object_tools
 from ook.object_type import BaseType, PropertySchema, SchemaType
 
 
-class CreateOokTypeTest(base_test_case.BaseTestCase):
+class CreateOokTypeTestCase(base_test_case.BaseTestCase):
     """Test the dynamic creation of Ook types."""
 
     def test_create_ook_type_arg_errors(self):
@@ -232,7 +232,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
 
         ook_type = object_tools.create_ook_type('MaxCheck', schema)
         self.assertIsNotNone(ook_type)
-        object_tools.validate_schema(ook_type.get_schema())
+        #object_tools.validate_schema(ook_type.get_schema())
 
         ook_object = ook_type()
 
@@ -317,7 +317,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
                                 object_tools.validate_object, ook_object)
 
 
-class ValidateValueCheck(base_test_case.BaseTestCase):
+class ValidateValueTestCase(base_test_case.BaseTestCase):
     """Test object_tools.validate_value method."""
 
     def test_bad_validate_value(self):
@@ -334,20 +334,49 @@ class ValidateValueCheck(base_test_case.BaseTestCase):
 
         self.assertRaisesRegexp(
             ValueError,
-            'The value for "property" is not of type "int": some_value',
+            'The value for "value" is not of type "int": some_value',
             object_tools.validate_value, 'some_value', {'type': 'int'})
 
 
-    def test_validate_value(self):
-        """Valid value testing of validate_value."""
-        test_schema = {'type': 'str', 'required': True}
-        object_tools.validate_value("some value", test_schema)
+    def test_validate_value_schema_arg(self):
+        """Valid property_schema argument testing of validate_value."""
+        # Tests that dict type is a valid argument.
+        test_property_schema = {'type': 'str', 'required': True}
+        object_tools.validate_value("some value", test_property_schema)
 
-        test_base_type = BaseType(test_schema)
+        # Test that BaseType is a valid argument.
+        test_base_type = BaseType(test_property_schema)
         object_tools.validate_value('some_value', test_base_type)
 
-        test_property_schema = PropertySchema(test_schema)
+        # Test that PropertySchema is a valud argument.
+        test_property_schema = PropertySchema(test_property_schema)
         object_tools.validate_value('some_value', test_property_schema)
+
+    def test_validate_value_value_arg(self):
+        """Valid value argument testing of validate_value."""
+        # Test that scalar property is valid.
+        single_property_schema = PropertySchema({
+            'type': 'str'
+        })
+        object_tools.validate_value('Hot Dog', single_property_schema)
+
+        self.assertRaisesRegexp(
+            ValueError,
+            'The value for "value" is not of type "str": 4',
+            object_tools.validate_value, 4, single_property_schema)
+
+        collection_property_schema = PropertySchema({
+            'type': 'list',
+            'item_type': 'str',
+        })
+        collection_value = ['Hot Dog', 'Hamburger']
+        object_tools.validate_value(collection_value, collection_property_schema)
+
+        collection_value.append(4)
+        self.assertRaisesRegexp(
+            ValueError,
+            'blah',
+            object_tools.validate_value, collection_value, collection_property_schema)
 
 
 class ValidateSchemaTestCase(base_test_case.BaseTestCase):
