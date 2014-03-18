@@ -180,42 +180,42 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         # Str failure
         ook_object.str_min_property = '1'
         self.assertRaisesRegexp(ValueError,
-                                'The value for "str_min_property" fails the minimum length of 5',
+                                'The value of "1" for "str_min_property" fails min of 5.',
                                 object_tools.validate_object, ook_object)
         ook_object.str_min_property = '8 letters'
 
         # Int failure
         ook_object.int_min_property = 5
         self.assertRaisesRegexp(ValueError,
-                                'The value of "5" for "int_min_property" is less than 10 min.',
+                                'The value of "5" for "int_min_property" fails min of 10.',
                                 object_tools.validate_object, ook_object)
         ook_object.int_min_property = 20
 
         # Float failure
         ook_object.float_min_property = 15.0
         self.assertRaisesRegexp(ValueError,
-                                'The value of "15.0" for "float_min_property" is less than 20 min.',
+                                'The value of "15.0" for "float_min_property" fails min of 20.',
                                 object_tools.validate_object, ook_object)
         ook_object.float_min_property = 30.0
 
         # List failure
         ook_object.list_min_property = list()
         self.assertRaisesRegexp(ValueError,
-                                'The value for "list_min_property" fails the minimum length of 1',
+                                'The value of "\[]" for "list_min_property" fails min of 1.',
                                 object_tools.validate_object, ook_object)
         ook_object.list_min_property = ['one item']
 
         # Set failure
         ook_object.set_min_property = set()
         self.assertRaisesRegexp(ValueError,
-                                'The value for "set_min_property" fails the minimum length of 1',
+                                'The value of "set\(\[]\)" for "set_min_property" fails min of 1.',
                                 object_tools.validate_object, ook_object)
         ook_object.set_min_property = {'one item'}
 
         # Dict failure
         ook_object.dict_min_property = dict()
         self.assertRaisesRegexp(ValueError,
-                                'The value for "dict_min_property" fails the minimum length of 1',
+                                'The value of "{}" for "dict_min_property" fails min of 1.',
                                 object_tools.validate_object, ook_object)
         ook_object.dict_min_property = {'some_key': 'one_item'}
 
@@ -251,14 +251,14 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         # Str failure
         ook_object.str_max_property = '8 letters'
         self.assertRaisesRegexp(ValueError,
-                                'The value for "str_max_property" fails the maximum length of 5',
+                                'The value of "8 letters" for "str_max_property" fails max of 5.',
                                 object_tools.validate_object, ook_object)
         ook_object.str_max_property = 'small'
 
         # Int failure
         ook_object.int_max_property = 20
         self.assertRaisesRegexp(ValueError,
-                                'The value of "20" for "int_max_property" is more than "10" max.',
+                                'The value of "20" for "int_max_property" fails max of 10.',
                                 object_tools.validate_object, ook_object)
         ook_object.int_max_property = 5
 
@@ -266,7 +266,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         ook_object.float_max_property = 30.0
         self.assertRaisesRegexp(
             ValueError,
-            'The value of "30.0" for "float_max_property" is more than "20" max.',
+            'The value of "30.0" for "float_max_property" fails max of 20.',
             object_tools.validate_object, ook_object)
         ook_object.float_max_property = 15.0
 

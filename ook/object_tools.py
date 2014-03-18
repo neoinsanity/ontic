@@ -177,32 +177,8 @@ def _validate_value(key, property_schema, value, value_errors):
         value_errors.append('The value for "%s" is required.' % key)
         return  # No other validation can occur without the required value
 
-    # check the enum
-    value_type = type(value)
-    if (value is not None and
-                value_type not in CollectionTypeSet and
-            property_schema.get('enum', None)):
-        if not value in property_schema.enum:
-            value_errors.append(
-                'The value "%s" for "%s" not in enumeration %s.' %
-                (value, key, list(property_schema.enum)))
-            return  # No further processing can occur
-
-    schema_value_type = TypeMap.get(property_schema.get('type', None), None)
-    # check if there is a value_type to continue processing
-    if schema_value_type and value is not None:
-        # type checking
-        if not isinstance(value, schema_value_type):
-            value_errors.append(
-                'The value for "%s" is not of type "%s": %s' %
-                (key, property_schema.type, str(value)))
-            return  # If not of the expected type, than can't further validate without errors.
-
     if value is not None:
         _validate_non_none_value(key, property_schema, value, value_errors)
-        # check for enumeration on non collection types
-        #todo: raul - split this up into collection and single validation.
-        _non_none_value_validation(key, property_schema, value, value_errors)
 
 
 def _validate_non_none_value(key, property_schema, value, value_errors):
@@ -220,7 +196,87 @@ def _validate_non_none_value(key, property_schema, value, value_errors):
     :rtype:
     """
     # Divide between single and collection types for validation processing.
-    pass
+    schema_value_type = TypeMap.get(property_schema.get('type', None), None)
+
+    if not schema_value_type:
+        # if no schema_type, then just check that the value is in an enum if necessary.
+        if not _enum_validation(property_schema, value):
+            value_errors.append(
+                'The value "%s" for "%s" not in enumeration %s.' %
+                (value, key, list(property_schema.enum)))
+            return  # No further processing can occur
+    else:
+        if schema_value_type in CollectionTypeSet:
+            _validate_collections(key, property_schema, value, value_errors)
+        else:
+            # type checking
+            if not isinstance(value, schema_value_type):
+                value_errors.append(
+                    'The value for "%s" is not of type "%s": %s' %
+                    (key, property_schema.type, str(value)))
+                return  # If not of the expected type, than can't further validate without errors.
+
+            if not _enum_validation(property_schema, value):
+                value_errors.append(
+                    'The value "%s" for "%s" not in enumeration %s.' %
+                    (value, key, list(property_schema.enum)))
+                return  # No further processing can occur
+
+            #todo: raul - split this up into collection and single validation.
+            _non_none_value_validation(key, property_schema, value, value_errors)
+
+
+def _validate_collections(key, property_schema, value, value_errors):
+    """
+
+    :param key:
+    :type key:
+    :param property_schema:
+    :type property_schema:
+    :param value:
+    :type value:
+    :param value_errors:
+    :type value_errors:
+    :return:
+    :rtype:
+    """
+    if not _min_validation(property_schema, value):
+        value_errors.append('The value of "%s" for "%s" fails min of %s.' %
+                            (value, key, property_schema.min))
+        return
+
+
+def _enum_validation(property_schema, value):
+    if property_schema.get('enum', None):
+        if not value in property_schema.enum:
+            return False
+    return True
+
+
+def _min_validation(property_schema, value):
+    if hasattr(property_schema, 'min'):
+        if ((property_schema.type == 'str' or
+                     property_schema.type in {'list', 'set', 'dict'})
+            and len(value) < property_schema.min):
+            return False
+        elif ((property_schema.type == 'int' or property_schema.type == 'float')
+              and value < property_schema.min):
+            return False
+
+    return True
+
+
+def _max_validation(property_schema, value):
+    if hasattr(property_schema, 'max'):
+        if ((property_schema.type == 'str' or
+                     property_schema.type in {'list', 'set', 'dict'})
+            and len(value) > property_schema.max):
+            return False
+        elif ((property_schema.type == 'int' or property_schema.type == 'float')
+              and value > property_schema.max):
+            return False
+
+    return True
 
 
 def _non_none_value_validation(key, property_schema, value, value_errors):
@@ -238,31 +294,14 @@ def _non_none_value_validation(key, property_schema, value, value_errors):
     :rtype:
     """
     # min
-    if hasattr(property_schema, 'min'):
-        if ((property_schema.type == 'str' or
-                     property_schema.type in {'list', 'set', 'dict'})
-            and len(value) < property_schema.min):
-            value_errors.append(
-                'The value for "%s" fails the minimum length of %s' %
-                (key, property_schema.min))
-        elif ((property_schema.type == 'int' or property_schema.type == 'float')
-              and value < property_schema.min):
-            value_errors.append(
-                'The value of "%s" for "%s" is less than %s min.' %
-                (value, key, property_schema.min))
+    if not _min_validation(property_schema, value):
+        value_errors.append('The value of "%s" for "%s" fails min of %s.' %
+                            (value, key, property_schema.min))
 
     # max
-    if hasattr(property_schema, 'max'):
-        if ((property_schema.type == 'str' or property_schema.type in {'list', 'set', 'dict'})
-            and len(value) > property_schema.max):
-            value_errors.append(
-                'The value for "%s" fails the maximum length of %s' %
-                (key, property_schema.max))
-        elif ((property_schema.type == 'int' or property_schema.type == 'float') and
-                      value > property_schema.max):
-            value_errors.append(
-                'The value of "%s" for "%s" is more than "%s" max.' %
-                (value, key, property_schema.max))
+    if not _max_validation(property_schema, value):
+        value_errors.append('The value of "%s" for "%s" fails max of %s.' %
+                            (value, key, property_schema.max))
 
     # regex validation
     if hasattr(property_schema, 'regex'):
