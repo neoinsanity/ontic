@@ -272,23 +272,29 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
 
         # List failure
         ook_object.list_max_property = ['one item', 'two item']
-        self.assertRaisesRegexp(ValueError,
-                                'The value for "list_max_property" fails the maximum length of 1',
-                                object_tools.validate_object, ook_object)
+        self.assertRaisesRegexp(
+            ValueError,
+            'The value of "\[\'one item\', \'two item\'\]" '
+            'for "list_max_property" fails max of 1.',
+            object_tools.validate_object, ook_object)
         ook_object.list_max_property = ['one item']
 
         # Set failure
         ook_object.set_max_property = {'one item', 'two item'}
-        self.assertRaisesRegexp(ValueError,
-                                'The value for "set_max_property" fails the maximum length of 1',
-                                object_tools.validate_object, ook_object)
+        self.assertRaisesRegexp(
+            ValueError,
+            'The value of "set\(\[\'one item\', \'two item\'\]\)" '
+            'for "set_max_property" fails max of 1.',
+            object_tools.validate_object, ook_object)
         ook_object.set_max_property = {'one item'}
 
         # Dict failure
         ook_object.dict_max_property = {'some_key': 'one_item', 'another_key': 'two_item'}
-        self.assertRaisesRegexp(ValueError,
-                                'The value for "dict_max_property" fails the maximum length of 1',
-                                object_tools.validate_object, ook_object)
+        self.assertRaisesRegexp(
+            ValueError,
+            'The value of "{\'another_key\': \'two_item\', \'some_key\': \'one_item\'}" for '
+            '"dict_max_property" fails max of 1.',
+            object_tools.validate_object, ook_object)
         ook_object.dict_max_property = {'some_key': 'one_item'}
 
     def test_regex_setting(self):

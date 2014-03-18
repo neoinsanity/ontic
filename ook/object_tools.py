@@ -245,6 +245,10 @@ def _validate_collections(key, property_schema, value, value_errors):
                             (value, key, property_schema.min))
         return
 
+    if not _max_validation(property_schema, value):
+        value_errors.append('The value of "%s" for "%s" fails max of %s.' %
+                            (value, key, property_schema.max))
+
 
 def _enum_validation(property_schema, value):
     if property_schema.get('enum', None):
