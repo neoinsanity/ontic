@@ -243,11 +243,55 @@ def _validate_collections(key, property_schema, value, value_errors):
     if not _min_validation(property_schema, value):
         value_errors.append('The value of "%s" for "%s" fails min of %s.' %
                             (value, key, property_schema.min))
-        return
 
     if not _max_validation(property_schema, value):
         value_errors.append('The value of "%s" for "%s" fails max of %s.' %
                             (value, key, property_schema.max))
+
+    if property_schema.type in {'list', 'set'}:
+        validation_list = list()
+        if hasattr(property_schema, 'enum'):
+            def validate_enum(item, property_schema, value_error):
+                if not _enum_validation(property_schema, item):
+                    value_errors.append(
+                        'The value "%s" for "%s" not in enumeration %s.' %
+                        (item, value, list(property_schema.enum)))
+
+            validation_list.append(validate_enum)
+
+        if hasattr(property_schema, 'item_type'):
+            def validate_item_type(item, property_schema, value_errors):
+                schema_value_type = TypeMap.get(property_schema.item_type)
+                if not isinstance(item, schema_value_type):
+                    value_errors.append(
+                        'The value for "%s" is not of type "%s": %s' %
+                        (value, property_schema.item_type, str(item)))
+
+            validation_list.append(validate_item_type)
+
+        for item_value in value:
+            _validate_collection_item_value(item_value,
+                                            property_schema,
+                                            validation_list,
+                                            value_errors)
+
+
+def _validate_collection_item_value(item, property_schema, validation_list, value_errors):
+    """
+
+    :param item:
+    :type item: bool, list, set, int, str, float,
+    :param property_schema:
+    :type property_schema:
+    :param validation_list:
+    :type validation_list: list
+    :param value_errors:
+    :type value_errors: list
+    :return:
+    :rtype:
+    """
+    for validation in validation_list:
+        validation(item, property_schema, value_errors)
 
 
 def _enum_validation(property_schema, value):
@@ -341,7 +385,6 @@ def _confirm_property_schema(property_schema_candidate):
     """
     if not isinstance(property_schema_candidate, PropertySchema):
         property_schema_candidate = PropertySchema(property_schema_candidate)
-
-    validate_object(property_schema_candidate)
+        validate_object(property_schema_candidate)
 
     return property_schema_candidate

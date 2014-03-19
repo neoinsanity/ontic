@@ -381,7 +381,7 @@ class ValidateValueTestCase(base_test_case.BaseTestCase):
         collection_value.append(4)
         self.assertRaisesRegexp(
             ValueError,
-            'blah',
+            'The value for "\[\'Hot Dog\', \'Hamburger\', 4\]" is not of type "str": 4',
             object_tools.validate_value, collection_value, collection_property_schema)
 
 
