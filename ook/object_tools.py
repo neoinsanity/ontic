@@ -77,7 +77,6 @@ def validate_object(the_object):
         * A property of *the_object* does not meet schema requirements.
 
     """
-
     if not isinstance(the_object, BaseType):
         raise ValueError(
             'Validation can only support validation of objects derived from ook.BaseType.')
@@ -251,7 +250,7 @@ def _validate_collections(key, property_schema, value, value_errors):
     if property_schema.type in {'list', 'set'}:
         validation_list = list()
         if hasattr(property_schema, 'enum'):
-            def validate_enum(item, property_schema, value_error):
+            def validate_enum(item, property_schema, value_errors):
                 if not _enum_validation(property_schema, item):
                     value_errors.append(
                         'The value "%s" for "%s" not in enumeration %s.' %
@@ -268,6 +267,41 @@ def _validate_collections(key, property_schema, value, value_errors):
                         (value, property_schema.item_type, str(item)))
 
             validation_list.append(validate_item_type)
+
+            if hasattr(property_schema, 'regex') and property_schema.type == 'str':
+                def validate_item_regex(item, property_schema, value_errors):
+                    if not re.match(property_schema.regex, value):
+                        value_errors.append(
+                            'Value "%s" for %s does not meet regex: %s' %
+                            (item, value, property_schema.regex))
+
+                validation_list.append(validate_item_regex)
+
+        if hasattr(property_schema, 'item_min'):
+            def validate_item_min(item, property_schema, value_errors):
+                if ((property_schema.item_type == 'str') and
+                            len(item) < property_schema.item_min):
+                    value_errors.append('The value of "%s" for "%s" fails min of %s.' %
+                                        (item, value, property_schema.type_min))
+                elif ((property_schema.item_type in {'int', 'float'})
+                      and item < property_schema.type_min):
+                    value_errors.append('The value of "%s" for "%s" fails min of %s.' %
+                                        (item, value, property_schema.min))
+
+            validation_list.append(validate_item_min)
+
+        if hasattr(property_schema, 'item_max'):
+            def validate_item_max(item, property_schema, value_errors):
+                if ((property_schema.item_type == 'str') and
+                            len(item) > property_schema.item_max):
+                    value_errors.append('The value of "%s" for "%s" fails max of %s.' %
+                                        (item, value, property_schema.type_min))
+                elif ((property_schema.item_type in {'int', 'float'})
+                      and item < property_schema.type_max):
+                    value_errors.append('The value of "%s" for "%s" fails max of %s.' %
+                                        (item, value, property_schema.max))
+
+            validation_list.append(validate_item_max)
 
         for item_value in value:
             _validate_collection_item_value(item_value,
@@ -358,12 +392,6 @@ def _non_none_value_validation(key, property_schema, value, value_errors):
                 value_errors.append(
                     'Value "%s" for %s does not meet regex: %s' %
                     (value, key, property_schema.regex))
-        if property_schema.type in {'list', 'set'}:
-            for item_value in value:
-                if not re.match(property_schema.regex, item_value):
-                    value_errors.append(
-                        'Value %s in %s does not meet regex: %s' %
-                        (item_value, key, property_schema))
 
 
 def _generate_schema_from_dict(schema_dict):
