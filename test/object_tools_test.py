@@ -84,6 +84,14 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
             ValueError,
             'The value for "bool_property" is not of type "bool": Dog',
             object_tools.validate_object, ook_object)
+        ook_object.bool_property = True
+
+        # Validate a string vs a list type
+        ook_object.list_property = 'some_string'
+        self.assertRaisesRegexp(
+            ValueError,
+            'The value for "list_property" is not of type "list": some_string',
+            object_tools.validate_object, ook_object)
 
     def test_type_bad_setting(self):
         """ValueError for bad 'type' setting."""
@@ -153,7 +161,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         # Collection testing
         ####################
         schema = {
-            'enum_property': {'type':'list', 'enum':{'dog', 'cat'}}
+            'enum_property': {'type': 'list', 'enum': {'dog', 'cat'}}
         }
 
         # Create the type

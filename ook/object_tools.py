@@ -189,16 +189,16 @@ def _validate_non_none_value(key, property_schema, value, value_errors):
                 (value, key, list(property_schema.enum)))
             return  # No further processing can occur
     else:
+        # type checking
+        if not isinstance(value, schema_value_type):
+            value_errors.append(
+                'The value for "%s" is not of type "%s": %s' %
+                (key, property_schema.type, str(value)))
+            return  # If not of the expected type, than can't further validate without errors.
+
         if schema_value_type in CollectionTypeSet:
             _validate_collections(key, property_schema, value, value_errors)
         else:
-            # type checking
-            if not isinstance(value, schema_value_type):
-                value_errors.append(
-                    'The value for "%s" is not of type "%s": %s' %
-                    (key, property_schema.type, str(value)))
-                return  # If not of the expected type, than can't further validate without errors.
-
             if not _enum_validation(property_schema, value):
                 value_errors.append(
                     'The value "%s" for "%s" not in enumeration %s.' %
