@@ -121,6 +121,8 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
 
     def test_enum_setting(self):
         """Validate 'enum' schema setting."""
+        # Scalar testing
+        ################
         schema = {
             'enum_property': {'enum': {'some_value', 99}}
         }
@@ -146,6 +148,34 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
             ValueError,
             "The value \"bad, bad, bad\" for \"enum_property\" "
             "not in enumeration \[99, 'some_value'\].",
+            object_tools.validate_object, ook_object)
+
+        # Collection testing
+        ####################
+        schema = {
+            'enum_property': {'type':'list', 'enum':{'dog', 'cat'}}
+        }
+
+        # Create the type
+        ook_type = object_tools.create_ook_type('EnumListCheck', schema)
+        self.assertIsNotNone(ook_type)
+        object_tools.validate_schema(ook_type.get_schema())
+
+        # Create object of type
+        ook_object = ook_type()
+
+        # Validate an empty object
+        object_tools.validate_object(ook_object)
+
+        # Validate a good setting
+        ook_object.enum_property = ['dog']
+        object_tools.validate_object(ook_object)
+
+        # Validate a bad setting
+        ook_object.enum_property = ['fish']
+        self.assertRaisesRegexp(
+            ValueError,
+            r'''The value "fish" for "\['fish'\]" not in enumeration \['dog', 'cat'\].''',
             object_tools.validate_object, ook_object)
 
     def test_min_setting(self):

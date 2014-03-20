@@ -92,22 +92,6 @@ def validate_object(the_object):
         raise ValueError(str.join(' \n', value_errors))
 
 
-def validate_property_schema(the_property):
-    """Method to validate if a schema property object is a valid definition.
-
-    :param the_property: The object to be validated as a :class:`~ook.object_type.PropertySchema`
-        candidate.
-    :type ook.object_type.PropertySchema|dict:
-    :except ValueError: *the_property* is  not dict, :class:`~ook.object_type.BaseType`
-        or :class:`~.ook.object_type.PropertySchema`.
-    """
-    if not isinstance(the_property, dict):
-        raise ValueError(
-            '"the_property" argument must be of type dict, BaseType, or PropertySchema.')
-
-    _confirm_property_schema(the_property)
-
-
 def validate_schema(property_schema):
     """Determine if a schema definition is a valid :class:`~ook.object_type.SchemaType` candidate.
 
