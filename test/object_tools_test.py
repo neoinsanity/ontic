@@ -2,7 +2,8 @@
 import base_test_case
 
 from ook import object_tools
-from ook.object_type import BaseType, PropertySchema, SchemaType
+from ook.object_type import BaseType
+from ook.schema_type import SchemaType, SchemaProperty
 
 
 class CreateOokTypeTestCase(base_test_case.BaseTestCase):
@@ -373,7 +374,7 @@ class ValidateValueTestCase(base_test_case.BaseTestCase):
 
         self.assertRaisesRegexp(
             ValueError,
-            '"property_schema" is not of type dict, BaseType, or PropertySchema',
+            '"property_schema" is not of type dict, BaseType, or SchemaProperty',
             object_tools.validate_value, 'some_value', "can't be string")
 
         self.assertRaisesRegexp(
@@ -392,14 +393,14 @@ class ValidateValueTestCase(base_test_case.BaseTestCase):
         test_base_type = BaseType(test_property_schema)
         object_tools.validate_value('some_value', test_base_type)
 
-        # Test that PropertySchema is a valud argument.
-        test_property_schema = PropertySchema(test_property_schema)
+        # Test that SchemaProperty is a valud argument.
+        test_property_schema = SchemaProperty(test_property_schema)
         object_tools.validate_value('some_value', test_property_schema)
 
     def test_validate_value_value_arg(self):
         """Valid value argument testing of validate_value."""
         # Test that scalar property is valid.
-        single_property_schema = PropertySchema({
+        single_property_schema = SchemaProperty({
             'type': 'str'
         })
         object_tools.validate_value('Hot Dog', single_property_schema)
@@ -409,7 +410,7 @@ class ValidateValueTestCase(base_test_case.BaseTestCase):
             'The value for "value" is not of type "str": 4',
             object_tools.validate_value, 4, single_property_schema)
 
-        collection_property_schema = PropertySchema({
+        collection_property_schema = SchemaProperty({
             'type': 'list',
             'item_type': 'str',
         })

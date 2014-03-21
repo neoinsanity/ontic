@@ -32,8 +32,8 @@ If the need should arise for validation of an **Ook** object by value, utilize t
 """
 import re
 
-from object_type import BaseType, CollectionTypeSet, PropertySchema, SchemaType, TypeMap
-
+from object_type import BaseType, CollectionTypeSet, TypeMap
+from schema_type import SchemaProperty, SchemaType
 
 def create_ook_type(name, schema):
     """Create an **Ook** type to generate objects with a given schema.
@@ -77,7 +77,7 @@ def validate_object(the_object):
         * A property of *the_object* does not meet schema requirements.
 
     """
-    if not isinstance(the_object, BaseType):
+    if not isinstance(the_object, BaseType) and not isinstance(the_object, SchemaProperty):
         raise ValueError(
             'Validation can only support validation of objects derived from ook.BaseType.')
 
@@ -96,7 +96,7 @@ def validate_schema(property_schema):
     """Determine if a schema definition is a valid :class:`~ook.object_type.SchemaType` candidate.
 
     :param property_schema: The schema definition candidate.
-    :type property_schema: dict|ook.object_type.SchemaType
+    :type property_schema: dict|schema_type.SchemaType
     :except ValueError:
 
         * *property_schema* is not a dict, **BaseType**, or *SchemaType*.
@@ -111,24 +111,24 @@ def validate_schema(property_schema):
 
 
 def validate_value(value, property_schema):
-    """Validate a value against a given **PropertySchema**
+    """Validate a value against a given **SchemaProperty**
 
-    :param value: The value to be validated against the given **PropertySchema**.
+    :param value: The value to be validated against the given **SchemaProperty**.
     :type value: object
-    :param property_schema: The **PropertySchema** utilized for validation.
-    :type property_schema:  dict, ook.object_tools.BaseType, ook.object_tools.PropertySchema
+    :param property_schema: The **SchemaProperty** utilized for validation.
+    :type property_schema:  dict, ook.object_tools.BaseType, ook.object_tools.SchemaProperty
     :except ValueError:
 
         - Responds with a value error if the validation is not successful.
 
-        - "property_schema" is not provided or not a dict, **BaseType**, or **PropertySchema**
+        - "property_schema" is not provided or not a dict, **BaseType**, or **SchemaProperty**
     """
     if property_schema is None:
         raise ValueError('"property_schema" is not provided.')
     if not isinstance(property_schema, dict):
-        raise ValueError('"property_schema" is not of type dict, BaseType, or PropertySchema.')
+        raise ValueError('"property_schema" is not of type dict, BaseType, or SchemaProperty.')
 
-    if not isinstance(property_schema, PropertySchema):
+    if not isinstance(property_schema, SchemaType):
         property_schema = _confirm_property_schema(property_schema)
 
     value_errors = []
@@ -379,8 +379,8 @@ def _non_none_value_validation(key, property_schema, value, value_errors):
 
 
 def _generate_schema_from_dict(schema_dict):
-    """Generates a PropertySchema from a dict."""
-    schema_object = PropertySchema(schema_dict)
+    """Generates a SchemaProperty from a dict."""
+    schema_object = SchemaType(schema_dict)
     for key, property_schema in schema_dict.iteritems():
         schema_object['key'] = _confirm_property_schema(property_schema)
 
@@ -395,8 +395,9 @@ def _confirm_property_schema(property_schema_candidate):
     :return:
     :rtype:
     """
-    if not isinstance(property_schema_candidate, PropertySchema):
-        property_schema_candidate = PropertySchema(property_schema_candidate)
+    if not isinstance(property_schema_candidate, SchemaType):
+        print '======== property_schema_candidate:', property_schema_candidate
+        property_schema_candidate = SchemaProperty(property_schema_candidate)
         validate_object(property_schema_candidate)
 
     return property_schema_candidate
