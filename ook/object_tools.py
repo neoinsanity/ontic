@@ -379,27 +379,3 @@ def _non_none_value_validation(key, property_schema, value, value_errors):
                     'Value "%s" for %s does not meet regex: %s' %
                     (value, key, property_schema.regex))
 
-
-def _generate_schema_from_dict(schema_dict):
-    """Generates a SchemaProperty from a dict."""
-    schema_object = SchemaType(schema_dict)
-    for key, property_schema in schema_dict.iteritems():
-        schema_object['key'] = _confirm_property_schema(property_schema)
-
-    return schema_dict
-
-
-def _confirm_property_schema(property_schema_candidate):
-    """
-
-    :param property_schema_candidate:
-    :type property_schema_candidate:
-    :return:
-    :rtype:
-    """
-    if not isinstance(property_schema_candidate, SchemaType):
-        print '======== property_schema_candidate:', property_schema_candidate
-        property_schema_candidate = SchemaProperty(property_schema_candidate)
-        validate_object(property_schema_candidate)
-
-    return property_schema_candidate
