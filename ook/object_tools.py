@@ -32,8 +32,8 @@ If the need should arise for validation of an **Ook** object by value, utilize t
 """
 import re
 
-from object_type import BaseType, CollectionTypeSet, TypeMap
-from schema_type import SchemaProperty, SchemaType
+from object_type import BaseType
+from schema_type import CollectionTypeSet, SchemaProperty, SchemaType, TypeMap
 
 def create_ook_type(name, schema):
     """Create an **Ook** type to generate objects with a given schema.
@@ -55,12 +55,10 @@ def create_ook_type(name, schema):
 
     ook_type = type(name, (BaseType, ), dict())
 
-    finalized_schema = SchemaType()
+    if not isinstance(schema, SchemaType):
+        schema = SchemaType(schema)
 
-    for property_name, property_schema_candidate in schema.iteritems():
-        finalized_schema[property_name] = _confirm_property_schema(property_schema_candidate)
-
-    ook_type._OOK_SCHEMA = finalized_schema
+    ook_type._OOK_SCHEMA = schema
 
     return ook_type
 
@@ -107,7 +105,11 @@ def validate_schema(property_schema):
         raise ValueError(
             '"property_schema" argument must be of type dict, BaseType, or SchemaType,')
 
-    _generate_schema_from_dict(property_schema)
+    if not isinstance(property_schema, SchemaProperty):
+        SchemaProperty(property_schema)
+    else:
+        validate_object(property_schema)
+
 
 
 def validate_value(value, property_schema):
@@ -128,8 +130,8 @@ def validate_value(value, property_schema):
     if not isinstance(property_schema, dict):
         raise ValueError('"property_schema" is not of type dict, BaseType, or SchemaProperty.')
 
-    if not isinstance(property_schema, SchemaType):
-        property_schema = _confirm_property_schema(property_schema)
+    if not isinstance(property_schema, SchemaProperty):
+        property_schema = SchemaProperty(property_schema)
 
     value_errors = []
 
@@ -233,7 +235,7 @@ def _validate_collections(key, property_schema, value, value_errors):
 
     if property_schema.type in {'list', 'set'}:
         validation_list = list()
-        if hasattr(property_schema, 'enum'):
+        if property_schema.enum:
             def validate_enum(item, property_schema, value_errors):
                 if not _enum_validation(property_schema, item):
                     value_errors.append(
@@ -242,7 +244,7 @@ def _validate_collections(key, property_schema, value, value_errors):
 
             validation_list.append(validate_enum)
 
-        if hasattr(property_schema, 'item_type'):
+        if property_schema.item_type:
             def validate_item_type(item, property_schema, value_errors):
                 schema_value_type = TypeMap.get(property_schema.item_type)
                 if not isinstance(item, schema_value_type):
@@ -252,7 +254,7 @@ def _validate_collections(key, property_schema, value, value_errors):
 
             validation_list.append(validate_item_type)
 
-            if hasattr(property_schema, 'regex') and property_schema.type == 'str':
+            if property_schema.regex and property_schema.type == 'str':
                 def validate_item_regex(item, property_schema, value_errors):
                     if not re.match(property_schema.regex, value):
                         value_errors.append(
@@ -261,7 +263,7 @@ def _validate_collections(key, property_schema, value, value_errors):
 
                 validation_list.append(validate_item_regex)
 
-        if hasattr(property_schema, 'item_min'):
+        if property_schema.item_min:
             def validate_item_min(item, property_schema, value_errors):
                 if ((property_schema.item_type == 'str') and
                             len(item) < property_schema.item_min):
@@ -274,7 +276,7 @@ def _validate_collections(key, property_schema, value, value_errors):
 
             validation_list.append(validate_item_min)
 
-        if hasattr(property_schema, 'item_max'):
+        if property_schema.item_max:
             def validate_item_max(item, property_schema, value_errors):
                 if ((property_schema.item_type == 'str') and
                             len(item) > property_schema.item_max):
@@ -313,14 +315,14 @@ def _validate_collection_item_value(item, property_schema, validation_list, valu
 
 
 def _enum_validation(property_schema, value):
-    if property_schema.get('enum', None):
+    if property_schema.enum:
         if not value in property_schema.enum:
             return False
     return True
 
 
 def _min_validation(property_schema, value):
-    if hasattr(property_schema, 'min'):
+    if property_schema.min:
         if ((property_schema.type == 'str' or
                      property_schema.type in {'list', 'set', 'dict'})
             and len(value) < property_schema.min):
@@ -333,7 +335,7 @@ def _min_validation(property_schema, value):
 
 
 def _max_validation(property_schema, value):
-    if hasattr(property_schema, 'max'):
+    if property_schema.max:
         if ((property_schema.type == 'str' or
                      property_schema.type in {'list', 'set', 'dict'})
             and len(value) > property_schema.max):
@@ -370,7 +372,7 @@ def _non_none_value_validation(key, property_schema, value, value_errors):
                             (value, key, property_schema.max))
 
     # regex validation
-    if hasattr(property_schema, 'regex'):
+    if property_schema.regex:
         if property_schema.type == 'str' and value is not '':
             if not re.match(property_schema.regex, value):
                 value_errors.append(

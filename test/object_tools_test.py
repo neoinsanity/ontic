@@ -100,11 +100,22 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
             'some_property': {'type': 'Unknown'}
         }
         # Create the type
-        self.assertRaisesRegexp(
-            ValueError,
-            "The value \"Unknown\" for \"type\" not in enumeration "
-            "\['set', 'int', 'float', 'list', 'dict', 'str', 'bool'\].",
-            object_tools.create_ook_type, 'Dummy', schema)
+        ook_type = object_tools.create_ook_type('Dummy', schema)
+
+        self.assertIsNotNone(ook_type)
+        self.assertIsInstance(ook_type, type)
+        self.assertDictEqual(
+            {'some_property': {'default': False,
+                               'enum': None,
+                               'item_max': None,
+                               'item_min': None,
+                               'item_type': None,
+                               'max': None,
+                               'min': None,
+                               'regex': None,
+                               'required': False,
+                               'type': 'Unknown'}},
+            ook_type.get_schema())
 
     def test_required_setting(self):
         """Validate 'required' schema setting."""

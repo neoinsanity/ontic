@@ -1,5 +1,20 @@
 from core_type import MetaType
-import schema_tools
+
+
+# The `type_map` converts the string declaration of attribute type.
+TypeMap = {
+    'bool': bool,
+    'dict': dict,
+    'float': float,
+    'int': int,
+    'list': list,
+    'set': set,
+    'str': basestring,
+}
+
+# The `collection_type_set` is the set of supported collection types.
+CollectionTypeSet = {dict, list, set}
+
 
 class SchemaProperty(MetaType):
     """The object type for representing Property schema definitions.
@@ -30,54 +45,133 @@ class SchemaProperty(MetaType):
     _OOK_SCHEMA = MetaType({
         'type': MetaType({
             'type': 'str',
-            'required': False,
-            'enum': {'bool', 'dict', 'float', 'int', 'list', 'set', 'str'}
+            'default': None,
+            'required': True,
+            'enum': {'bool', 'dict', 'float', 'int', 'list', 'set', 'str'},
+            'min': None,
+            'max': None,
+            'regex': None,
+            'item_type': None,
+            'item_min': None,
+            'item_max': None,
+        }),
+        'default': MetaType({
+            'type': 'bool',
+            'default': False,
+            'required': True,
+            'enum': None,
+            'min': None,
+            'max': None,
+            'regex': None,
+            'item_type': None,
+            'item_min': None,
+            'item_max': None,
         }),
         'required': MetaType({
             'type': 'bool',
-            'required': False,
+            'default': False,
+            'required': True,
+            'enum': None,
+            'min': None,
+            'max': None,
+            'regex': None,
+            'item_type': None,
+            'item_min': None,
+            'item_max': None,
         }),
         'enum': MetaType({
             'type': 'set',
-            'required': False,
+            'default': None,
+            'required': True,
+            'enum': None,
+            'min': None,
+            'max': None,
+            'regex': None,
+            'item_type': None,
+            'item_min': None,
+            'item_max': None,
         }),
         'min': MetaType({
             'type': float,
-            'required': False,
+            'default': None,
+            'required': True,
+            'enum': None,
+            'min': None,
+            'max': None,
+            'regex': None,
+            'item_type': None,
+            'item_min': None,
+            'item_max': None,
         }),
         'max': MetaType({
             'type': float,
-            'required': False,
+            'default': None,
+            'required': True,
+            'enum': None,
+            'min': None,
+            'max': None,
+            'regex': None,
+            'item_type': None,
+            'item_min': None,
+            'item_max': None,
         }),
         'regex': MetaType({
             'type': 'str',
-            'required': False,
+            'default': None,
+            'required': True,
+            'enum': None,
             'min': 1,
+            'max': None,
+            'regex': None,
+            'item_type': None,
+            'item_min': None,
+            'item_max': None,
         }),
         'item_type': MetaType({
             'type': 'str',
-            'required': False,
-            'enum': {'bool', 'dict', 'float', 'int', 'list', 'set', 'str'}
+            'default': None,
+            'required': True,
+            'enum': {'bool', 'dict', 'float', 'int', 'list', 'set', 'str'},
+            'min': None,
+            'max': None,
+            'regex': None,
+            'item_type': None,
+            'item_min': None,
+            'item_max': None,
         }),
         'item_min': MetaType({
             'type': float,
-            'required': False,
+            'default': None,
+            'required': True,
+            'enum': None,
+            'min': None,
+            'max': None,
+            'regex': None,
+            'item_type': None,
+            'item_min': None,
+            'item_max': None,
         }),
         'item_max': MetaType({
             'type': float,
-            'required': False,
+            'default': None,
+            'required': True,
+            'enum': None,
+            'min': None,
+            'max': None,
+            'regex': None,
+            'item_type': None,
+            'item_min': None,
+            'item_max': None,
         }),
     })
 
     def __init__(self, *args, **kwargs):
-        print '==== schema_property.args:', args
-        print '==== schema_property.kwargs:', kwargs
         MetaType.__init__(self, *args, **kwargs)
+
+        import schema_tools
+
+        schema_tools.perfect_schema_property(self)
         schema_tools.validate_schema_property(self)
-        # for key in self.keys():
-        #     print '======== key:', key
-        #     #self[key] = SchemaProperty(self[key])
-        # print '==== schema_property init done.'
 
 
 class SchemaType(MetaType):
@@ -97,9 +191,8 @@ class SchemaType(MetaType):
     """
 
     def __init__(self, *args, **kwargs):
-        print '====== args:', args
-        print '====== kwargs:', kwargs
         MetaType.__init__(self, *args, **kwargs)
-        for key in self.keys():
-            self[key] = SchemaProperty(self[key])
+        for key, value in self.iteritems():
+            if not isinstance(value, SchemaProperty):
+                self[key] = SchemaProperty(value)
 

@@ -34,21 +34,6 @@ Classes
 from core_type import MetaType
 
 
-# The `type_map` converts the string declaration of attribute type.
-TypeMap = {
-    'bool': bool,
-    'dict': dict,
-    'float': float,
-    'int': int,
-    'list': list,
-    'set': set,
-    'str': basestring,
-}
-
-# The `collection_type_set` is the set of supported collection types.
-CollectionTypeSet = {dict, list, set}
-
-
 class BaseType(MetaType):
     """BaseType provides the **Ook** schema interface.
 
