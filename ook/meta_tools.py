@@ -1,6 +1,6 @@
 import re
 
-from core_type import CollectionTypeSet, TypeMap
+from meta_type import CollectionTypeSet, TypeMap
 
 
 def _validate_value(key, property_schema, value, value_errors):

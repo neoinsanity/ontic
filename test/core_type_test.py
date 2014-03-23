@@ -2,7 +2,7 @@
 
 import base_test_case
 
-from ook.core_type import _CoreType, MetaType
+from ook.meta_type import _CoreType, MetaType
 
 
 class CoreTypeTest(base_test_case.BaseTestCase):

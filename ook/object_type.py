@@ -31,7 +31,7 @@ Classes
 
 """
 
-from core_type import MetaType
+from meta_type import MetaType
 
 
 class BaseType(MetaType):
