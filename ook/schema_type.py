@@ -1,29 +1,14 @@
 from core_type import MetaType
 
 
-# The `type_map` converts the string declaration of attribute type.
-TypeMap = {
-    'bool': bool,
-    'dict': dict,
-    'float': float,
-    'int': int,
-    'list': list,
-    'set': set,
-    'str': basestring,
-}
-
-# The `collection_type_set` is the set of supported collection types.
-CollectionTypeSet = {dict, list, set}
-
-
 class SchemaProperty(MetaType):
     """The object type for representing Property schema definitions.
 
     *Property Schema Settings*:
 
         *type*
-            datetime*, date*, time*, str, int, float, bool, dict, set, list, none. Defaults to
-            None.
+            datetime*, date*, time*, str, int, float, bool, dict, set, list,
+            none. Defaults to None.
         *required*
             True|False. Defaults False.
         *min*
@@ -33,7 +18,8 @@ class SchemaProperty(MetaType):
         *regex*
             string. Defaults to None.
         *item_type*
-            datetime*, date*, time*, str, int, float, bool, dict, set, list, none. Default to None.
+            datetime*, date*, time*, str, int, float, bool, dict, set, list,
+            none. Default to None.
         *tem_min*
             float. Defaults to None.
         *item_max*
@@ -177,8 +163,8 @@ class SchemaProperty(MetaType):
 class SchemaType(MetaType):
     """The type definition for a schema object.
 
-    The **SchemaType** contains a dictionary of property field names and the corresponding
-    **SchemaProperty** definition.
+    The **SchemaType** contains a dictionary of property field names and
+    the corresponding **SchemaProperty** definition.
 
     Example SchemaType representation::
 

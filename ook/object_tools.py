@@ -1,50 +1,62 @@
-"""The **object_tools** provides the methods to create and validate **Ook** types and objects.
+"""The **object_tools** provides the methods to create and validate **Ook**
+types and objects.
 
 Usage
 ======
 
-There are two basic operations provided by **object_tools**; schema definition and object
+There are two basic operations provided by **object_tools**; schema
+definition and object
 handling. Schema definition entails type creation and validation.
 
 Schema Tools
 -------------
 
-To validate a schema definition, utilize the :meth:`~ook.object_tools.validate_schema` method.
+To validate a schema definition, utilize the :meth:`~ook.object_tools
+.validate_schema` method.
 
-Schema are composed of :class:`~ook.object_type.PropertySchema` objects. If there is a need,
+Schema are composed of :class:`~ook.object_type.PropertySchema` objects. If
+there is a need,
 individual **PropertySchema** objects can be validated individually with the
 :meth:`~ook.object_tools.validate_property` method.
 
-To create a python type for a given :class:`~ook.object_type.SchemaType` utilize the
-:meth:`~ook.object_tools.create_ook_type` method. **Ook** object instances created by a generated
+To create a python type for a given :class:`~ook.object_type.SchemaType`
+utilize the
+:meth:`~ook.object_tools.create_ook_type` method. **Ook** object instances
+created by a generated
 type are child classes of the :class:`~ook.object_types` class.
 
 Object Tools
 -------------
 
-**Ook** objects created by either subclassing :class:`~ook.object_type.BaseType` or via
+**Ook** objects created by either subclassing :class:`~ook.object_type
+.BaseType` or via
 :meth:`~create_ook_type`, will need to be validated. Utilize the
 **Ook** object :meth:`~ook.object_tools.validate_object` method for validation.
 
-If the need should arise for validation of an **Ook** object by value, utilize the
+If the need should arise for validation of an **Ook** object by value,
+utilize the
 :meth:`~ook.object_tools.validate_value` method.
 
 """
 import re
 
 from object_type import BaseType
-from schema_type import CollectionTypeSet, SchemaProperty, SchemaType, TypeMap
+from ook import meta_tools
+from schema_type import SchemaProperty, SchemaType
+
 
 def create_ook_type(name, schema):
     """Create an **Ook** type to generate objects with a given schema.
 
-    :param name: The name to apply to the created class, with object_type.BaseType as parent.
+    :param name: The name to apply to the created class, with object_type
+    .BaseType as parent.
     :type name: str
     :param schema: A representation of the schema in dictionary format.
     :type schema: dict
     :return: A class whose base is object_type.BaseType.
     :rtype: ClassType
-    :except ValueError: String name required. Dict or SchemaType schema required.
+    :except ValueError: String name required. Dict or SchemaType schema
+    required.
     """
     if name is None or name is '':
         raise ValueError('The string "name" argument is required.')
@@ -75,23 +87,27 @@ def validate_object(the_object):
         * A property of *the_object* does not meet schema requirements.
 
     """
-    if not isinstance(the_object, BaseType) and not isinstance(the_object, SchemaProperty):
+    if not isinstance(the_object, BaseType) and not isinstance(the_object,
+                                                               SchemaProperty):
         raise ValueError(
-            'Validation can only support validation of objects derived from ook.BaseType.')
+            'Validation can only support validation of objects derived from '
+            'ook.BaseType.')
 
     value_errors = []
 
     for property_name, property_schema in the_object.get_schema().iteritems():
         value = the_object.get(property_name, None)
 
-        _validate_value(property_name, property_schema, value, value_errors)
+        meta_tools._validate_value(
+            property_name, property_schema, value, value_errors)
 
     if value_errors:
         raise ValueError(str.join(' \n', value_errors))
 
 
 def validate_schema(property_schema):
-    """Determine if a schema definition is a valid :class:`~ook.object_type.SchemaType` candidate.
+    """Determine if a schema definition is a valid :class:`~ook.object_type
+    .SchemaType` candidate.
 
     :param property_schema: The schema definition candidate.
     :type property_schema: dict|schema_type.SchemaType
@@ -103,7 +119,8 @@ def validate_schema(property_schema):
     """
     if not isinstance(property_schema, dict):
         raise ValueError(
-            '"property_schema" argument must be of type dict, BaseType, or SchemaType,')
+            '"property_schema" argument must be of type dict, BaseType, '
+            'or SchemaType,')
 
     if not isinstance(property_schema, SchemaProperty):
         SchemaProperty(property_schema)
@@ -111,271 +128,36 @@ def validate_schema(property_schema):
         validate_object(property_schema)
 
 
-
 def validate_value(value, property_schema):
     """Validate a value against a given **SchemaProperty**
 
-    :param value: The value to be validated against the given **SchemaProperty**.
+    :param value: The value to be validated against the given
+    **SchemaProperty**.
     :type value: object
     :param property_schema: The **SchemaProperty** utilized for validation.
-    :type property_schema:  dict, ook.object_tools.BaseType, ook.object_tools.SchemaProperty
+    :type property_schema:  dict, ook.object_tools.BaseType, ook.object_tools
+    .SchemaProperty
     :except ValueError:
 
         - Responds with a value error if the validation is not successful.
 
-        - "property_schema" is not provided or not a dict, **BaseType**, or **SchemaProperty**
+        - "property_schema" is not provided or not a dict, **BaseType**,
+        or **SchemaProperty**
     """
     if property_schema is None:
         raise ValueError('"property_schema" is not provided.')
     if not isinstance(property_schema, dict):
-        raise ValueError('"property_schema" is not of type dict, BaseType, or SchemaProperty.')
+        raise ValueError(
+            '"property_schema" is not of type dict, BaseType, '
+            'or SchemaProperty.')
 
     if not isinstance(property_schema, SchemaProperty):
         property_schema = SchemaProperty(property_schema)
 
     value_errors = []
 
-    _validate_value('value', property_schema, value, value_errors)
+    meta_tools._validate_value('value', property_schema, value, value_errors)
 
     if value_errors:
         raise ValueError(str.join(' \n', value_errors))
-
-
-def _validate_value(key, property_schema, value, value_errors):
-    """
-
-    :param key:
-    :type key:
-    :param property_schema:
-    :type property_schema:
-    :param value:
-    :type value:
-    :param value_errors:
-    :type value_errors:
-    :return:
-    :rtype:
-    """
-
-    # required: True | False
-    required = property_schema.get('required', False)
-    if required and value is None:
-        value_errors.append('The value for "%s" is required.' % key)
-        return  # No other validation can occur without the required value
-
-    if value is not None:
-        _validate_non_none_value(key, property_schema, value, value_errors)
-
-
-def _validate_non_none_value(key, property_schema, value, value_errors):
-    """
-
-    :param key:
-    :type key:
-    :param property_schema:
-    :type property_schema:
-    :param value:
-    :type value:
-    :param value_errors:
-    :type value_errors:
-    :return:
-    :rtype:
-    """
-    # Divide between single and collection types for validation processing.
-    schema_value_type = TypeMap.get(property_schema.get('type', None), None)
-
-    if not schema_value_type:
-        # if no schema_type, then just check that the value is in an enum if necessary.
-        if not _enum_validation(property_schema, value):
-            value_errors.append(
-                'The value "%s" for "%s" not in enumeration %s.' %
-                (value, key, list(property_schema.enum)))
-            return  # No further processing can occur
-    else:
-        # type checking
-        if not isinstance(value, schema_value_type):
-            value_errors.append(
-                'The value for "%s" is not of type "%s": %s' %
-                (key, property_schema.type, str(value)))
-            return  # If not of the expected type, than can't further validate without errors.
-
-        if schema_value_type in CollectionTypeSet:
-            _validate_collections(key, property_schema, value, value_errors)
-        else:
-            if not _enum_validation(property_schema, value):
-                value_errors.append(
-                    'The value "%s" for "%s" not in enumeration %s.' %
-                    (value, key, list(property_schema.enum)))
-                return  # No further processing can occur
-
-            #todo: raul - split this up into collection and single validation.
-            _non_none_value_validation(key, property_schema, value, value_errors)
-
-
-def _validate_collections(key, property_schema, value, value_errors):
-    """
-
-    :param key:
-    :type key:
-    :param property_schema:
-    :type property_schema:
-    :param value:
-    :type value:
-    :param value_errors:
-    :type value_errors:
-    :return:
-    :rtype:
-    """
-    if not _min_validation(property_schema, value):
-        value_errors.append('The value of "%s" for "%s" fails min of %s.' %
-                            (value, key, property_schema.min))
-
-    if not _max_validation(property_schema, value):
-        value_errors.append('The value of "%s" for "%s" fails max of %s.' %
-                            (value, key, property_schema.max))
-
-    if property_schema.type in {'list', 'set'}:
-        validation_list = list()
-        if property_schema.enum:
-            def validate_enum(item, property_schema, value_errors):
-                if not _enum_validation(property_schema, item):
-                    value_errors.append(
-                        'The value "%s" for "%s" not in enumeration %s.' %
-                        (item, value, list(property_schema.enum)))
-
-            validation_list.append(validate_enum)
-
-        if property_schema.item_type:
-            def validate_item_type(item, property_schema, value_errors):
-                schema_value_type = TypeMap.get(property_schema.item_type)
-                if not isinstance(item, schema_value_type):
-                    value_errors.append(
-                        'The value for "%s" is not of type "%s": %s' %
-                        (value, property_schema.item_type, str(item)))
-
-            validation_list.append(validate_item_type)
-
-            if property_schema.regex and property_schema.type == 'str':
-                def validate_item_regex(item, property_schema, value_errors):
-                    if not re.match(property_schema.regex, value):
-                        value_errors.append(
-                            'Value "%s" for %s does not meet regex: %s' %
-                            (item, value, property_schema.regex))
-
-                validation_list.append(validate_item_regex)
-
-        if property_schema.item_min:
-            def validate_item_min(item, property_schema, value_errors):
-                if ((property_schema.item_type == 'str') and
-                            len(item) < property_schema.item_min):
-                    value_errors.append('The value of "%s" for "%s" fails min of %s.' %
-                                        (item, value, property_schema.type_min))
-                elif ((property_schema.item_type in {'int', 'float'})
-                      and item < property_schema.type_min):
-                    value_errors.append('The value of "%s" for "%s" fails min of %s.' %
-                                        (item, value, property_schema.min))
-
-            validation_list.append(validate_item_min)
-
-        if property_schema.item_max:
-            def validate_item_max(item, property_schema, value_errors):
-                if ((property_schema.item_type == 'str') and
-                            len(item) > property_schema.item_max):
-                    value_errors.append('The value of "%s" for "%s" fails max of %s.' %
-                                        (item, value, property_schema.type_min))
-                elif ((property_schema.item_type in {'int', 'float'})
-                      and item < property_schema.type_max):
-                    value_errors.append('The value of "%s" for "%s" fails max of %s.' %
-                                        (item, value, property_schema.max))
-
-            validation_list.append(validate_item_max)
-
-        for item_value in value:
-            _validate_collection_item_value(item_value,
-                                            property_schema,
-                                            validation_list,
-                                            value_errors)
-
-
-def _validate_collection_item_value(item, property_schema, validation_list, value_errors):
-    """
-
-    :param item:
-    :type item: bool, list, set, int, str, float,
-    :param property_schema:
-    :type property_schema:
-    :param validation_list:
-    :type validation_list: list
-    :param value_errors:
-    :type value_errors: list
-    :return:
-    :rtype:
-    """
-    for validation in validation_list:
-        validation(item, property_schema, value_errors)
-
-
-def _enum_validation(property_schema, value):
-    if property_schema.enum:
-        if not value in property_schema.enum:
-            return False
-    return True
-
-
-def _min_validation(property_schema, value):
-    if property_schema.min:
-        if ((property_schema.type == 'str' or
-                     property_schema.type in {'list', 'set', 'dict'})
-            and len(value) < property_schema.min):
-            return False
-        elif ((property_schema.type == 'int' or property_schema.type == 'float')
-              and value < property_schema.min):
-            return False
-
-    return True
-
-
-def _max_validation(property_schema, value):
-    if property_schema.max:
-        if ((property_schema.type == 'str' or
-                     property_schema.type in {'list', 'set', 'dict'})
-            and len(value) > property_schema.max):
-            return False
-        elif ((property_schema.type == 'int' or property_schema.type == 'float')
-              and value > property_schema.max):
-            return False
-
-    return True
-
-
-def _non_none_value_validation(key, property_schema, value, value_errors):
-    """ Method to validate an object value meets schema requirements.
-
-    :param key:
-    :type key:
-    :param property_schema:
-    :type property_schema:
-    :param value:
-    :type value:
-    :param value_errors:
-    :type value_errors:
-    :return:
-    :rtype:
-    """
-    # min
-    if not _min_validation(property_schema, value):
-        value_errors.append('The value of "%s" for "%s" fails min of %s.' %
-                            (value, key, property_schema.min))
-
-    # max
-    if not _max_validation(property_schema, value):
-        value_errors.append('The value of "%s" for "%s" fails max of %s.' %
-                            (value, key, property_schema.max))
-
-    # regex validation
-    if property_schema.regex:
-        if property_schema.type == 'str' and value is not '':
-            if not re.match(property_schema.regex, value):
-                value_errors.append(
-                    'Value "%s" for %s does not meet regex: %s' %
-                    (value, key, property_schema.regex))
 

@@ -1,9 +1,23 @@
+# The `type_map` converts the string declaration of attribute type.
+TypeMap = {
+    'bool': bool,
+    'dict': dict,
+    'float': float,
+    'int': int,
+    'list': list,
+    'set': set,
+    'str': basestring,
+}
+
+# The `collection_type_set` is the set of supported collection types.
+CollectionTypeSet = {dict, list, set}
 
 
 class _CoreType(dict):
     """The root type of *Ook* types.
 
-    **_CoreType** ensures that *Ook* objects can be access by either dict key or object attribute.
+    **_CoreType** ensures that *Ook* objects can be access by either dict key
+    or object attribute.
 
     :Example:
     >>> some_object = _CoreType({'key1': 'value1'})
@@ -23,7 +37,8 @@ class _CoreType(dict):
         :param kwargs: Named args to be passed to `dict` parent class.
         :type kwargs: dict
 
-        Initializes the accessor behavior to allow for property access as dict key or object
+        Initializes the accessor behavior to allow for property access as
+        dict key or object
         attribute.
         """
         # noinspection PyTypeChecker
