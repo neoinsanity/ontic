@@ -1,6 +1,6 @@
 """Test the basic functionality of the schema data types."""
 
-import base_test_case
+from test_utils import base_test_case
 
 from ook.schema_type import SchemaProperty, SchemaType
 
@@ -32,7 +32,7 @@ class SchemaTypeTest(base_test_case.BaseTestCase):
         self.assertTrue('property1' in schema_object)
 
         schema_object = SchemaType(
-            property1= {
+            property1={
                 'type': 'int',
             }
         )

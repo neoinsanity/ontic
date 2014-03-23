@@ -87,8 +87,8 @@ def validate_object(the_object):
         * A property of *the_object* does not meet schema requirements.
 
     """
-    if not isinstance(the_object, BaseType) and not isinstance(the_object,
-                                                               SchemaProperty):
+    if (not isinstance(the_object, BaseType) and
+            not isinstance(the_object, SchemaProperty)):
         raise ValueError(
             'Validation can only support validation of objects derived from '
             'ook.BaseType.')
@@ -105,30 +105,7 @@ def validate_object(the_object):
         raise ValueError(str.join(' \n', value_errors))
 
 
-def validate_schema(property_schema):
-    """Determine if a schema definition is a valid :class:`~ook.object_type
-    .SchemaType` candidate.
-
-    :param property_schema: The schema definition candidate.
-    :type property_schema: dict|schema_type.SchemaType
-    :except ValueError:
-
-        * *property_schema* is not a dict, **BaseType**, or *SchemaType*.
-
-        * *property_schema* is not a valid **Ook** schema definition.
-    """
-    if not isinstance(property_schema, dict):
-        raise ValueError(
-            '"property_schema" argument must be of type dict, BaseType, '
-            'or SchemaType,')
-
-    if not isinstance(property_schema, SchemaProperty):
-        SchemaProperty(property_schema)
-    else:
-        validate_object(property_schema)
-
-
-def validate_value(value, property_schema):
+def validate_value(property_name, ook_object):
     """Validate a value against a given **SchemaProperty**
 
     :param value: The value to be validated against the given
@@ -144,19 +121,30 @@ def validate_value(value, property_schema):
         - "property_schema" is not provided or not a dict, **BaseType**,
         or **SchemaProperty**
     """
-    if property_schema is None:
-        raise ValueError('"property_schema" is not provided.')
-    if not isinstance(property_schema, dict):
+    if property_name is None:
         raise ValueError(
-            '"property_schema" is not of type dict, BaseType, '
-            'or SchemaProperty.')
-
-    if not isinstance(property_schema, SchemaProperty):
-        property_schema = SchemaProperty(property_schema)
+            '"property_name" is required, cannot be None.')
+    if not isinstance(property_name, basestring) or len(property_name) < 1:
+        raise ValueError(
+            '"property_name" is not a valid string.')
+    if ook_object is None:
+        raise ValueError(
+            '"ook_object" is required, cannot be None.')
+    if not isinstance(ook_object, BaseType):
+        raise ValueError(
+            '"ook_object" must be BaseType or child type of BaseType.')
 
     value_errors = []
 
-    meta_tools._validate_value('value', property_schema, value, value_errors)
+    property_schema = ook_object.get_schema().get(property_name)
+    if property_schema is None:
+        raise ValueError(
+            '"property_name" is not a recognized property.')
+
+    value = ook_object.get(property_name, None)
+
+    meta_tools._validate_value(
+        property_name, property_schema, value, value_errors)
 
     if value_errors:
         raise ValueError(str.join(' \n', value_errors))

@@ -1,6 +1,6 @@
 """Test the basic functionality of the core and meta data types."""
 
-import base_test_case
+from test_utils import base_test_case
 
 from ook.meta_type import _CoreType, MetaType
 

@@ -1,4 +1,3 @@
-
 import meta_tools
 from schema_type import SchemaType, SchemaProperty
 
@@ -22,9 +21,15 @@ def validate_schema(candidate_schema):
     :rtype:
     """
     if candidate_schema is None:
-        raise ValueError('candidate_schema must be provided.')
+        raise ValueError('"candidate_schema" must be provided.')
     if not isinstance(candidate_schema, SchemaType):
-        raise ValueError('candidate_schema must be of SchemaType.')
+        raise ValueError('"candidate_schema" must be of SchemaType.')
+
+    value_errors = []
+    for candidate_property_schema in candidate_schema.values():
+        validate_schema_property(candidate_property_schema)
+
+    return value_errors
 
 
 def perfect_schema_property(candidate_schema_property):
@@ -64,13 +69,14 @@ def validate_schema_property(candidate_schema_property):
 
     value_errors = []
 
-    for schema_setting, setting_schema in candidate_schema_property\
+    for schema_setting, setting_schema in candidate_schema_property \
             .get_schema().iteritems():
         setting_value = candidate_schema_property.get(schema_setting, None)
 
-        meta_tools._validate_value(schema_setting, setting_schema,
+        meta_tools._validate_value(schema_setting,
+                                   setting_schema,
                                    setting_value,
-                        value_errors)
+                                   value_errors)
 
 
 

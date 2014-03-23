@@ -1,6 +1,6 @@
 """Test the basic functionality of the base and core data types."""
-import base_test_case
 from ook import object_type
+from test.test_utils import base_test_case
 
 
 class BaseTypeTest(base_test_case.BaseTestCase):

@@ -1,7 +1,37 @@
-import base_test_case
+from test_utils import base_test_case
 
 from ook import schema_tools
 from ook.schema_type import SchemaProperty, SchemaType
+
+
+class ValidateSchemaTestCase(base_test_case.BaseTestCase):
+    """Test schema_tools.validate_schema method."""
+
+    def test_bad_validate_schema(self):
+        """ValueError testing of validate_schema."""
+        self.assertRaisesRegexp(
+            ValueError,
+            '"candidate_schema" must be provided.',
+            schema_tools.validate_schema, None)
+        self.assertRaisesRegexp(
+            ValueError,
+            '"candidate_schema" must be of SchemaType.',
+            schema_tools.validate_schema, "not a schema")
+
+    def test_validate_schema(self):
+        """Valid schema testing of validate_schema."""
+        schema = SchemaType({'some_property': {'type': 'int'}})
+
+        # Dict test
+        schema_tools.validate_schema(schema)
+
+        # BaseType test
+        base_type_schema = SchemaType(schema)
+        schema_tools.validate_schema(base_type_schema)
+
+        # SchemaType test
+        schema_type_schema = SchemaType(schema)
+        schema_tools.validate_schema(schema_type_schema)
 
 
 class PerfectSchemaPropertyTestCase(base_test_case.BaseTestCase):
