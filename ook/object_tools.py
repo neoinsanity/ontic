@@ -40,8 +40,8 @@ utilize the
 """
 import re
 
+import meta_tools
 from object_type import BaseType
-from ook import meta_tools
 from schema_type import SchemaProperty, SchemaType
 
 

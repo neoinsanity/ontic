@@ -1,7 +1,6 @@
-import re
 
-from ook import meta_tools
-from ook.schema_type import SchemaType, SchemaProperty
+import meta_tools
+from schema_type import SchemaType, SchemaProperty
 
 
 def perfect_schema(candidate_schema):
