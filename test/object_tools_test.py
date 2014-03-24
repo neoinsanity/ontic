@@ -2,8 +2,6 @@
 from test_utils import base_test_case
 
 from ook import object_tools
-from ook.object_type import BaseType
-from ook.schema_type import SchemaProperty
 
 
 class CreateOokTypeTestCase(base_test_case.BaseTestCase):
@@ -39,11 +37,13 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         """ValueError testing of validate_object."""
         self.assertRaisesRegexp(
             ValueError,
-            'Validation can only support validation of objects derived from ook.BaseType.',
+            'Validation can only support validation of objects derived from '
+            'ook.BaseType.',
             object_tools.validate_object, None)
         self.assertRaisesRegexp(
             ValueError,
-            'Validation can only support validation of objects derived from ook.BaseType.',
+            'Validation can only support validation of objects derived from '
+            'ook.BaseType.',
             object_tools.validate_object, 'Not a BaseType')
 
     def test_type_setting(self):
@@ -191,7 +191,8 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         ook_object.enum_property = ['fish']
         self.assertRaisesRegexp(
             ValueError,
-            r'''The value "fish" for "\['fish'\]" not in enumeration \['dog', 'cat'\].''',
+            r'''The value "fish" for "\['fish'\]" not in enumeration '''
+            r'''\['dog', 'cat'\].''',
             object_tools.validate_object, ook_object)
 
     def test_min_setting(self):
@@ -225,42 +226,48 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         # Str failure
         ook_object.str_min_property = '1'
         self.assertRaisesRegexp(ValueError,
-                                'The value of "1" for "str_min_property" fails min of 5.',
+                                'The value of "1" for "str_min_property" '
+                                'fails min of 5.',
                                 object_tools.validate_object, ook_object)
         ook_object.str_min_property = '8 letters'
 
         # Int failure
         ook_object.int_min_property = 5
         self.assertRaisesRegexp(ValueError,
-                                'The value of "5" for "int_min_property" fails min of 10.',
+                                'The value of "5" for "int_min_property" '
+                                'fails min of 10.',
                                 object_tools.validate_object, ook_object)
         ook_object.int_min_property = 20
 
         # Float failure
         ook_object.float_min_property = 15.0
         self.assertRaisesRegexp(ValueError,
-                                'The value of "15.0" for "float_min_property" fails min of 20.',
+                                'The value of "15.0" for "float_min_property" '
+                                'fails min of 20.',
                                 object_tools.validate_object, ook_object)
         ook_object.float_min_property = 30.0
 
         # List failure
         ook_object.list_min_property = list()
         self.assertRaisesRegexp(ValueError,
-                                'The value of "\[]" for "list_min_property" fails min of 1.',
+                                'The value of "\[]" for "list_min_property" '
+                                'fails min of 1.',
                                 object_tools.validate_object, ook_object)
         ook_object.list_min_property = ['one item']
 
         # Set failure
         ook_object.set_min_property = set()
         self.assertRaisesRegexp(ValueError,
-                                'The value of "set\(\[]\)" for "set_min_property" fails min of 1.',
+                                'The value of "set\(\[]\)" for '
+                                '"set_min_property" fails min of 1.',
                                 object_tools.validate_object, ook_object)
         ook_object.set_min_property = {'one item'}
 
         # Dict failure
         ook_object.dict_min_property = dict()
         self.assertRaisesRegexp(ValueError,
-                                'The value of "{}" for "dict_min_property" fails min of 1.',
+                                'The value of "{}" for "dict_min_property" '
+                                'fails min of 1.',
                                 object_tools.validate_object, ook_object)
         ook_object.dict_min_property = {'some_key': 'one_item'}
 
@@ -296,14 +303,16 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         # Str failure
         ook_object.str_max_property = '8 letters'
         self.assertRaisesRegexp(ValueError,
-                                'The value of "8 letters" for "str_max_property" fails max of 5.',
+                                'The value of "8 letters" for '
+                                '"str_max_property" fails max of 5.',
                                 object_tools.validate_object, ook_object)
         ook_object.str_max_property = 'small'
 
         # Int failure
         ook_object.int_max_property = 20
         self.assertRaisesRegexp(ValueError,
-                                'The value of "20" for "int_max_property" fails max of 10.',
+                                'The value of "20" for "int_max_property" '
+                                'fails max of 10.',
                                 object_tools.validate_object, ook_object)
         ook_object.int_max_property = 5
 
@@ -334,10 +343,12 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         ook_object.set_max_property = {'one item'}
 
         # Dict failure
-        ook_object.dict_max_property = {'some_key': 'one_item', 'another_key': 'two_item'}
+        ook_object.dict_max_property = {'some_key': 'one_item',
+                                        'another_key': 'two_item'}
         self.assertRaisesRegexp(
             ValueError,
-            'The value of "{\'another_key\': \'two_item\', \'some_key\': \'one_item\'}" for '
+            'The value of "{\'another_key\': \'two_item\', \'some_key\': '
+            '\'one_item\'}" for '
             '"dict_max_property" fails max of 1.',
             object_tools.validate_object, ook_object)
         ook_object.dict_max_property = {'some_key': 'one_item'}
@@ -363,7 +374,8 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         # Bad test
         ook_object.b_only_property = 'a'
         self.assertRaisesRegexp(ValueError,
-                                'Value \"a\" for b_only_property does not meet regex: \^b\+',
+                                'Value \"a\" for b_only_property does not '
+                                'meet regex: \^b\+',
                                 object_tools.validate_object, ook_object)
 
 
@@ -385,7 +397,7 @@ class ValidateValueTestCase(base_test_case.BaseTestCase):
         ook_type = object_tools.create_ook_type(
             'BadValidateValue',
             {
-                'prop1': {'type':'int'}
+                'prop1': {'type': 'int'}
             })
         ook_object = ook_type()
         ook_object.prop1 = 1

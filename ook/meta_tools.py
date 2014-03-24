@@ -3,7 +3,7 @@ import re
 from meta_type import CollectionTypeSet, TypeMap
 
 
-def _validate_value(key, property_schema, value, value_errors):
+def validate_value(key, property_schema, value, value_errors):
     """
 
     :param key:
@@ -24,10 +24,10 @@ def _validate_value(key, property_schema, value, value_errors):
         return  # No other validation can occur without the required value
 
     if value is not None:
-        _validate_non_none_value(key, property_schema, value, value_errors)
+        validate_non_none_value(key, property_schema, value, value_errors)
 
 
-def _validate_non_none_value(key, property_schema, value, value_errors):
+def validate_non_none_value(key, property_schema, value, value_errors):
     """
 
     :param key:
@@ -47,7 +47,7 @@ def _validate_non_none_value(key, property_schema, value, value_errors):
     if not schema_value_type:
         # if no schema_type, then just check that the value is in an enum if
         # necessary.
-        if not _enum_validation(property_schema, value):
+        if not enum_validation(property_schema, value):
             value_errors.append(
                 'The value "%s" for "%s" not in enumeration %s.' %
                 (value, key, list(property_schema.enum)))
@@ -62,9 +62,9 @@ def _validate_non_none_value(key, property_schema, value, value_errors):
             # validate without errors.
 
         if schema_value_type in CollectionTypeSet:
-            _validate_collections(key, property_schema, value, value_errors)
+            validate_collections(key, property_schema, value, value_errors)
         else:
-            if not _enum_validation(property_schema, value):
+            if not enum_validation(property_schema, value):
                 value_errors.append(
                     'The value "%s" for "%s" not in enumeration %s.' %
                     (value, key, list(property_schema.enum)))
@@ -74,7 +74,7 @@ def _validate_non_none_value(key, property_schema, value, value_errors):
             non_none_value_validation(key, property_schema, value, value_errors)
 
 
-def _validate_collections(key, property_schema, value, value_errors):
+def validate_collections(key, property_schema, value, value_errors):
     """
 
     :param key:
@@ -100,7 +100,7 @@ def _validate_collections(key, property_schema, value, value_errors):
         validation_list = list()
         if property_schema.enum:
             def validate_enum(item, property_schema, value_errors):
-                if not _enum_validation(property_schema, item):
+                if not enum_validation(property_schema, item):
                     value_errors.append(
                         'The value "%s" for "%s" not in enumeration %s.' %
                         (item, value, list(property_schema.enum)))
@@ -157,13 +157,13 @@ def _validate_collections(key, property_schema, value, value_errors):
             validation_list.append(validate_item_max)
 
         for item_value in value:
-            _validate_collection_item_value(item_value,
+            validate_collection_item_value(item_value,
                                             property_schema,
                                             validation_list,
                                             value_errors)
 
 
-def _validate_collection_item_value(item, property_schema, validation_list,
+def validate_collection_item_value(item, property_schema, validation_list,
                                     value_errors):
     """
 
@@ -182,7 +182,7 @@ def _validate_collection_item_value(item, property_schema, validation_list,
         validation(item, property_schema, value_errors)
 
 
-def _enum_validation(property_schema, value):
+def enum_validation(property_schema, value):
     if property_schema.enum:
         if not value in property_schema.enum:
             return False

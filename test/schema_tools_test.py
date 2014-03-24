@@ -4,6 +4,19 @@ from ook import schema_tools
 from ook.schema_type import SchemaProperty, SchemaType
 
 
+class ValidateSchemaProperty(base_test_case.BaseTestCase):
+    def test_bad_validate_schema_property(self):
+        self.assertRaisesRegexp(
+            ValueError,
+            '"candidate_schema_property" must be provided.',
+            schema_tools.validate_schema_property, None)
+
+        self.assertRaisesRegexp(
+            ValueError,
+            '"candidate_schema_property" must be SchemaProperty type.',
+            schema_tools.validate_schema_property, {})
+
+
 class ValidateSchemaTestCase(base_test_case.BaseTestCase):
     """Test schema_tools.validate_schema method."""
 
@@ -110,6 +123,17 @@ class PerfectSchemaPropertyTestCase(base_test_case.BaseTestCase):
                 'type': 'int'
             }, candidate_schema_property)
 
+    def test_bad_perfect_schema_property(self):
+        self.assertRaisesRegexp(
+            ValueError,
+            '"candidate_schema_property" must be provided.',
+            schema_tools.perfect_schema_property, None)
+
+        self.assertRaisesRegexp(
+            ValueError,
+            '"candidate_schema_property" must be SchemaProperty type.',
+            schema_tools.perfect_schema_property, {})
+
 
 class PerfectSchemaTestCase(base_test_case.BaseTestCase):
     def test_perfect_schema_type(self):
@@ -181,3 +205,14 @@ class PerfectSchemaTestCase(base_test_case.BaseTestCase):
             }, candidate_schema)
         self.assertIsInstance(candidate_schema.prop1, SchemaProperty)
         self.assertIsInstance(candidate_schema.prop2, SchemaProperty)
+
+    def test_bad_perfect_schema(self):
+        self.assertRaisesRegexp(
+            ValueError,
+            '"candidate_schema" must be provided.',
+            schema_tools.perfect_schema, None)
+
+        self.assertRaisesRegexp(
+            ValueError,
+            '"candidate_schema" must be of SchemaType.',
+            schema_tools.perfect_schema, {})
