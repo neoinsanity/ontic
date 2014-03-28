@@ -378,6 +378,161 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
                                 'meet regex: \^b\+',
                                 object_tools.validate_object, ook_object)
 
+    def test_item_type_setting(self):
+        schema = {
+            'list_property': {'type': 'list', 'item_type': 'str'}
+        }
+
+        ook_type = object_tools.create_ook_type('ItemTypeCheck', schema)
+        self.assertIsNotNone(ook_type)
+
+        ook_object = ook_type()
+
+        # None test, with no required fields.
+        object_tools.validate_object(ook_object)
+
+        # Good test
+        ook_object.list_property = []
+        object_tools.validate_object(ook_object)
+        ook_object.list_property.append('some_item')
+        object_tools.validate_object(ook_object)
+
+        # Bad test
+        ook_object.list_property.append(99)
+        self.assertRaisesRegexp(
+            ValueError,
+            r'''The value for "\['some_item', 99\]" is not of type "str": 99''',
+            object_tools.validate_object, ook_object)
+
+    def test_collection_regex_setting(self):
+        schema = {
+            'set_property': {'type': 'set', 'item_type': 'str', 'regex': 'b+'}
+        }
+
+        ook_type = object_tools.create_ook_type('CollectionRegexCheck', schema)
+        self.assertIsNotNone(ook_type)
+
+        ook_object = ook_type()
+
+        # None test, with no required fields.
+        object_tools.validate_object(ook_object)
+
+        # Good test
+        ook_object.set_property = set()
+        object_tools.validate_object(ook_object)
+        ook_object.set_property.add('bbbbb')
+        object_tools.validate_object(ook_object)
+
+        # Bad test
+        ook_object.set_property.add('xxxxxx')
+        self.assertRaisesRegexp(
+            ValueError,
+            r'''Value "xxxxxx" for set\(\['xxxxxx', 'bbbbb'\]\) does not meet regex: b+''',
+            object_tools.validate_object, ook_object)
+
+    def test_item_min_setting(self):
+        # Test the item min setting for string items.
+        schema = {
+            'list_property': {'type': 'list', 'item_type': 'str', 'item_min': 4}
+        }
+
+        ook_type = object_tools.create_ook_type('StrItemMinCheck', schema)
+        self.assertIsNotNone(ook_type)
+
+        ook_object = ook_type()
+
+        # None test, with no required fields.
+        object_tools.validate_object(ook_object)
+
+        # Good Test
+        ook_object.list_property = []
+        object_tools.validate_object(ook_object)
+        ook_object.list_property.append('four')
+        object_tools.validate_object(ook_object)
+
+        # Bad Test
+        ook_object.list_property.append('one')
+        self.assertRaisesRegexp(ValueError,
+                                r'''The value of "one" for "\['four', 'one'\]" fails min of 4.''',
+                                object_tools.validate_object, ook_object)
+
+        # Test the item min setting for numeric items.
+        schema = {
+            'list_property': {'type': 'list', 'item_type': 'int', 'item_min': 4}
+        }
+
+        ook_type = object_tools.create_ook_type('StrItemMinCheck', schema)
+        self.assertIsNotNone(ook_type)
+
+        ook_object = ook_type()
+
+        # None test, with no required fields.
+        object_tools.validate_object(ook_object)
+
+        # Good Test
+        ook_object.list_property = []
+        object_tools.validate_object(ook_object)
+        ook_object.list_property.append(4)
+        object_tools.validate_object(ook_object)
+
+        # Bad Test
+        ook_object.list_property.append(1)
+        self.assertRaisesRegexp(ValueError,
+                                r'''The value of "1" for "\[4, 1\]" fails min of 4.''',
+                                object_tools.validate_object, ook_object)
+
+    def test_item_max_setting(self):
+        # Test the item max setting for string items.
+        schema = {
+            'list_property': {'type': 'list', 'item_type': 'str', 'item_max': 4}
+        }
+
+        ook_type = object_tools.create_ook_type('StrItemMinCheck', schema)
+        self.assertIsNotNone(ook_type)
+
+        ook_object = ook_type()
+
+        # None test, with no required fields.
+        object_tools.validate_object(ook_object)
+
+        # Good Test
+        ook_object.list_property = []
+        object_tools.validate_object(ook_object)
+        ook_object.list_property.append('four')
+        object_tools.validate_object(ook_object)
+
+        # Bad Test
+        ook_object.list_property.append('seven')
+        self.assertRaisesRegexp(
+            ValueError,
+            r'''The value of "seven" for "\['four', 'seven'\]" fails max of 4.''',
+            object_tools.validate_object, ook_object)
+
+        # Test the item min setting for numeric items.
+        schema = {
+            'list_property': {'type': 'list', 'item_type': 'int', 'item_max': 4}
+        }
+
+        ook_type = object_tools.create_ook_type('StrItemMinCheck', schema)
+        self.assertIsNotNone(ook_type)
+
+        ook_object = ook_type()
+
+        # None test, with no required fields.
+        object_tools.validate_object(ook_object)
+
+        # Good Test
+        ook_object.list_property = []
+        object_tools.validate_object(ook_object)
+        ook_object.list_property.append(4)
+        object_tools.validate_object(ook_object)
+
+        # Bad Test
+        ook_object.list_property.append(7)
+        self.assertRaisesRegexp(ValueError,
+                                r'''The value of "7" for "\[4, 7\]" fails max of 4.''',
+                                object_tools.validate_object, ook_object)
+
 
 class ValidateValueTestCase(base_test_case.BaseTestCase):
     """Test object_tools.validate_value method."""

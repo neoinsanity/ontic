@@ -117,9 +117,9 @@ def validate_collections(key, property_schema, value, value_errors):
 
             validation_list.append(validate_item_type)
 
-            if property_schema.regex and property_schema.type == 'str':
+            if property_schema.regex and property_schema.item_type == 'str':
                 def validate_item_regex(item, property_schema, value_errors):
-                    if not re.match(property_schema.regex, value):
+                    if not re.match(property_schema.regex, item):
                         value_errors.append(
                             'Value "%s" for %s does not meet regex: %s' %
                             (item, value, property_schema.regex))
@@ -132,12 +132,12 @@ def validate_collections(key, property_schema, value, value_errors):
                             len(item) < property_schema.item_min):
                     value_errors.append(
                         'The value of "%s" for "%s" fails min of %s.' %
-                        (item, value, property_schema.type_min))
+                        (item, value, property_schema.item_min))
                 elif ((property_schema.item_type in {'int', 'float'})
-                      and item < property_schema.type_min):
+                      and item < property_schema.item_min):
                     value_errors.append(
                         'The value of "%s" for "%s" fails min of %s.' %
-                        (item, value, property_schema.min))
+                        (item, value, property_schema.item_min))
 
             validation_list.append(validate_item_min)
 
@@ -147,12 +147,12 @@ def validate_collections(key, property_schema, value, value_errors):
                             len(item) > property_schema.item_max):
                     value_errors.append(
                         'The value of "%s" for "%s" fails max of %s.' %
-                        (item, value, property_schema.type_min))
+                        (item, value, property_schema.item_max))
                 elif ((property_schema.item_type in {'int', 'float'})
-                      and item < property_schema.type_max):
+                      and item > property_schema.item_max):
                     value_errors.append(
                         'The value of "%s" for "%s" fails max of %s.' %
-                        (item, value, property_schema.max))
+                        (item, value, property_schema.item_max))
 
             validation_list.append(validate_item_max)
 
