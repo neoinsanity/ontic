@@ -2,6 +2,7 @@
 from test_utils import base_test_case
 
 from ook import object_tools
+from ook.schema_type import SchemaType
 
 
 class CreateOokTypeTestCase(base_test_case.BaseTestCase):
@@ -21,7 +22,17 @@ class CreateOokTypeTestCase(base_test_case.BaseTestCase):
 
     def test_create_ook_type(self):
         """The most simple and basic dynamic Ook."""
+        # Test creation from raw dictionary.
         ook_type = object_tools.create_ook_type('Simple', dict())
+
+        self.assertIsNotNone(ook_type)
+
+        ook_object = ook_type()
+        self.assert_dynamic_accessing(ook_object)
+        self.assertIsInstance(ook_object, ook_type)
+
+        # Test creation using a SchemaType object.
+        ook_type = object_tools.create_ook_type('AnotherSimple', SchemaType())
 
         self.assertIsNotNone(ook_type)
 
@@ -368,6 +379,8 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         object_tools.validate_object(ook_object)
 
         # Good test
+        ook_object.b_only_property = ''
+        object_tools.validate_object(ook_object)
         ook_object.b_only_property = 'b'
         object_tools.validate_object(ook_object)
 
@@ -379,6 +392,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
                                 object_tools.validate_object, ook_object)
 
     def test_item_type_setting(self):
+        """Validate 'item_type' setting."""
         schema = {
             'list_property': {'type': 'list', 'item_type': 'str'}
         }
@@ -405,6 +419,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
             object_tools.validate_object, ook_object)
 
     def test_collection_regex_setting(self):
+        """Validate string collection with 'regex' setting."""
         schema = {
             'set_property': {'type': 'set', 'item_type': 'str', 'regex': 'b+'}
         }
@@ -431,6 +446,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
             object_tools.validate_object, ook_object)
 
     def test_item_min_setting(self):
+        """Validate 'item_min' setting."""
         # Test the item min setting for string items.
         schema = {
             'list_property': {'type': 'list', 'item_type': 'str', 'item_min': 4}
@@ -482,6 +498,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
                                 object_tools.validate_object, ook_object)
 
     def test_item_max_setting(self):
+        """Validate 'item_max' setting."""
         # Test the item max setting for string items.
         schema = {
             'list_property': {'type': 'list', 'item_type': 'str', 'item_max': 4}

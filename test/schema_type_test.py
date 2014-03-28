@@ -10,9 +10,6 @@ class SchemaPropertyTest(base_test_case.BaseTestCase):
 
     def test_core_type_instantiation(self):
         """SchemaProperty instantiation testing to confirm dict behavior."""
-        # schema_property = SchemaProperty()
-        # self.assertIsNotNone(schema_property)
-
         schema_property = SchemaProperty({'type': 'int', 'required': True})
         self.assertIsNotNone(schema_property)
 
@@ -21,6 +18,7 @@ class SchemaTypeTest(base_test_case.BaseTestCase):
     """SchemaType test cases."""
 
     def test_schema_definition(self):
+        """SchemaType instantiation testing to confirm dict behaviour."""
         schema_object = SchemaType()
         self.assertIsNotNone(schema_object)
 
@@ -31,8 +29,3 @@ class SchemaTypeTest(base_test_case.BaseTestCase):
         self.assertTrue(hasattr(schema_object, 'property1'))
         self.assertTrue('property1' in schema_object)
 
-        schema_object = SchemaType(
-            property1={
-                'type': 'int',
-            }
-        )
