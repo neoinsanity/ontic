@@ -48,15 +48,15 @@ from schema_type import SchemaProperty, SchemaType
 def create_ook_type(name, schema):
     """Create an **Ook** type to generate objects with a given schema.
 
-    :param name: The name to apply to the created class, with object_type
-    .BaseType as parent.
+    :param name: The name to apply to the created class, with
+        object_type.BaseType as parent.
     :type name: str
     :param schema: A representation of the schema in dictionary format.
     :type schema: dict
     :return: A class whose base is object_type.BaseType.
     :rtype: ClassType
     :except ValueError: String name required. Dict or SchemaType schema
-    required.
+        required.
     """
     if name is None or name is '':
         raise ValueError('The string "name" argument is required.')
@@ -109,17 +109,17 @@ def validate_value(property_name, ook_object):
     """Validate a value against a given **SchemaProperty**
 
     :param value: The value to be validated against the given
-    **SchemaProperty**.
+        **SchemaProperty**.
     :type value: object
     :param property_schema: The **SchemaProperty** utilized for validation.
-    :type property_schema:  dict, ook.object_tools.BaseType, ook.object_tools
-    .SchemaProperty
+    :type property_schema:  dict, ook.object_tools.BaseType,
+        ook.object_tools.SchemaProperty
     :except ValueError:
 
         - Responds with a value error if the validation is not successful.
 
         - "property_schema" is not provided or not a dict, **BaseType**,
-        or **SchemaProperty**
+            or **SchemaProperty**
     """
     if property_name is None:
         raise ValueError(

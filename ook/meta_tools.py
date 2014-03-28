@@ -3,28 +3,26 @@ import re
 from meta_type import CollectionTypeSet, TypeMap
 
 
-def validate_value(key, property_schema, value, value_errors):
-    """
+def validate_value(name, property_schema, value, value_errors):
+    """Method to validate a given value against a given property schema.
 
-    :param key:
-    :type key:
-    :param property_schema:
-    :type property_schema:
-    :param value:
-    :type value:
-    :param value_errors:
-    :type value_errors:
-    :return:
-    :rtype:
+    :param name: The name of the value to be validated.
+    :type name: str
+    :param property_schema: The property schema that contains the validation rules.
+    :type property_schema: ook.schema_type.SchemaProperty
+    :param value: The value that is to be validated.
+    :type value: object
+    :param value_errors: A list that is utilized to collect the errors found during schema
+        validation.
+    :type value_errors: list
     """
-
     # required: True | False
     if property_schema.required and value is None:
-        value_errors.append('The value for "%s" is required.' % key)
+        value_errors.append('The value for "%s" is required.' % name)
         return  # No other validation can occur without the required value
 
     if value is not None:
-        validate_non_none_value(key, property_schema, value, value_errors)
+        validate_non_none_value(name, property_schema, value, value_errors)
 
 
 def validate_non_none_value(key, property_schema, value, value_errors):
@@ -163,8 +161,8 @@ def validate_collections(key, property_schema, value, value_errors):
                                             value_errors)
 
 
-def validate_collection_item_value(item, property_schema, validation_list,
-                                    value_errors):
+def validate_collection_item_value(
+        item, property_schema, validation_list, value_errors):
     """
 
     :param item:

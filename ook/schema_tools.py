@@ -77,6 +77,3 @@ def validate_schema_property(candidate_schema_property):
                                    setting_schema,
                                    setting_value,
                                    value_errors)
-
-
-

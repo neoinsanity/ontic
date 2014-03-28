@@ -68,10 +68,16 @@ patched with any public methods.
 API Specification
 ------------------
 .. toctree::
-    :maxdepth: 2
+  :maxdepth: 2
 
-    ook.object_type
-    ook.object_tools
+  ook
+  ook.meta_type
+  ook.meta_tools
+  ook.object_type
+  ook.object_tools
+  ook.schema_type
+  ook.schema_tools
+
 
 Indices and Tables
 ===================
