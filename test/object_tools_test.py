@@ -1,4 +1,6 @@
 """Testing suite for object_tools module."""
+from datetime import date, datetime, time
+
 from test_utils import base_test_case
 
 from ook import object_tools
@@ -66,7 +68,10 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
             'int_property': {'type': 'int'},
             'list_property': {'type': 'list'},
             'set_property': {'type': 'set'},
-            'str_property': {'type': 'str'}
+            'str_property': {'type': 'str'},
+            'date_property': {'type': 'date'},
+            'time_property': {'type': 'time'},
+            'datetime_property': {'type': 'datetime'},
         }
 
         # Create the type
@@ -87,6 +92,9 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         ook_object.list_property = [5, 6, 7]
         ook_object.set_property = {'dog', 'cat', 'mouse'}
         ook_object.str_property = 'some_string'
+        ook_object.date_property = date(2000, 1, 1)
+        ook_object.time_property = time(12, 30, 30)
+        ook_object.datetime_property = datetime(2001, 1, 1, 12, 30, 30)
         object_tools.validate_object(ook_object)
 
         # Validate with known bad data.
@@ -215,6 +223,10 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
             'list_min_property': {'type': 'list', 'min': 1},
             'set_min_property': {'type': 'set', 'min': 1},
             'dict_min_property': {'type': 'dict', 'min': 1},
+            'date_min_property': {'type': 'date', 'min': date(2000, 1, 1)},
+            'time_min_property': {'type': 'time', 'min': time(12, 30, 30)},
+            'datetime_min_property': {
+                'type': 'datetime', 'min': datetime(2000, 1, 1, 12, 30, 30)}
         }
 
         ook_type = object_tools.create_ook_type('MinCheck', schema)
@@ -232,6 +244,9 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         ook_object.list_min_property = ['one item']
         ook_object.set_min_property = {'one item'}
         ook_object.dict_min_property = {'some_kee': 'one item'}
+        ook_object.date_min_property = date(2001, 1, 1)
+        ook_object.time_min_property = time(13, 30, 30)
+        ook_object.datetime_min_property = datetime(2001, 1, 1)
         object_tools.validate_object(ook_object)
 
         # Str failure
@@ -282,6 +297,30 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
                                 object_tools.validate_object, ook_object)
         ook_object.dict_min_property = {'some_key': 'one_item'}
 
+        # Date failure
+        ook_object.date_min_property = date(1999, 1, 1)
+        self.assertRaisesRegexp(ValueError,
+                                'date_min_property" fails min of 2000-01-01.',
+                                object_tools.validate_object, ook_object)
+        ook_object.date_min_property = date(2001, 1, 1)
+
+        # Time failure
+        ook_object.time_min_property = time(11, 30, 30)
+        self.assertRaisesRegexp(
+            ValueError,
+            'The value of "11:30:30" for "time_min_property" '
+            'fails min of 12:30:30.',
+            object_tools.validate_object, ook_object)
+        ook_object.time_min_property = time(13, 30, 30)
+
+        # Datetime failure
+        ook_object.datetime_min_property = datetime(1999, 1, 1, 11, 30, 30)
+        self.assertRaisesRegexp(
+            ValueError,
+            'The value of "1999-01-01 11:30:30" for "datetime_min_property" '
+            'fails min of 2000-01-01 12:30:30.',
+            object_tools.validate_object, ook_object)
+
     def test_max_setting(self):
         """Validate 'max' schema setting."""
         schema = {
@@ -291,6 +330,10 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
             'list_max_property': {'type': 'list', 'max': 1},
             'set_max_property': {'type': 'set', 'max': 1},
             'dict_max_property': {'type': 'dict', 'max': 1},
+            'date_max_property': {'type': 'date', 'max': date(2000, 1, 1)},
+            'time_max_property': {'type': 'time', 'max': time(12, 30, 30)},
+            'datetime_max_property': {
+                'type': 'datetime', 'max': datetime(2000, 1, 1, 12, 30, 30)}
         }
 
         ook_type = object_tools.create_ook_type('MaxCheck', schema)
@@ -309,6 +352,9 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         ook_object.list_max_property = ['one item']
         ook_object.set_max_property = {'one item'}
         ook_object.dict_max_property = {'some_kee': 'one item'}
+        ook_object.date_max_property = date(1999, 1, 1)
+        ook_object.time_max_property = time(11, 30, 30)
+        ook_object.datetime_max_property = datetime(1999, 1, 1)
         object_tools.validate_object(ook_object)
 
         # Str failure
@@ -363,6 +409,32 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
             '"dict_max_property" fails max of 1.',
             object_tools.validate_object, ook_object)
         ook_object.dict_max_property = {'some_key': 'one_item'}
+
+        # Date failure
+        ook_object.date_max_property = date(2001, 1, 1)
+        self.assertRaisesRegexp(
+            ValueError,
+            'The value of "2001-01-01" for '
+            '"date_max_property" fails max of 2000-01-01.',
+            object_tools.validate_object, ook_object)
+        ook_object.date_max_property = date(2001, 1, 1)
+
+        # Time failure
+        ook_object.time_max_property = time(13, 30, 30)
+        self.assertRaisesRegexp(
+            ValueError,
+            'The value of "13:30:30" for "time_max_property" '
+            'fails max of 12:30:30.',
+            object_tools.validate_object, ook_object)
+        ook_object.time_max_property = time(13, 30, 30)
+
+        # Datetime failure
+        ook_object.datetime_max_property = datetime(2001, 1, 1, 11, 30, 30)
+        self.assertRaisesRegexp(
+            ValueError,
+            'The value of "2001-01-01 11:30:30" for "datetime_max_property" '
+            'fails max of 2000-01-01 12:30:30.',
+            object_tools.validate_object, ook_object)
 
     def test_regex_setting(self):
         """Validate 'regex' schema setting."""
@@ -442,7 +514,8 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         ook_object.set_property.add('xxxxxx')
         self.assertRaisesRegexp(
             ValueError,
-            r'''Value "xxxxxx" for set\(\['xxxxxx', 'bbbbb'\]\) does not meet regex: b+''',
+            r'''Value "xxxxxx" for '''
+            '''set\(\['xxxxxx', 'bbbbb'\]\) does not meet regex: b+''',
             object_tools.validate_object, ook_object)
 
     def test_item_min_setting(self):
@@ -468,9 +541,10 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
 
         # Bad Test
         ook_object.list_property.append('one')
-        self.assertRaisesRegexp(ValueError,
-                                r'''The value of "one" for "\['four', 'one'\]" fails min of 4.''',
-                                object_tools.validate_object, ook_object)
+        self.assertRaisesRegexp(
+            ValueError,
+            r'''The value of "one" for "\['four', 'one'\]" fails min of 4.''',
+            object_tools.validate_object, ook_object)
 
         # Test the item min setting for numeric items.
         schema = {
@@ -493,15 +567,17 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
 
         # Bad Test
         ook_object.list_property.append(1)
-        self.assertRaisesRegexp(ValueError,
-                                r'''The value of "1" for "\[4, 1\]" fails min of 4.''',
-                                object_tools.validate_object, ook_object)
+        self.assertRaisesRegexp(
+            ValueError,
+            r'''The value of "1" for "\[4, 1\]" fails min of 4.''',
+            object_tools.validate_object, ook_object)
 
     def test_item_max_setting(self):
         """Validate 'item_max' setting."""
         # Test the item max setting for string items.
         schema = {
-            'list_property': {'type': 'list', 'item_type': 'str', 'item_max': 4}
+            'list_property': {
+                'type': 'list', 'item_type': 'str', 'item_max': 4}
         }
 
         ook_type = object_tools.create_ook_type('StrItemMinCheck', schema)
@@ -522,12 +598,14 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         ook_object.list_property.append('seven')
         self.assertRaisesRegexp(
             ValueError,
-            r'''The value of "seven" for "\['four', 'seven'\]" fails max of 4.''',
+            r'''The value of "seven" for '''
+            '''"\['four', 'seven'\]" fails max of 4.''',
             object_tools.validate_object, ook_object)
 
         # Test the item min setting for numeric items.
         schema = {
-            'list_property': {'type': 'list', 'item_type': 'int', 'item_max': 4}
+            'list_property': {
+                'type': 'list', 'item_type': 'int', 'item_max': 4}
         }
 
         ook_type = object_tools.create_ook_type('StrItemMinCheck', schema)
@@ -546,9 +624,10 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
 
         # Bad Test
         ook_object.list_property.append(7)
-        self.assertRaisesRegexp(ValueError,
-                                r'''The value of "7" for "\[4, 7\]" fails max of 4.''',
-                                object_tools.validate_object, ook_object)
+        self.assertRaisesRegexp(
+            ValueError,
+            r'''The value of "7" for "\[4, 7\]" fails max of 4.''',
+            object_tools.validate_object, ook_object)
 
 
 class ValidateValueTestCase(base_test_case.BaseTestCase):

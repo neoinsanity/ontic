@@ -2,6 +2,8 @@ import re
 
 from meta_type import CollectionTypeSet, TypeMap
 
+_COMPARABLE_TYPES = {'int', 'float', 'date', 'time', 'datetime'}
+
 
 def validate_value(name, property_schema, value, value_errors):
     """Method to validate a given value against a given property schema.
@@ -131,7 +133,7 @@ def validate_collections(key, property_schema, value, value_errors):
                     value_errors.append(
                         'The value of "%s" for "%s" fails min of %s.' %
                         (item, value, property_schema.item_min))
-                elif ((property_schema.item_type in {'int', 'float'})
+                elif ((property_schema.item_type in _COMPARABLE_TYPES)
                       and item < property_schema.item_min):
                     value_errors.append(
                         'The value of "%s" for "%s" fails min of %s.' %
@@ -146,7 +148,7 @@ def validate_collections(key, property_schema, value, value_errors):
                     value_errors.append(
                         'The value of "%s" for "%s" fails max of %s.' %
                         (item, value, property_schema.item_max))
-                elif ((property_schema.item_type in {'int', 'float'})
+                elif ((property_schema.item_type in _COMPARABLE_TYPES)
                       and item > property_schema.item_max):
                     value_errors.append(
                         'The value of "%s" for "%s" fails max of %s.' %
@@ -156,9 +158,9 @@ def validate_collections(key, property_schema, value, value_errors):
 
         for item_value in value:
             validate_collection_item_value(item_value,
-                                            property_schema,
-                                            validation_list,
-                                            value_errors)
+                                           property_schema,
+                                           validation_list,
+                                           value_errors)
 
 
 def validate_collection_item_value(
@@ -193,8 +195,8 @@ def min_validation(property_schema, value):
                      property_schema.type in {'list', 'set', 'dict'})
             and len(value) < property_schema.min):
             return False
-        elif ((property_schema.type == 'int' or property_schema.type == 'float')
-              and value < property_schema.min):
+        elif (property_schema.type in _COMPARABLE_TYPES and
+                      value < property_schema.min):
             return False
 
     return True
@@ -206,8 +208,8 @@ def max_validation(property_schema, value):
                      property_schema.type in {'list', 'set', 'dict'})
             and len(value) > property_schema.max):
             return False
-        elif ((property_schema.type == 'int' or property_schema.type == 'float')
-              and value > property_schema.max):
+        elif (property_schema.type in _COMPARABLE_TYPES and
+                      value > property_schema.max):
             return False
 
     return True

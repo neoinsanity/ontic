@@ -1,3 +1,5 @@
+from datetime import date, datetime, time
+
 # The `type_map` converts the string declaration of attribute type.
 TypeMap = {
     'bool': bool,
@@ -7,6 +9,9 @@ TypeMap = {
     'list': list,
     'set': set,
     'str': basestring,
+    'time': time,
+    'date': date,
+    'datetime': datetime,
 }
 
 # The `collection_type_set` is the set of supported collection types.
