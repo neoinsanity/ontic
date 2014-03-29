@@ -138,7 +138,8 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
     def test_required_setting(self):
         """Validate 'required' schema setting."""
         schema = {
-            'some_property': {'required': True}
+            'some_property': {'required': True},
+            'other_property': {'required': False}
         }
 
         # Create the type
@@ -155,6 +156,8 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
 
         # Validate with data
         ook_object.some_property = 'Something'
+        ook_object.other_property = 'Other'
+        object_tools.validate_object(ook_object)
 
     def test_enum_setting(self):
         """Validate 'enum' schema setting."""

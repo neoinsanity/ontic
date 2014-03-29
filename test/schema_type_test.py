@@ -8,9 +8,12 @@ from ook.schema_type import SchemaProperty, SchemaType
 class SchemaPropertyTest(base_test_case.BaseTestCase):
     """SchemaProperty test cases."""
 
-    def test_core_type_instantiation(self):
+    def test_schema_property_instantiation(self):
         """SchemaProperty instantiation testing to confirm dict behavior."""
         schema_property = SchemaProperty({'type': 'int', 'required': True})
+        self.assertIsNotNone(schema_property)
+
+        schema_property = SchemaProperty({'type': 'int', 'required': False})
         self.assertIsNotNone(schema_property)
 
 
