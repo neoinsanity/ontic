@@ -1,4 +1,4 @@
-object_type Classes
+object_type Class
 ====================
 
 .. automodule:: ook.object_type

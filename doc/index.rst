@@ -2,14 +2,15 @@ Object of Knowledge (Ook)
 ==========================
 
 The goal of **Ook** is to provide a pure data object that is flexible to use in
-a python environment. The motivation is to make it simple to utilize in a
+a python project. The motivation is to make it simple to utilize in a
 development environment that interfaces with external services and
 third-party tools, but not require an extensive library to convert objects.
 
 To that end **Ook** objects can be accessed through attribute access or via
 dictionary key access. The theory is that most third party libraries, from JSON
-to NoSql, take some form of the dict as input. Attribute access is easier to
-type when writing code, hence the attribute access. By way of example::
+to NoSql packages, take some form of the dict as input. Attribute access is
+easier to type when writing code, hence the attribute access. By way of
+example::
 
   >>> an_object = ook.object_type.BaseType()
   >>> an_object['property1'] = 1
@@ -22,7 +23,7 @@ type when writing code, hence the attribute access. By way of example::
 As **Ook** objects are designed to be utilized as pure data objects, they
 implement the python *dict* interface. So anywhere you can use pass a dict
 object, you can pass an **Ook** object. **Ook** objects can even be
-initialize with a dictionary, as exampled below::
+initialized with a dictionary, as exampled below::
 
   >>> an_object = ook.object_type.BaseType({'the_property':'the_value'})
   >>> assert an_object.the_property = 'the_value'

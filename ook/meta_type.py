@@ -1,3 +1,16 @@
+"""The base class for deriving types that require schema support.
+
+
+.. image:: images/object_types.jpg
+
+Usage
+------
+
+Classes
+--------
+
+"""
+
 from datetime import date, datetime, time
 
 # The `type_map` converts the string declaration of attribute type.
