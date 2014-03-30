@@ -1,4 +1,4 @@
-schema_type Classes
+Schema Classes
 ====================
 
 .. automodule:: ook.schema_type

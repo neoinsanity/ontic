@@ -1,4 +1,4 @@
-meta_type Class
+MetaType Class
 ====================
 
 .. automodule:: ook.meta_type
