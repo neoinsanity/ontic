@@ -7,7 +7,7 @@ Classes
 --------
 
 """
-from meta_type import MetaType
+from meta_type import CoreType, MetaType
 
 
 class SchemaProperty(MetaType):
@@ -188,7 +188,7 @@ class SchemaProperty(MetaType):
         schema_tool.validate_schema_property(self)
 
 
-class SchemaType(MetaType):
+class SchemaType(CoreType):
     """The type definition for a schema object.
 
     The **SchemaType** contains a dictionary of property field names and

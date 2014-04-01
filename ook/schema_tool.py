@@ -69,8 +69,8 @@ def validate_schema_property(candidate_schema_property):
 
     value_errors = []
 
-    for schema_setting, setting_schema in candidate_schema_property \
-            .get_schema().iteritems():
+    for schema_setting, setting_schema in (
+            candidate_schema_property.get_schema().iteritems()):
         setting_value = candidate_schema_property.get(schema_setting, None)
 
         meta_tool.validate_value(schema_setting,

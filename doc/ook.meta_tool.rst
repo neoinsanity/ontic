@@ -4,7 +4,7 @@ meta_tool API
 .. automodule:: ook.meta_tool
 
 Method Definitions
-===================
+-------------------
 
 .. automethod:: ook.meta_tool.validate_value
 

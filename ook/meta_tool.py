@@ -1,6 +1,6 @@
 import re
 
-from meta_type import CollectionTypeSet, TypeMap
+from meta_type import SUPPORTED_COLLECTION_TYPES, TYPE_MAP
 
 _COMPARABLE_TYPES = {'int', 'float', 'date', 'time', 'datetime'}
 
@@ -42,7 +42,7 @@ def validate_non_none_value(key, property_schema, value, value_errors):
     :rtype:
     """
     # Divide between single and collection types for validation processing.
-    schema_value_type = TypeMap.get(property_schema.get('type', None), None)
+    schema_value_type = TYPE_MAP.get(property_schema.get('type', None), None)
 
     if not schema_value_type:
         # if no schema_type, then just check that the value is in an enum if
@@ -61,7 +61,7 @@ def validate_non_none_value(key, property_schema, value, value_errors):
             return  # If not of the expected type, than can't further
             # validate without errors.
 
-        if schema_value_type in CollectionTypeSet:
+        if schema_value_type in SUPPORTED_COLLECTION_TYPES:
             validate_collections(key, property_schema, value, value_errors)
         else:
             if not enum_validation(property_schema, value):
@@ -109,7 +109,7 @@ def validate_collections(key, property_schema, value, value_errors):
 
         if property_schema.item_type:
             def validate_item_type(item, property_schema, value_errors):
-                schema_value_type = TypeMap.get(property_schema.item_type)
+                schema_value_type = TYPE_MAP.get(property_schema.item_type)
                 if not isinstance(item, schema_value_type):
                     value_errors.append(
                         'The value for "%s" is not of type "%s": %s' %

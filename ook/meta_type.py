@@ -6,16 +6,15 @@
 Usage
 ------
 
-Classes
---------
-
 """
 
 from datetime import date, datetime, time
 
-#: The `type_map` converts the string declaration of attribute type.
-TypeMap = {
+#: The `TYPE_MAP` converts the string declaration of attribute type.
+TYPE_MAP = {
     'bool': bool,
+    'date': date,
+    'datetime': datetime,
     'dict': dict,
     'float': float,
     'int': int,
@@ -23,12 +22,10 @@ TypeMap = {
     'set': set,
     'str': basestring,
     'time': time,
-    'date': date,
-    'datetime': datetime,
 }
 
-#: The `collection_type_set` is the set of supported collection types.
-CollectionTypeSet = {dict, list, set}
+#: The `SUPPORTED_COLLECTION_TYPES` is the set of supported collection types.
+SUPPORTED_COLLECTION_TYPES = {dict, list, set}
 
 
 class CoreType(dict):
