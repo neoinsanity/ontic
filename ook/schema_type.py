@@ -34,7 +34,6 @@ class SchemaType(CoreType):
                 self[key] = SchemaProperty(value)
 
 
-
 def perfect_schema(candidate_schema):
     if candidate_schema is None:
         raise ValueError('"candidate_schema" must be provided.')

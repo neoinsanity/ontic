@@ -108,7 +108,7 @@ class SchemaProperty(MetaType):
             float, Defaults to None.
 
     """
-    OOK_SCHEMA = MetaType({
+    OOK_SCHEMA = CoreType({
         'type': MetaType({
             'type': 'str',
             'default': None,

@@ -1,29 +1,29 @@
 """The fundamental *Ook* base data types for creation of derived child classes.
 
-The **object_tools** provides the methods to create and validate **Ook**
+The **object_type** provides the methods to create and validate **Ook**
 types and objects.
 
 Usage
-======
+-----
 
-There are two basic operations provided by **object_tools**; schema
+There are two basic operations provided by **object_type**; schema
 definition and object
 handling. Schema definition entails type creation and validation.
 
 Schema Tools
 -------------
 
-To validate a schema definition, utilize the :meth:`~ook.object_tools
+To validate a schema definition, utilize the :meth:`~ook.object_type
 .validate_schema` method.
 
 Schema are composed of :class:`~ook.object_type.PropertySchema` objects. If
 there is a need,
 individual **PropertySchema** objects can be validated individually with the
-:meth:`~ook.object_tools.validate_property` method.
+:meth:`~ook.object_type.validate_property` method.
 
 To create a python type for a given :class:`~ook.object_type.SchemaType`
 utilize the
-:meth:`~ook.object_tools.create_ook_type` method. **Ook** object instances
+:meth:`~ook.object_type.create_ook_type` method. **Ook** object instances
 created by a generated
 type are child classes of the :class:`~ook.object_types` class.
 
@@ -33,11 +33,11 @@ Object Tools
 **Ook** objects created by either subclassing :class:`~ook.object_type
 .BaseType` or via
 :meth:`~create_ook_type`, will need to be validated. Utilize the
-**Ook** object :meth:`~ook.object_tools.validate_object` method for validation.
+**Ook** object :meth:`~ook.object_type.validate_object` method for validation.
 
 If the need should arise for validation of an **Ook** object by value,
 utilize the
-:meth:`~ook.object_tools.validate_value` method.
+:meth:`~ook.object_type.validate_value` method.
 
 Usage
 ------
@@ -147,8 +147,8 @@ def validate_value(property_name, ook_object):
         **SchemaProperty**.
     :type value: object
     :param property_schema: The **SchemaProperty** utilized for validation.
-    :type property_schema:  dict, ook.object_tools.BaseType,
-        ook.object_tools.SchemaProperty
+    :type property_schema:  dict, ook.object_type.BaseType,
+        ook.object_type.SchemaProperty
     :except ValueError:
 
         - Responds with a value error if the validation is not successful.
