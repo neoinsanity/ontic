@@ -182,10 +182,10 @@ class SchemaProperty(MetaType):
     def __init__(self, *args, **kwargs):
         MetaType.__init__(self, *args, **kwargs)
 
-        import schema_tools
+        import schema_tool
 
-        schema_tools.perfect_schema_property(self)
-        schema_tools.validate_schema_property(self)
+        schema_tool.perfect_schema_property(self)
+        schema_tool.validate_schema_property(self)
 
 
 class SchemaType(MetaType):

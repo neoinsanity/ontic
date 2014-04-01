@@ -1,6 +1,6 @@
 from test_utils import base_test_case
 
-from ook import schema_tools
+from ook import schema_tool
 from ook.schema_type import SchemaProperty, SchemaType
 
 
@@ -12,12 +12,12 @@ class ValidateSchemaProperty(base_test_case.BaseTestCase):
         self.assertRaisesRegexp(
             ValueError,
             '"candidate_schema_property" must be provided.',
-            schema_tools.validate_schema_property, None)
+            schema_tool.validate_schema_property, None)
 
         self.assertRaisesRegexp(
             ValueError,
             '"candidate_schema_property" must be SchemaProperty type.',
-            schema_tools.validate_schema_property, {})
+            schema_tool.validate_schema_property, {})
 
 
 class ValidateSchemaTestCase(base_test_case.BaseTestCase):
@@ -28,26 +28,26 @@ class ValidateSchemaTestCase(base_test_case.BaseTestCase):
         self.assertRaisesRegexp(
             ValueError,
             '"candidate_schema" must be provided.',
-            schema_tools.validate_schema, None)
+            schema_tool.validate_schema, None)
         self.assertRaisesRegexp(
             ValueError,
             '"candidate_schema" must be of SchemaType.',
-            schema_tools.validate_schema, "not a schema")
+            schema_tool.validate_schema, "not a schema")
 
     def test_validate_schema(self):
         """Valid schema testing of validate_schema."""
         schema = SchemaType({'some_property': {'type': 'int'}})
 
         # Dict test
-        schema_tools.validate_schema(schema)
+        schema_tool.validate_schema(schema)
 
         # BaseType test
         base_type_schema = SchemaType(schema)
-        schema_tools.validate_schema(base_type_schema)
+        schema_tool.validate_schema(base_type_schema)
 
         # SchemaType test
         schema_type_schema = SchemaType(schema)
-        schema_tools.validate_schema(schema_type_schema)
+        schema_tool.validate_schema(schema_type_schema)
 
 
 class PerfectSchemaPropertyTestCase(base_test_case.BaseTestCase):
@@ -72,7 +72,7 @@ class PerfectSchemaPropertyTestCase(base_test_case.BaseTestCase):
             },
             candidate_schema_property)
 
-        schema_tools.perfect_schema_property(candidate_schema_property)
+        schema_tool.perfect_schema_property(candidate_schema_property)
 
         self.assertEqual(10, len(candidate_schema_property))
         self.assertDictEqual(
@@ -113,7 +113,7 @@ class PerfectSchemaPropertyTestCase(base_test_case.BaseTestCase):
             },
             candidate_schema_property)
 
-        schema_tools.perfect_schema_property(candidate_schema_property)
+        schema_tool.perfect_schema_property(candidate_schema_property)
 
         self.assertEqual(10, len(candidate_schema_property))
         self.assertDictEqual(
@@ -135,12 +135,12 @@ class PerfectSchemaPropertyTestCase(base_test_case.BaseTestCase):
         self.assertRaisesRegexp(
             ValueError,
             '"candidate_schema_property" must be provided.',
-            schema_tools.perfect_schema_property, None)
+            schema_tool.perfect_schema_property, None)
 
         self.assertRaisesRegexp(
             ValueError,
             '"candidate_schema_property" must be SchemaProperty type.',
-            schema_tools.perfect_schema_property, {})
+            schema_tool.perfect_schema_property, {})
 
 
 class PerfectSchemaTestCase(base_test_case.BaseTestCase):
@@ -184,7 +184,7 @@ class PerfectSchemaTestCase(base_test_case.BaseTestCase):
                 }},
             candidate_schema)
 
-        schema_tools.perfect_schema(candidate_schema)
+        schema_tool.perfect_schema(candidate_schema)
 
         self.assertEqual(2, len(candidate_schema))
         self.assertEqual(10, len(candidate_schema.prop1))
@@ -222,9 +222,9 @@ class PerfectSchemaTestCase(base_test_case.BaseTestCase):
         self.assertRaisesRegexp(
             ValueError,
             '"candidate_schema" must be provided.',
-            schema_tools.perfect_schema, None)
+            schema_tool.perfect_schema, None)
 
         self.assertRaisesRegexp(
             ValueError,
             '"candidate_schema" must be of SchemaType.',
-            schema_tools.perfect_schema, {})
+            schema_tool.perfect_schema, {})

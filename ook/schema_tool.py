@@ -1,4 +1,4 @@
-import meta_tools
+import meta_tool
 from schema_type import SchemaType, SchemaProperty
 
 
@@ -73,7 +73,7 @@ def validate_schema_property(candidate_schema_property):
             .get_schema().iteritems():
         setting_value = candidate_schema_property.get(schema_setting, None)
 
-        meta_tools.validate_value(schema_setting,
+        meta_tool.validate_value(schema_setting,
                                    setting_schema,
                                    setting_value,
                                    value_errors)

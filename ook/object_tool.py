@@ -40,7 +40,7 @@ utilize the
 """
 import re
 
-import meta_tools
+import meta_tool
 from object_type import BaseType
 from schema_type import SchemaProperty, SchemaType
 
@@ -98,7 +98,7 @@ def validate_object(the_object):
     for property_name, property_schema in the_object.get_schema().iteritems():
         value = the_object.get(property_name, None)
 
-        meta_tools.validate_value(
+        meta_tool.validate_value(
             property_name, property_schema, value, value_errors)
 
     if value_errors:
@@ -143,7 +143,7 @@ def validate_value(property_name, ook_object):
 
     value = ook_object.get(property_name, None)
 
-    meta_tools.validate_value(
+    meta_tool.validate_value(
         property_name, property_schema, value, value_errors)
 
     if value_errors:
