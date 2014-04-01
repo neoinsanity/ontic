@@ -21,7 +21,7 @@ example::
     '{"property1": 1, "property2": 2}'
 
 As **Ook** objects are designed to be utilized as pure data objects, they
-implement the python *dict* interface. So anywhere you can use pass a dict
+implement the python *dict* interface. So anywhere you can use or pass a dict
 object, you can pass an **Ook** object. **Ook** objects can even be
 initialized with a dictionary, as exampled below::
 
