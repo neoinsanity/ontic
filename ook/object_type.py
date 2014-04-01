@@ -3,12 +3,11 @@
 Usage
 ------
 
-The **object_type** module allows for the construction of **Ook** data types. A complete
-configured data type definition would be constructed as::
-
+The **object_type** module allows for the construction of **Ook** data types. A
+complete configured data type definition would be constructed as::
 
     class MyType(BaseType):
-        _OOK_SCHEMA = SchemaType({
+        OOK_SCHEMA = SchemaType({
             'some_property': PropertyType({
                 'type': 'int',
                 'required': True,
@@ -37,9 +36,6 @@ from meta_type import MetaType
 class BaseType(MetaType):
     """BaseType provides the **Ook** schema interface.
 
-    The **BaseType** provides the schema management functionality to a derived **Ook** type
-    instance.
+    The **BaseType** provides the schema management functionality to a derived
+    **Ook** type instance.
     """
-
-
-

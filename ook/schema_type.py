@@ -1,3 +1,12 @@
+"""The classes utilized to construct schemas for object definitions.
+
+Usage
+------
+
+Classes
+--------
+
+"""
 from meta_type import MetaType
 
 
@@ -7,8 +16,8 @@ class SchemaProperty(MetaType):
     *Property Schema Settings*:
 
         *type*
-            datetime*, date*, time*, str, int, float, bool, dict, set, list,
-            none. Defaults to None.
+            datetime, date, time, str, int, float, bool, dict, set, list, none.
+            Defaults to None.
         *required*
             True|False. Defaults False.
         *min*
@@ -25,10 +34,8 @@ class SchemaProperty(MetaType):
         *item_max*
             float, Defaults to None.
 
-    \* - Are to be added in subsequent versions.
     """
-    #: todo: Add support for datetime, date & time
-    _OOK_SCHEMA = MetaType({
+    OOK_SCHEMA = MetaType({
         'type': MetaType({
             'type': 'str',
             'default': None,

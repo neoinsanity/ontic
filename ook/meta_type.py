@@ -13,7 +13,7 @@ Classes
 
 from datetime import date, datetime, time
 
-# The `type_map` converts the string declaration of attribute type.
+#: The `type_map` converts the string declaration of attribute type.
 TypeMap = {
     'bool': bool,
     'dict': dict,
@@ -27,18 +27,18 @@ TypeMap = {
     'datetime': datetime,
 }
 
-# The `collection_type_set` is the set of supported collection types.
+#: The `collection_type_set` is the set of supported collection types.
 CollectionTypeSet = {dict, list, set}
 
 
-class _CoreType(dict):
+class CoreType(dict):
     """The root type of *Ook* types.
 
-    **_CoreType** ensures that *Ook* objects can be access by either dict key
+    **CoreType** ensures that *Ook* objects can be access by either dict key
     or object attribute.
 
     :Example:
-    >>> some_object = _CoreType({'key1': 'value1'})
+    >>> some_object = CoreType({'key1': 'value1'})
     >>> assert some_object.key1 == 'value1'
     >>> assert some_object['key1'] == 'value1'
     >>> some_object.key2 = 'value2'
@@ -48,7 +48,7 @@ class _CoreType(dict):
     """
 
     def __init__(self, *args, **kwargs):
-        """**_CoreType** initialized as a `dict` type.
+        """**CoreType** initialized as a `dict` type.
 
         :param args: Args to be passed to `dict` parent class.
         :type args: list
@@ -64,9 +64,12 @@ class _CoreType(dict):
         self.__dict__ = self
 
 
-class MetaType(_CoreType):
+class MetaType(CoreType):
+    """
+
+    """
     #: The Ook schema pointer.
-    _OOK_SCHEMA = None
+    OOK_SCHEMA = None
 
     @classmethod
     def get_schema(cls):
@@ -76,4 +79,4 @@ class MetaType(_CoreType):
             child type.
         :rtype: ook.object_type.SchemaType.
         """
-        return cls._OOK_SCHEMA
+        return cls.OOK_SCHEMA

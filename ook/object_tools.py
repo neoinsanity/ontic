@@ -70,7 +70,7 @@ def create_ook_type(name, schema):
     if not isinstance(schema, SchemaType):
         schema = SchemaType(schema)
 
-    ook_type._OOK_SCHEMA = schema
+    ook_type.OOK_SCHEMA = schema
 
     return ook_type
 
