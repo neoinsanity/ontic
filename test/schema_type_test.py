@@ -2,7 +2,8 @@
 
 from test_utils import base_test_case
 
-from ook.schema_type import SchemaProperty, SchemaType
+from ook.meta_type import SchemaProperty
+from ook.schema_type import SchemaType
 
 
 class SchemaPropertyTest(base_test_case.BaseTestCase):

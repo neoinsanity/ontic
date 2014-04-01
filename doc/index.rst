@@ -38,28 +38,28 @@ at runtime, or types can be defined as classes that derive from the **Ook**
   >>> class MyType(ook.object_type.BaseType):
   ...   OOK_SCHEMA = {'the_property':{'required':True}}
   >>> my_object = MyType()
-  >>> ook.object_tool.validate_object(my_object)
+  >>> ook.object_type.validate_object(my_object)
     Traceback (most recent call last):
       File "<stdin>", line 1, in <module>
-      File "ook/object_tool.py", line 137, in validate_object
+      File "ook/object_type.py", line 137, in validate_object
         raise ValueError(str.join(' \n-- ', value_errors))
     ValueError: The value for "the_property" is required.
   >>> my_object.the_property = 99
-  >>> ook.object_tool.validate_object(my_object)
+  >>> ook.object_type.validate_object(my_object)
 
 and dynamic definition of Ook type with schema.
 
-  >>> my_type = ook.object_tool.create_ook_type(
+  >>> my_type = ook.object_type.create_ook_type(
   ...   'MyType', {'the_property':{'required':True}})
   >>> my_object = my_type()
-  >>> ook.object_tool.validate_object(my_object)
+  >>> ook.object_type.validate_object(my_object)
     Traceback (most recent call last):
       File "<stdin>", line 1, in <module>
-      File "ook/object_tool.py", line 137, in validate_object
+      File "ook/object_type.py", line 137, in validate_object
         raise ValueError(str.join(' \n-- ', value_errors))
     ValueError: The value for "the_property" is required.
   >>> my_object['the_property'] = 'Some value'
-  >>> ook.object_tool.validate_object(my_object)
+  >>> ook.object_type.validate_object(my_object)
 
 .. important::
     The limitation to this approach is that **Ook** objects should not be
@@ -80,11 +80,8 @@ API Specification
   :maxdepth: 2
 
   ook.meta_type
-  ook.meta_tool
   ook.object_type
-  ook.object_tool
   ook.schema_type
-  ook.schema_tool
 
 
 Indices and Tables

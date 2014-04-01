@@ -7,185 +7,8 @@ Classes
 --------
 
 """
-from meta_type import CoreType, MetaType
-
-
-class SchemaProperty(MetaType):
-    """The object type for representing Property schema definitions.
-
-    *Property Schema Settings*:
-
-        *type*
-            datetime, date, time, str, int, float, bool, dict, set, list, none.
-            Defaults to None.
-        *required*
-            True|False. Defaults False.
-        *min*
-            float. Defaults to None.
-        *max*
-            float. Defaults to None.
-        *regex*
-            string. Defaults to None.
-        *item_type*
-            datetime*, date*, time*, str, int, float, bool, dict, set, list,
-            none. Default to None.
-        *tem_min*
-            float. Defaults to None.
-        *item_max*
-            float, Defaults to None.
-
-    """
-    OOK_SCHEMA = MetaType({
-        'type': MetaType({
-            'type': 'str',
-            'default': None,
-            'required': True,
-            'enum': {
-                'bool',
-                'dict',
-                'float',
-                'int',
-                'list',
-                'set',
-                'str',
-                'date',
-                'time',
-                'datetime'},
-            'min': None,
-            'max': None,
-            'regex': None,
-            'item_type': None,
-            'item_min': None,
-            'item_max': None,
-        }),
-        'default': MetaType({
-            'type': 'bool',
-            'default': False,
-            'required': True,
-            'enum': None,
-            'min': None,
-            'max': None,
-            'regex': None,
-            'item_type': None,
-            'item_min': None,
-            'item_max': None,
-        }),
-        'required': MetaType({
-            'type': 'bool',
-            'default': False,
-            'required': True,
-            'enum': None,
-            'min': None,
-            'max': None,
-            'regex': None,
-            'item_type': None,
-            'item_min': None,
-            'item_max': None,
-        }),
-        'enum': MetaType({
-            'type': 'set',
-            'default': None,
-            'required': True,
-            'enum': None,
-            'min': None,
-            'max': None,
-            'regex': None,
-            'item_type': None,
-            'item_min': None,
-            'item_max': None,
-        }),
-        'min': MetaType({
-            'type': float,
-            'default': None,
-            'required': True,
-            'enum': None,
-            'min': None,
-            'max': None,
-            'regex': None,
-            'item_type': None,
-            'item_min': None,
-            'item_max': None,
-        }),
-        'max': MetaType({
-            'type': float,
-            'default': None,
-            'required': True,
-            'enum': None,
-            'min': None,
-            'max': None,
-            'regex': None,
-            'item_type': None,
-            'item_min': None,
-            'item_max': None,
-        }),
-        'regex': MetaType({
-            'type': 'str',
-            'default': None,
-            'required': True,
-            'enum': None,
-            'min': 1,
-            'max': None,
-            'regex': None,
-            'item_type': None,
-            'item_min': None,
-            'item_max': None,
-        }),
-        'item_type': MetaType({
-            'type': 'str',
-            'default': None,
-            'required': True,
-            'enum': {
-                'bool',
-                'dict',
-                'float',
-                'int',
-                'list',
-                'set',
-                'str',
-                'date',
-                'time',
-                'datetime',
-            },
-            'min': None,
-            'max': None,
-            'regex': None,
-            'item_type': None,
-            'item_min': None,
-            'item_max': None,
-        }),
-        'item_min': MetaType({
-            'type': float,
-            'default': None,
-            'required': True,
-            'enum': None,
-            'min': None,
-            'max': None,
-            'regex': None,
-            'item_type': None,
-            'item_min': None,
-            'item_max': None,
-        }),
-        'item_max': MetaType({
-            'type': float,
-            'default': None,
-            'required': True,
-            'enum': None,
-            'min': None,
-            'max': None,
-            'regex': None,
-            'item_type': None,
-            'item_min': None,
-            'item_max': None,
-        }),
-    })
-
-    def __init__(self, *args, **kwargs):
-        MetaType.__init__(self, *args, **kwargs)
-
-        import schema_tool
-
-        schema_tool.perfect_schema_property(self)
-        schema_tool.validate_schema_property(self)
+from ook import meta_type
+from ook.meta_type import CoreType, SchemaProperty
 
 
 class SchemaType(CoreType):
@@ -205,8 +28,38 @@ class SchemaType(CoreType):
     """
 
     def __init__(self, *args, **kwargs):
-        MetaType.__init__(self, *args, **kwargs)
+        CoreType.__init__(self, *args, **kwargs)
         for key, value in self.iteritems():
             if not isinstance(value, SchemaProperty):
                 self[key] = SchemaProperty(value)
 
+
+
+def perfect_schema(candidate_schema):
+    if candidate_schema is None:
+        raise ValueError('"candidate_schema" must be provided.')
+    if not isinstance(candidate_schema, SchemaType):
+        raise ValueError('"candidate_schema" must be of SchemaType.')
+
+    for property_schema in candidate_schema.values():
+        meta_type.perfect_schema_property(property_schema)
+
+
+def validate_schema(candidate_schema):
+    """
+
+    :param candidate_schema:
+    :type candidate_schema:
+    :return:
+    :rtype:
+    """
+    if candidate_schema is None:
+        raise ValueError('"candidate_schema" must be provided.')
+    if not isinstance(candidate_schema, SchemaType):
+        raise ValueError('"candidate_schema" must be of SchemaType.')
+
+    value_errors = []
+    for candidate_property_schema in candidate_schema.values():
+        meta_type.validate_schema_property(candidate_property_schema)
+
+    return value_errors

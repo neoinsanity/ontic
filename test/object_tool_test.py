@@ -1,9 +1,9 @@
-"""Testing suite for object_tools module."""
+"""Testing suite for object_types module."""
 from datetime import date, datetime, time
 
 from test_utils import base_test_case
 
-from ook import object_tool
+from ook import object_type
 from ook.schema_type import SchemaType
 
 
@@ -14,18 +14,18 @@ class CreateOokTypeTestCase(base_test_case.BaseTestCase):
         """Assert the create ook type arg errors."""
         self.assertRaisesRegexp(
             ValueError, 'The string "name" argument is required.',
-            object_tool.create_ook_type, name=None, schema=dict())
+            object_type.create_ook_type, name=None, schema=dict())
         self.assertRaisesRegexp(
             ValueError, 'The schema dictionary is required.',
-            object_tool.create_ook_type, name='SomeName', schema=None)
+            object_type.create_ook_type, name='SomeName', schema=None)
         self.assertRaisesRegexp(
             ValueError, 'The schema must be a dict.',
-            object_tool.create_ook_type, name='SomeName', schema=list())
+            object_type.create_ook_type, name='SomeName', schema=list())
 
     def test_create_ook_type(self):
         """The most simple and basic dynamic Ook."""
         # Test creation from raw dictionary.
-        ook_type = object_tool.create_ook_type('Simple', dict())
+        ook_type = object_type.create_ook_type('Simple', dict())
 
         self.assertIsNotNone(ook_type)
 
@@ -34,7 +34,7 @@ class CreateOokTypeTestCase(base_test_case.BaseTestCase):
         self.assertIsInstance(ook_object, ook_type)
 
         # Test creation using a SchemaType object.
-        ook_type = object_tool.create_ook_type('AnotherSimple', SchemaType())
+        ook_type = object_type.create_ook_type('AnotherSimple', SchemaType())
 
         self.assertIsNotNone(ook_type)
 
@@ -44,7 +44,7 @@ class CreateOokTypeTestCase(base_test_case.BaseTestCase):
 
 
 class ValidateObjectTestCase(base_test_case.BaseTestCase):
-    """Test object_tools.validate_object method basics."""
+    """Test object_types.validate_object method basics."""
 
     def test_bad_validate_object(self):
         """ValueError testing of validate_object."""
@@ -52,12 +52,12 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
             ValueError,
             'Validation can only support validation of objects derived from '
             'ook.BaseType.',
-            object_tool.validate_object, None)
+            object_type.validate_object, None)
         self.assertRaisesRegexp(
             ValueError,
             'Validation can only support validation of objects derived from '
             'ook.BaseType.',
-            object_tool.validate_object, 'Not a BaseType')
+            object_type.validate_object, 'Not a BaseType')
 
     def test_type_setting(self):
         """Validate 'type' schema setting."""
@@ -75,14 +75,14 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         }
 
         # Create the type
-        ook_type = object_tool.create_ook_type('TypeCheck', schema)
+        ook_type = object_type.create_ook_type('TypeCheck', schema)
         self.assertIsNotNone(ook_type)
 
         # Create object of type
         ook_object = ook_type()
 
         # Validate an empty object.
-        object_tool.validate_object(ook_object)
+        object_type.validate_object(ook_object)
 
         # Validate with known good data.
         ook_object.bool_property = True
@@ -95,14 +95,14 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         ook_object.date_property = date(2000, 1, 1)
         ook_object.time_property = time(12, 30, 30)
         ook_object.datetime_property = datetime(2001, 1, 1, 12, 30, 30)
-        object_tool.validate_object(ook_object)
+        object_type.validate_object(ook_object)
 
         # Validate with known bad data.
         ook_object.bool_property = 'Dog'
         self.assertRaisesRegexp(
             ValueError,
             'The value for "bool_property" is not of type "bool": Dog',
-            object_tool.validate_object, ook_object)
+            object_type.validate_object, ook_object)
         ook_object.bool_property = True
 
         # Validate a string vs a list type
@@ -110,7 +110,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         self.assertRaisesRegexp(
             ValueError,
             'The value for "list_property" is not of type "list": some_string',
-            object_tool.validate_object, ook_object)
+            object_type.validate_object, ook_object)
 
     def test_type_bad_setting(self):
         """ValueError for bad 'type' setting."""
@@ -118,7 +118,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
             'some_property': {'type': 'Unknown'}
         }
         # Create the type
-        ook_type = object_tool.create_ook_type('Dummy', schema)
+        ook_type = object_type.create_ook_type('Dummy', schema)
 
         self.assertIsNotNone(ook_type)
         self.assertIsInstance(ook_type, type)
@@ -143,7 +143,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         }
 
         # Create the type
-        ook_type = object_tool.create_ook_type('RequireCheck', schema)
+        ook_type = object_type.create_ook_type('RequireCheck', schema)
         self.assertIsNotNone(ook_type)
 
         # Create object of type
@@ -152,12 +152,12 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         # Validate an empty object, which should cause ValueError
         self.assertRaisesRegexp(
             ValueError, 'The value for "some_property" is required.',
-            object_tool.validate_object, ook_object)
+            object_type.validate_object, ook_object)
 
         # Validate with data
         ook_object.some_property = 'Something'
         ook_object.other_property = 'Other'
-        object_tool.validate_object(ook_object)
+        object_type.validate_object(ook_object)
 
     def test_enum_setting(self):
         """Validate 'enum' schema setting."""
@@ -168,18 +168,18 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         }
 
         # Create the type
-        ook_type = object_tool.create_ook_type('EnumCheck', schema)
+        ook_type = object_type.create_ook_type('EnumCheck', schema)
         self.assertIsNotNone(ook_type)
 
         # Create object of type
         ook_object = ook_type()
 
         # Validate an empty object
-        object_tool.validate_object(ook_object)
+        object_type.validate_object(ook_object)
 
         # Validate a good setting
         ook_object.enum_property = 99
-        object_tool.validate_object(ook_object)
+        object_type.validate_object(ook_object)
 
         # Validate a bad setting
         ook_object.enum_property = 'bad, bad, bad'
@@ -187,7 +187,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
             ValueError,
             "The value \"bad, bad, bad\" for \"enum_property\" "
             "not in enumeration \[99, 'some_value'\].",
-            object_tool.validate_object, ook_object)
+            object_type.validate_object, ook_object)
 
         # Collection testing
         ####################
@@ -196,18 +196,18 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         }
 
         # Create the type
-        ook_type = object_tool.create_ook_type('EnumListCheck', schema)
+        ook_type = object_type.create_ook_type('EnumListCheck', schema)
         self.assertIsNotNone(ook_type)
 
         # Create object of type
         ook_object = ook_type()
 
         # Validate an empty object
-        object_tool.validate_object(ook_object)
+        object_type.validate_object(ook_object)
 
         # Validate a good setting
         ook_object.enum_property = ['dog']
-        object_tool.validate_object(ook_object)
+        object_type.validate_object(ook_object)
 
         # Validate a bad setting
         ook_object.enum_property = ['fish']
@@ -215,7 +215,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
             ValueError,
             r'''The value "fish" for "\['fish'\]" not in enumeration '''
             r'''\['dog', 'cat'\].''',
-            object_tool.validate_object, ook_object)
+            object_type.validate_object, ook_object)
 
     def test_min_setting(self):
         """Validate 'min' schema setting."""
@@ -232,13 +232,13 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
                 'type': 'datetime', 'min': datetime(2000, 1, 1, 12, 30, 30)}
         }
 
-        ook_type = object_tool.create_ook_type('MinCheck', schema)
+        ook_type = object_type.create_ook_type('MinCheck', schema)
         self.assertIsNotNone(ook_type)
 
         ook_object = ook_type()
 
         # None test, with no required fields
-        object_tool.validate_object(ook_object)
+        object_type.validate_object(ook_object)
 
         # Good test
         ook_object.str_min_property = '8 letters'
@@ -250,14 +250,14 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         ook_object.date_min_property = date(2001, 1, 1)
         ook_object.time_min_property = time(13, 30, 30)
         ook_object.datetime_min_property = datetime(2001, 1, 1)
-        object_tool.validate_object(ook_object)
+        object_type.validate_object(ook_object)
 
         # Str failure
         ook_object.str_min_property = '1'
         self.assertRaisesRegexp(ValueError,
                                 'The value of "1" for "str_min_property" '
                                 'fails min of 5.',
-                                object_tool.validate_object, ook_object)
+                                object_type.validate_object, ook_object)
         ook_object.str_min_property = '8 letters'
 
         # Int failure
@@ -265,7 +265,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         self.assertRaisesRegexp(ValueError,
                                 'The value of "5" for "int_min_property" '
                                 'fails min of 10.',
-                                object_tool.validate_object, ook_object)
+                                object_type.validate_object, ook_object)
         ook_object.int_min_property = 20
 
         # Float failure
@@ -273,7 +273,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         self.assertRaisesRegexp(ValueError,
                                 'The value of "15.0" for "float_min_property" '
                                 'fails min of 20.',
-                                object_tool.validate_object, ook_object)
+                                object_type.validate_object, ook_object)
         ook_object.float_min_property = 30.0
 
         # List failure
@@ -281,7 +281,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         self.assertRaisesRegexp(ValueError,
                                 'The value of "\[]" for "list_min_property" '
                                 'fails min of 1.',
-                                object_tool.validate_object, ook_object)
+                                object_type.validate_object, ook_object)
         ook_object.list_min_property = ['one item']
 
         # Set failure
@@ -289,7 +289,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         self.assertRaisesRegexp(ValueError,
                                 'The value of "set\(\[]\)" for '
                                 '"set_min_property" fails min of 1.',
-                                object_tool.validate_object, ook_object)
+                                object_type.validate_object, ook_object)
         ook_object.set_min_property = {'one item'}
 
         # Dict failure
@@ -297,14 +297,14 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         self.assertRaisesRegexp(ValueError,
                                 'The value of "{}" for "dict_min_property" '
                                 'fails min of 1.',
-                                object_tool.validate_object, ook_object)
+                                object_type.validate_object, ook_object)
         ook_object.dict_min_property = {'some_key': 'one_item'}
 
         # Date failure
         ook_object.date_min_property = date(1999, 1, 1)
         self.assertRaisesRegexp(ValueError,
                                 'date_min_property" fails min of 2000-01-01.',
-                                object_tool.validate_object, ook_object)
+                                object_type.validate_object, ook_object)
         ook_object.date_min_property = date(2001, 1, 1)
 
         # Time failure
@@ -313,7 +313,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
             ValueError,
             'The value of "11:30:30" for "time_min_property" '
             'fails min of 12:30:30.',
-            object_tool.validate_object, ook_object)
+            object_type.validate_object, ook_object)
         ook_object.time_min_property = time(13, 30, 30)
 
         # Datetime failure
@@ -322,7 +322,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
             ValueError,
             'The value of "1999-01-01 11:30:30" for "datetime_min_property" '
             'fails min of 2000-01-01 12:30:30.',
-            object_tool.validate_object, ook_object)
+            object_type.validate_object, ook_object)
 
     def test_max_setting(self):
         """Validate 'max' schema setting."""
@@ -339,14 +339,14 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
                 'type': 'datetime', 'max': datetime(2000, 1, 1, 12, 30, 30)}
         }
 
-        ook_type = object_tool.create_ook_type('MaxCheck', schema)
+        ook_type = object_type.create_ook_type('MaxCheck', schema)
         self.assertIsNotNone(ook_type)
-        #object_tools.validate_schema(ook_type.get_schema())
+        #object_types.validate_schema(ook_type.get_schema())
 
         ook_object = ook_type()
 
         # None test, with no required fields
-        object_tool.validate_object(ook_object)
+        object_type.validate_object(ook_object)
 
         # Good test
         ook_object.str_max_property = 'small'
@@ -358,14 +358,14 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         ook_object.date_max_property = date(1999, 1, 1)
         ook_object.time_max_property = time(11, 30, 30)
         ook_object.datetime_max_property = datetime(1999, 1, 1)
-        object_tool.validate_object(ook_object)
+        object_type.validate_object(ook_object)
 
         # Str failure
         ook_object.str_max_property = '8 letters'
         self.assertRaisesRegexp(ValueError,
                                 'The value of "8 letters" for '
                                 '"str_max_property" fails max of 5.',
-                                object_tool.validate_object, ook_object)
+                                object_type.validate_object, ook_object)
         ook_object.str_max_property = 'small'
 
         # Int failure
@@ -373,7 +373,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         self.assertRaisesRegexp(ValueError,
                                 'The value of "20" for "int_max_property" '
                                 'fails max of 10.',
-                                object_tool.validate_object, ook_object)
+                                object_type.validate_object, ook_object)
         ook_object.int_max_property = 5
 
         # Float failure
@@ -381,7 +381,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         self.assertRaisesRegexp(
             ValueError,
             'The value of "30.0" for "float_max_property" fails max of 20.',
-            object_tool.validate_object, ook_object)
+            object_type.validate_object, ook_object)
         ook_object.float_max_property = 15.0
 
         # List failure
@@ -390,7 +390,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
             ValueError,
             'The value of "\[\'one item\', \'two item\'\]" '
             'for "list_max_property" fails max of 1.',
-            object_tool.validate_object, ook_object)
+            object_type.validate_object, ook_object)
         ook_object.list_max_property = ['one item']
 
         # Set failure
@@ -399,7 +399,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
             ValueError,
             'The value of "set\(\[\'one item\', \'two item\'\]\)" '
             'for "set_max_property" fails max of 1.',
-            object_tool.validate_object, ook_object)
+            object_type.validate_object, ook_object)
         ook_object.set_max_property = {'one item'}
 
         # Dict failure
@@ -410,7 +410,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
             'The value of "{\'another_key\': \'two_item\', \'some_key\': '
             '\'one_item\'}" for '
             '"dict_max_property" fails max of 1.',
-            object_tool.validate_object, ook_object)
+            object_type.validate_object, ook_object)
         ook_object.dict_max_property = {'some_key': 'one_item'}
 
         # Date failure
@@ -419,7 +419,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
             ValueError,
             'The value of "2001-01-01" for '
             '"date_max_property" fails max of 2000-01-01.',
-            object_tool.validate_object, ook_object)
+            object_type.validate_object, ook_object)
         ook_object.date_max_property = date(2001, 1, 1)
 
         # Time failure
@@ -428,7 +428,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
             ValueError,
             'The value of "13:30:30" for "time_max_property" '
             'fails max of 12:30:30.',
-            object_tool.validate_object, ook_object)
+            object_type.validate_object, ook_object)
         ook_object.time_max_property = time(13, 30, 30)
 
         # Datetime failure
@@ -437,7 +437,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
             ValueError,
             'The value of "2001-01-01 11:30:30" for "datetime_max_property" '
             'fails max of 2000-01-01 12:30:30.',
-            object_tool.validate_object, ook_object)
+            object_type.validate_object, ook_object)
 
     def test_regex_setting(self):
         """Validate 'regex' schema setting."""
@@ -445,26 +445,26 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
             'b_only_property': {'type': 'str', 'regex': '^b+'}
         }
 
-        ook_type = object_tool.create_ook_type('RegexCheck', schema)
+        ook_type = object_type.create_ook_type('RegexCheck', schema)
         self.assertIsNotNone(ook_type)
 
         ook_object = ook_type()
 
         # None test, with no required fields
-        object_tool.validate_object(ook_object)
+        object_type.validate_object(ook_object)
 
         # Good test
         ook_object.b_only_property = ''
-        object_tool.validate_object(ook_object)
+        object_type.validate_object(ook_object)
         ook_object.b_only_property = 'b'
-        object_tool.validate_object(ook_object)
+        object_type.validate_object(ook_object)
 
         # Bad test
         ook_object.b_only_property = 'a'
         self.assertRaisesRegexp(ValueError,
                                 'Value \"a\" for b_only_property does not '
                                 'meet regex: \^b\+',
-                                object_tool.validate_object, ook_object)
+                                object_type.validate_object, ook_object)
 
     def test_item_type_setting(self):
         """Validate 'item_type' setting."""
@@ -472,26 +472,26 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
             'list_property': {'type': 'list', 'item_type': 'str'}
         }
 
-        ook_type = object_tool.create_ook_type('ItemTypeCheck', schema)
+        ook_type = object_type.create_ook_type('ItemTypeCheck', schema)
         self.assertIsNotNone(ook_type)
 
         ook_object = ook_type()
 
         # None test, with no required fields.
-        object_tool.validate_object(ook_object)
+        object_type.validate_object(ook_object)
 
         # Good test
         ook_object.list_property = []
-        object_tool.validate_object(ook_object)
+        object_type.validate_object(ook_object)
         ook_object.list_property.append('some_item')
-        object_tool.validate_object(ook_object)
+        object_type.validate_object(ook_object)
 
         # Bad test
         ook_object.list_property.append(99)
         self.assertRaisesRegexp(
             ValueError,
             r'''The value for "\['some_item', 99\]" is not of type "str": 99''',
-            object_tool.validate_object, ook_object)
+            object_type.validate_object, ook_object)
 
     def test_collection_regex_setting(self):
         """Validate string collection with 'regex' setting."""
@@ -499,19 +499,19 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
             'set_property': {'type': 'set', 'item_type': 'str', 'regex': 'b+'}
         }
 
-        ook_type = object_tool.create_ook_type('CollectionRegexCheck', schema)
+        ook_type = object_type.create_ook_type('CollectionRegexCheck', schema)
         self.assertIsNotNone(ook_type)
 
         ook_object = ook_type()
 
         # None test, with no required fields.
-        object_tool.validate_object(ook_object)
+        object_type.validate_object(ook_object)
 
         # Good test
         ook_object.set_property = set()
-        object_tool.validate_object(ook_object)
+        object_type.validate_object(ook_object)
         ook_object.set_property.add('bbbbb')
-        object_tool.validate_object(ook_object)
+        object_type.validate_object(ook_object)
 
         # Bad test
         ook_object.set_property.add('xxxxxx')
@@ -519,7 +519,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
             ValueError,
             r'''Value "xxxxxx" for '''
             '''set\(\['xxxxxx', 'bbbbb'\]\) does not meet regex: b+''',
-            object_tool.validate_object, ook_object)
+            object_type.validate_object, ook_object)
 
     def test_item_min_setting(self):
         """Validate 'item_min' setting."""
@@ -528,52 +528,52 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
             'list_property': {'type': 'list', 'item_type': 'str', 'item_min': 4}
         }
 
-        ook_type = object_tool.create_ook_type('StrItemMinCheck', schema)
+        ook_type = object_type.create_ook_type('StrItemMinCheck', schema)
         self.assertIsNotNone(ook_type)
 
         ook_object = ook_type()
 
         # None test, with no required fields.
-        object_tool.validate_object(ook_object)
+        object_type.validate_object(ook_object)
 
         # Good Test
         ook_object.list_property = []
-        object_tool.validate_object(ook_object)
+        object_type.validate_object(ook_object)
         ook_object.list_property.append('four')
-        object_tool.validate_object(ook_object)
+        object_type.validate_object(ook_object)
 
         # Bad Test
         ook_object.list_property.append('one')
         self.assertRaisesRegexp(
             ValueError,
             r'''The value of "one" for "\['four', 'one'\]" fails min of 4.''',
-            object_tool.validate_object, ook_object)
+            object_type.validate_object, ook_object)
 
         # Test the item min setting for numeric items.
         schema = {
             'list_property': {'type': 'list', 'item_type': 'int', 'item_min': 4}
         }
 
-        ook_type = object_tool.create_ook_type('StrItemMinCheck', schema)
+        ook_type = object_type.create_ook_type('StrItemMinCheck', schema)
         self.assertIsNotNone(ook_type)
 
         ook_object = ook_type()
 
         # None test, with no required fields.
-        object_tool.validate_object(ook_object)
+        object_type.validate_object(ook_object)
 
         # Good Test
         ook_object.list_property = []
-        object_tool.validate_object(ook_object)
+        object_type.validate_object(ook_object)
         ook_object.list_property.append(4)
-        object_tool.validate_object(ook_object)
+        object_type.validate_object(ook_object)
 
         # Bad Test
         ook_object.list_property.append(1)
         self.assertRaisesRegexp(
             ValueError,
             r'''The value of "1" for "\[4, 1\]" fails min of 4.''',
-            object_tool.validate_object, ook_object)
+            object_type.validate_object, ook_object)
 
     def test_item_max_setting(self):
         """Validate 'item_max' setting."""
@@ -583,19 +583,19 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
                 'type': 'list', 'item_type': 'str', 'item_max': 4}
         }
 
-        ook_type = object_tool.create_ook_type('StrItemMinCheck', schema)
+        ook_type = object_type.create_ook_type('StrItemMinCheck', schema)
         self.assertIsNotNone(ook_type)
 
         ook_object = ook_type()
 
         # None test, with no required fields.
-        object_tool.validate_object(ook_object)
+        object_type.validate_object(ook_object)
 
         # Good Test
         ook_object.list_property = []
-        object_tool.validate_object(ook_object)
+        object_type.validate_object(ook_object)
         ook_object.list_property.append('four')
-        object_tool.validate_object(ook_object)
+        object_type.validate_object(ook_object)
 
         # Bad Test
         ook_object.list_property.append('seven')
@@ -603,7 +603,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
             ValueError,
             r'''The value of "seven" for '''
             '''"\['four', 'seven'\]" fails max of 4.''',
-            object_tool.validate_object, ook_object)
+            object_type.validate_object, ook_object)
 
         # Test the item min setting for numeric items.
         schema = {
@@ -611,44 +611,44 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
                 'type': 'list', 'item_type': 'int', 'item_max': 4}
         }
 
-        ook_type = object_tool.create_ook_type('StrItemMinCheck', schema)
+        ook_type = object_type.create_ook_type('StrItemMinCheck', schema)
         self.assertIsNotNone(ook_type)
 
         ook_object = ook_type()
 
         # None test, with no required fields.
-        object_tool.validate_object(ook_object)
+        object_type.validate_object(ook_object)
 
         # Good Test
         ook_object.list_property = []
-        object_tool.validate_object(ook_object)
+        object_type.validate_object(ook_object)
         ook_object.list_property.append(4)
-        object_tool.validate_object(ook_object)
+        object_type.validate_object(ook_object)
 
         # Bad Test
         ook_object.list_property.append(7)
         self.assertRaisesRegexp(
             ValueError,
             r'''The value of "7" for "\[4, 7\]" fails max of 4.''',
-            object_tool.validate_object, ook_object)
+            object_type.validate_object, ook_object)
 
 
 class ValidateValueTestCase(base_test_case.BaseTestCase):
-    """Test object_tools.validate_value method."""
+    """Test object_types.validate_value method."""
 
     def test_bad_validate_value(self):
         """ValueError testing of validate_value."""
         self.assertRaisesRegexp(
             ValueError,
             '"ook_object" is required, cannot be None.',
-            object_tool.validate_value, 'some_value', None)
+            object_type.validate_value, 'some_value', None)
 
         self.assertRaisesRegexp(
             ValueError,
             '"ook_object" must be BaseType or child type of BaseType',
-            object_tool.validate_value, 'some_value', "can't be string")
+            object_type.validate_value, 'some_value', "can't be string")
 
-        ook_type = object_tool.create_ook_type(
+        ook_type = object_type.create_ook_type(
             'BadValidateValue',
             {
                 'prop1': {'type': 'int'}
@@ -659,28 +659,28 @@ class ValidateValueTestCase(base_test_case.BaseTestCase):
         self.assertRaisesRegexp(
             ValueError,
             '"property_name" is required, cannot be None.',
-            object_tool.validate_value, None, ook_object)
+            object_type.validate_value, None, ook_object)
 
         self.assertRaisesRegexp(
             ValueError,
             '"property_name" is not a valid string.',
-            object_tool.validate_value, '', ook_object)
+            object_type.validate_value, '', ook_object)
 
         self.assertRaisesRegexp(
             ValueError,
             '"property_name" is not a valid string.',
-            object_tool.validate_value, 5, ook_object)
+            object_type.validate_value, 5, ook_object)
 
         self.assertRaisesRegexp(
             ValueError,
             '"property_name" is not a recognized property.',
-            object_tool.validate_value, 'illegal property name', ook_object)
+            object_type.validate_value, 'illegal property name', ook_object)
 
         ook_object.prop1 = 'invalid string value'
         self.assertRaisesRegexp(
             ValueError,
             'The value for "prop1" is not of type "int": invalid string value',
-            object_tool.validate_value, 'prop1', ook_object)
+            object_type.validate_value, 'prop1', ook_object)
 
 
     def test_validate_value_value_arg(self):
@@ -689,8 +689,8 @@ class ValidateValueTestCase(base_test_case.BaseTestCase):
         single_property_schema = {
             'prop1': {'type': 'str'}
         }
-        ook_type = object_tool.create_ook_type(
+        ook_type = object_type.create_ook_type(
             'GoodValidateValue', single_property_schema)
         ook_object = ook_type({'prop1': 'Hot Dog'})
-        object_tool.validate_value('prop1', ook_object)
+        object_type.validate_value('prop1', ook_object)
 
