@@ -33,32 +33,32 @@ class SchemaType(CoreType):
             if not isinstance(value, SchemaProperty):
                 self[key] = SchemaProperty(value)
 
+    @staticmethod
+    def perfect_schema(candidate_schema):
+        if candidate_schema is None:
+            raise ValueError('"candidate_schema" must be provided.')
+        if not isinstance(candidate_schema, SchemaType):
+            raise ValueError('"candidate_schema" must be of SchemaType.')
 
-def perfect_schema(candidate_schema):
-    if candidate_schema is None:
-        raise ValueError('"candidate_schema" must be provided.')
-    if not isinstance(candidate_schema, SchemaType):
-        raise ValueError('"candidate_schema" must be of SchemaType.')
+        for property_schema in candidate_schema.values():
+            SchemaProperty.perfect_schema_property(property_schema)
 
-    for property_schema in candidate_schema.values():
-        SchemaProperty.perfect_schema_property(property_schema)
+    @staticmethod
+    def validate_schema(candidate_schema):
+        """
 
+        :param candidate_schema:
+        :type candidate_schema:
+        :return:
+        :rtype:
+        """
+        if candidate_schema is None:
+            raise ValueError('"candidate_schema" must be provided.')
+        if not isinstance(candidate_schema, SchemaType):
+            raise ValueError('"candidate_schema" must be of SchemaType.')
 
-def validate_schema(candidate_schema):
-    """
+        value_errors = []
+        for candidate_property_schema in candidate_schema.values():
+            SchemaProperty.validate_schema_property(candidate_property_schema)
 
-    :param candidate_schema:
-    :type candidate_schema:
-    :return:
-    :rtype:
-    """
-    if candidate_schema is None:
-        raise ValueError('"candidate_schema" must be provided.')
-    if not isinstance(candidate_schema, SchemaType):
-        raise ValueError('"candidate_schema" must be of SchemaType.')
-
-    value_errors = []
-    for candidate_property_schema in candidate_schema.values():
-        SchemaProperty.validate_schema_property(candidate_property_schema)
-
-    return value_errors
+        return value_errors
