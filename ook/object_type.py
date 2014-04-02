@@ -69,9 +69,9 @@ Classes
 
 """
 
-import meta_type
-from meta_type import MetaType
+from meta_type import MetaType, SchemaProperty
 from schema_type import SchemaType
+
 
 class BaseType(MetaType):
     """BaseType provides the **Ook** schema interface.
@@ -133,7 +133,7 @@ def validate_object(the_object):
     for property_name, property_schema in the_object.get_schema().iteritems():
         value = the_object.get(property_name, None)
 
-        meta_type.validate_value(
+        SchemaProperty.validate_value(
             property_name, property_schema, value, value_errors)
 
     if value_errors:
@@ -143,9 +143,9 @@ def validate_object(the_object):
 def validate_value(property_name, ook_object):
     """Validate a value against a given **SchemaProperty**
 
-    :param value: The value to be validated against the given
+    :param property_name: The value to be validated against the given
         **SchemaProperty**.
-    :type value: object
+    :type property_name: basestring
     :param property_schema: The **SchemaProperty** utilized for validation.
     :type property_schema:  dict, ook.object_type.BaseType,
         ook.object_type.SchemaProperty
@@ -178,7 +178,7 @@ def validate_value(property_name, ook_object):
 
     value = ook_object.get(property_name, None)
 
-    meta_type.validate_value(
+    SchemaProperty.validate_value(
         property_name, property_schema, value, value_errors)
 
     if value_errors:

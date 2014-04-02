@@ -1,6 +1,5 @@
 from test_utils import base_test_case
 
-from ook import meta_type
 from ook.meta_type import SchemaProperty
 from ook import schema_type
 from ook.schema_type import SchemaType
@@ -14,12 +13,12 @@ class ValidateSchemaProperty(base_test_case.BaseTestCase):
         self.assertRaisesRegexp(
             ValueError,
             '"candidate_schema_property" must be provided.',
-            meta_type.validate_schema_property, None)
+            SchemaProperty.validate_schema_property, None)
 
         self.assertRaisesRegexp(
             ValueError,
             '"candidate_schema_property" must be SchemaProperty type.',
-            meta_type.validate_schema_property, {})
+            SchemaProperty.validate_schema_property, {})
 
 
 class ValidateSchemaTestCase(base_test_case.BaseTestCase):
@@ -74,7 +73,7 @@ class PerfectSchemaPropertyTestCase(base_test_case.BaseTestCase):
             },
             candidate_schema_property)
 
-        meta_type.perfect_schema_property(candidate_schema_property)
+        SchemaProperty.perfect_schema_property(candidate_schema_property)
 
         self.assertEqual(10, len(candidate_schema_property))
         self.assertDictEqual(
@@ -115,7 +114,7 @@ class PerfectSchemaPropertyTestCase(base_test_case.BaseTestCase):
             },
             candidate_schema_property)
 
-        meta_type.perfect_schema_property(candidate_schema_property)
+        SchemaProperty.perfect_schema_property(candidate_schema_property)
 
         self.assertEqual(10, len(candidate_schema_property))
         self.assertDictEqual(
@@ -137,12 +136,12 @@ class PerfectSchemaPropertyTestCase(base_test_case.BaseTestCase):
         self.assertRaisesRegexp(
             ValueError,
             '"candidate_schema_property" must be provided.',
-            meta_type.perfect_schema_property, None)
+            SchemaProperty.perfect_schema_property, None)
 
         self.assertRaisesRegexp(
             ValueError,
             '"candidate_schema_property" must be SchemaProperty type.',
-            meta_type.perfect_schema_property, {})
+            SchemaProperty.perfect_schema_property, {})
 
 
 class PerfectSchemaTestCase(base_test_case.BaseTestCase):

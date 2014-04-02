@@ -41,7 +41,7 @@ def perfect_schema(candidate_schema):
         raise ValueError('"candidate_schema" must be of SchemaType.')
 
     for property_schema in candidate_schema.values():
-        meta_type.perfect_schema_property(property_schema)
+        SchemaProperty.perfect_schema_property(property_schema)
 
 
 def validate_schema(candidate_schema):
@@ -59,6 +59,6 @@ def validate_schema(candidate_schema):
 
     value_errors = []
     for candidate_property_schema in candidate_schema.values():
-        meta_type.validate_schema_property(candidate_property_schema)
+        SchemaProperty.validate_schema_property(candidate_property_schema)
 
     return value_errors
