@@ -35,6 +35,13 @@ class SchemaType(CoreType):
 
     @staticmethod
     def perfect_schema(candidate_schema):
+        """
+
+        :param candidate_schema:
+        :type candidate_schema:
+        :return:
+        :rtype:
+        """
         if candidate_schema is None:
             raise ValueError('"candidate_schema" must be provided.')
         if not isinstance(candidate_schema, SchemaType):

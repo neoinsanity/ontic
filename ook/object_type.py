@@ -63,10 +63,6 @@ complete configured data type definition would be constructed as::
     # or
     my_object['some_property'] = 7
 
-
-Classes
---------
-
 """
 
 from meta_type import MetaType, SchemaProperty
