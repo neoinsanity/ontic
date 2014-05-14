@@ -348,8 +348,7 @@ class SchemaProperty(MetaType):
         :rtype:
         """
         # Divide between single and collection types for validation processing.
-        schema_value_type = SchemaProperty.TYPE_MAP.get(
-            property_schema.get('type', None), None)
+        schema_value_type = SchemaProperty.TYPE_MAP.get(property_schema.type)
 
         if not schema_value_type:
             # if no schema_type, then just check that the value is in an enum if
@@ -407,65 +406,64 @@ class SchemaProperty(MetaType):
         if property_schema.type in {'list', 'set'}:
             validation_list = list()
             if property_schema.enum:
-                def validate_enum(item, property_schema, value_errors):
+                def validate_enum(item, prop_schema, val_errors):
                     if not SchemaProperty.enum_validation(
-                            property_schema, item):
-                        value_errors.append(
+                            prop_schema, item):
+                        val_errors.append(
                             'The value "%s" for "%s" not in enumeration %s.' %
-                            (item, value, list(property_schema.enum)))
+                            (item, value, list(prop_schema.enum)))
 
                 validation_list.append(validate_enum)
 
             if property_schema.item_type:
-                def validate_item_type(item, property_schema, value_errors):
+                def validate_item_type(item, prop_schema, val_errors):
                     schema_value_type = SchemaProperty.TYPE_MAP.get(
-                        property_schema.item_type)
+                        prop_schema.item_type)
                     if not isinstance(item, schema_value_type):
-                        value_errors.append(
+                        val_errors.append(
                             'The value for "%s" is not of type "%s": %s' %
-                            (value, property_schema.item_type, str(item)))
+                            (value, prop_schema.item_type, str(item)))
 
                 validation_list.append(validate_item_type)
 
                 if property_schema.regex and property_schema.item_type == 'str':
-                    def validate_item_regex(item, property_schema,
-                                            value_errors):
-                        if not re.match(property_schema.regex, item):
-                            value_errors.append(
+                    def validate_item_regex(item, prop_schema, val_errors):
+                        if not re.match(prop_schema.regex, item):
+                            val_errors.append(
                                 'Value "%s" for %s does not meet regex: %s' %
-                                (item, value, property_schema.regex))
+                                (item, value, prop_schema.regex))
 
                     validation_list.append(validate_item_regex)
 
             if property_schema.item_min:
-                def validate_item_min(item, property_schema, value_errors):
-                    if ((property_schema.item_type == 'str') and
-                                len(item) < property_schema.item_min):
-                        value_errors.append(
+                def validate_item_min(item, prop_schema, val_errors):
+                    if ((prop_schema.item_type == 'str') and
+                                len(item) < prop_schema.item_min):
+                        val_errors.append(
                             'The value of "%s" for "%s" fails min of %s.' %
-                            (item, value, property_schema.item_min))
-                    elif ((property_schema.item_type in
+                            (item, value, prop_schema.item_min))
+                    elif ((prop_schema.item_type in
                                SchemaProperty.COMPARABLE_TYPES)
-                          and item < property_schema.item_min):
-                        value_errors.append(
+                          and item < prop_schema.item_min):
+                        val_errors.append(
                             'The value of "%s" for "%s" fails min of %s.' %
-                            (item, value, property_schema.item_min))
+                            (item, value, prop_schema.item_min))
 
                 validation_list.append(validate_item_min)
 
             if property_schema.item_max:
-                def validate_item_max(item, property_schema, value_errors):
-                    if ((property_schema.item_type == 'str') and
-                                len(item) > property_schema.item_max):
-                        value_errors.append(
+                def validate_item_max(item, prop_schema, val_errors):
+                    if ((prop_schema.item_type == 'str') and
+                                len(item) > prop_schema.item_max):
+                        val_errors.append(
                             'The value of "%s" for "%s" fails max of %s.' %
                             (item, value, property_schema.item_max))
-                    elif ((property_schema.item_type in
+                    elif ((prop_schema.item_type in
                                SchemaProperty.COMPARABLE_TYPES)
-                          and item > property_schema.item_max):
-                        value_errors.append(
+                          and item > prop_schema.item_max):
+                        val_errors.append(
                             'The value of "%s" for "%s" fails max of %s.' %
-                            (item, value, property_schema.item_max))
+                            (item, value, prop_schema.item_max))
 
                 validation_list.append(validate_item_max)
 
