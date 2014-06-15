@@ -71,9 +71,9 @@ def create_ook_type(name, schema):
     finalized_schema = SchemaType()
 
     for key, value in schema.iteritems():
-        propertySchema = PropertySchema(value)
-        validate_object(propertySchema)
-        finalized_schema[key] = propertySchema
+        property_schema = PropertySchema(value)
+        validate_object(property_schema)
+        finalized_schema[key] = property_schema
 
     ook_type.OOK_SCHEMA = finalized_schema
 
@@ -104,7 +104,6 @@ def validate_object(the_object):
         required = metadata.get('required', False)
         value = the_object.get(key, None)
         value_type = type_map.get(metadata.get('type', None), None)
-        item_type = type_map.get(metadata.get('item_type', None), None)
 
         # required: True | False
         if required and value is None:
@@ -127,7 +126,7 @@ def validate_object(the_object):
                         key, metadata.type, str(value)))
                 continue  # don't assume successful testing based on value_type
 
-            #todo: raul - split this up into collection and single validation.
+            # todo: raul - split this up into collection and single validation.
             validate_value(key, metadata, value_type, value, value_errors)
 
     if value_errors:
@@ -175,15 +174,15 @@ def validate_schema(the_schema):
                 '"the_schema" argument must be of type dict, BaseType, '
                 'or SchemaType,')
 
-    #todo: raul - validation should happen like this, but will defer until
+    # todo: raul - validation should happen like this, but will defer until
     # nested validation.
     # validate_object(the_schema)
 
-    for property in the_schema.values():
-        validate_property(property)
+    for the_property in the_schema.values():
+        validate_property(the_property)
 
 
-#todo: raulg - This is going to get revamped in next rev.
+# todo: raulg - This is going to get revamped in next rev.
 def validate_value(key, metadata, value_type, value, value_errors):
     """ Method to validate an object value meets schema requirements.
 
@@ -202,32 +201,26 @@ def validate_value(key, metadata, value_type, value, value_errors):
     """
     # min
     if hasattr(metadata, 'min'):
-        if ((
-                            value_type is basestring or value_type in
-                        collection_type_set) and len(
-                value) < metadata.min):
+        if ((value_type is basestring or value_type in collection_type_set) and
+                    len(value) < metadata.min):
             value_errors.append(
                 'The value for "%s" fails the minimum length of %s' % (
                     key, metadata.min))
-        elif (
-                        value_type is int or value_type is float) and value < \
-                metadata.min:
+        elif ((value_type is int or value_type is float) and
+                      value < metadata.min):
             value_errors.append(
                 'The value of "%s" for "%s" is less than %s min.' % (
                     value, key, metadata.min))
 
     # max
     if hasattr(metadata, 'max'):
-        if ((
-                            value_type is basestring or value_type in
-                        collection_type_set) and len(
-                value) > metadata.max):
+        if ((value_type is basestring or value_type in collection_type_set) and
+                    len(value) > metadata.max):
             value_errors.append(
                 'The value for "%s" fails the maximum length of %s' % (
                     key, metadata.max))
-        elif (
-                        value_type is int or value_type is float) and value > \
-                metadata.max:
+        elif ((value_type is int or value_type is float) and
+                      value > metadata.max):
             value_errors.append(
                 'The value of "%s" for "%s" is more than "%s" max.' % (
                     value, key, metadata.max))
