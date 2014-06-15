@@ -1,5 +1,10 @@
-object_type Classes
+Object Class
 ====================
 
 .. automodule:: ook.object_type
-  :members:
+
+Classes
+--------
+
+.. autoclass:: ook.object_type.BaseType
+    :members:

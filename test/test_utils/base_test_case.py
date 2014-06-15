@@ -9,7 +9,7 @@ class BaseTestCase(unittest.TestCase):
         """Assert that ook_object exhibits dynamic property accessing.
 
         :param ook_object: Ook object to validate for dynamic access.
-        :type ook_object: ook.object_type.BaseType
+        :type ook_object: ook.meta_type.CoreType
         """
         # Assignment by attribute
         ook_object.attr1 = 1

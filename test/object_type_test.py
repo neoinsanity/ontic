@@ -1,15 +1,6 @@
 """Test the basic functionality of the base and core data types."""
-import base_test_case
 from ook import object_type
-
-
-class CoreTypeTest(base_test_case.BaseTestCase):
-    """CoreType test cases."""
-
-    def test_dynamic_access(self):
-        """_CoreType property access as a Dict and an Attribute."""
-        core_object = object_type._CoreType()
-        self.assert_dynamic_accessing(core_object)
+from test.test_utils import base_test_case
 
 
 class BaseTypeTest(base_test_case.BaseTestCase):
