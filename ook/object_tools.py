@@ -201,29 +201,29 @@ def validate_value(key, metadata, value_type, value, value_errors):
     """
     # min
     if hasattr(metadata, 'min'):
-        if ((value_type is basestring or value_type in collection_type_set) and
-                    len(value) < metadata.min):
-            value_errors.append(
-                'The value for "%s" fails the minimum length of %s' % (
-                    key, metadata.min))
-        elif ((value_type is int or value_type is float) and
-                      value < metadata.min):
-            value_errors.append(
-                'The value of "%s" for "%s" is less than %s min.' % (
-                    value, key, metadata.min))
+        if value_type is basestring or value_type in collection_type_set:
+            if len(value) < metadata.min:
+                value_errors.append(
+                    'The value for "%s" fails the minimum length of %s' % (
+                        key, metadata.min))
+        elif value_type is int or value_type is float:
+            if value < metadata.min:
+                value_errors.append(
+                    'The value of "%s" for "%s" is less than %s min.' % (
+                        value, key, metadata.min))
 
     # max
     if hasattr(metadata, 'max'):
-        if ((value_type is basestring or value_type in collection_type_set) and
-                    len(value) > metadata.max):
-            value_errors.append(
-                'The value for "%s" fails the maximum length of %s' % (
-                    key, metadata.max))
-        elif ((value_type is int or value_type is float) and
-                      value > metadata.max):
-            value_errors.append(
-                'The value of "%s" for "%s" is more than "%s" max.' % (
-                    value, key, metadata.max))
+        if value_type is basestring or value_type in collection_type_set:
+            if len(value) > metadata.max:
+                value_errors.append(
+                    'The value for "%s" fails the maximum length of %s' % (
+                        key, metadata.max))
+        elif value_type is int or value_type is float:
+            if value > metadata.max:
+                value_errors.append(
+                    'The value of "%s" for "%s" is more than "%s" max.' % (
+                        value, key, metadata.max))
 
     # regex validation
     if hasattr(metadata, 'regex'):
@@ -238,4 +238,3 @@ def validate_value(key, metadata, value_type, value, value_errors):
                     value_errors.append(
                         'Value %s in %s does not meet regex: %s' % (
                             item_value, key, metadata))
-
