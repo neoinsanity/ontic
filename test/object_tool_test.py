@@ -125,9 +125,9 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         self.assertDictEqual(
             {'some_property': {'default': False,
                                'enum': None,
-                               'item_max': None,
-                               'item_min': None,
-                               'item_type': None,
+                               'member_max': None,
+                               'member_min': None,
+                               'member_type': None,
                                'max': None,
                                'min': None,
                                'regex': None,
@@ -190,7 +190,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
             object_type.validate_object, ook_object)
 
         # Collection testing
-        ####################
+        # ###################
         schema = {
             'enum_property': {'type': 'list', 'enum': {'dog', 'cat'}}
         }
@@ -213,8 +213,8 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         ook_object.enum_property = ['fish']
         self.assertRaisesRegexp(
             ValueError,
-            r'''The value "fish" for "\['fish'\]" not in enumeration '''
-            r'''\['dog', 'cat'\].''',
+            r'''The value "fish" for "enum_property" not in'''
+            r''' enumeration \['cat', 'dog'\].''',
             object_type.validate_object, ook_object)
 
     def test_min_setting(self):
@@ -467,9 +467,9 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
                                 object_type.validate_object, ook_object)
 
     def test_item_type_setting(self):
-        """Validate 'item_type' setting."""
+        """Validate 'member_type' setting."""
         schema = {
-            'list_property': {'type': 'list', 'item_type': 'str'}
+            'list_property': {'type': 'list', 'member_type': 'str'}
         }
 
         ook_type = object_type.create_ook_type('ItemTypeCheck', schema)
@@ -490,13 +490,13 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         ook_object.list_property.append(99)
         self.assertRaisesRegexp(
             ValueError,
-            r'''The value for "\['some_item', 99\]" is not of type "str": 99''',
+            r'''The value "99" for "list_property" is not of type "str".''',
             object_type.validate_object, ook_object)
 
     def test_collection_regex_setting(self):
         """Validate string collection with 'regex' setting."""
         schema = {
-            'set_property': {'type': 'set', 'item_type': 'str', 'regex': 'b+'}
+            'set_property': {'type': 'set', 'member_type': 'str', 'regex': 'b+'}
         }
 
         ook_type = object_type.create_ook_type('CollectionRegexCheck', schema)
@@ -517,15 +517,15 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         ook_object.set_property.add('xxxxxx')
         self.assertRaisesRegexp(
             ValueError,
-            r'''Value "xxxxxx" for '''
-            '''set\(\['xxxxxx', 'bbbbb'\]\) does not meet regex: b+''',
+            r'''Value "xxxxxx" for "set_property" does not meet regex: b+''',
             object_type.validate_object, ook_object)
 
     def test_item_min_setting(self):
-        """Validate 'item_min' setting."""
+        """Validate 'member_min' setting."""
         # Test the item min setting for string items.
         schema = {
-            'list_property': {'type': 'list', 'item_type': 'str', 'item_min': 4}
+            'list_property': {'type': 'list', 'member_type': 'str',
+                              'member_min': 4}
         }
 
         ook_type = object_type.create_ook_type('StrItemMinCheck', schema)
@@ -546,12 +546,14 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         ook_object.list_property.append('one')
         self.assertRaisesRegexp(
             ValueError,
-            r'''The value of "one" for "\['four', 'one'\]" fails min of 4.''',
+            r'''The value of "one" for "list_property" '''
+            r'''fails min length of 4.''',
             object_type.validate_object, ook_object)
 
         # Test the item min setting for numeric items.
         schema = {
-            'list_property': {'type': 'list', 'item_type': 'int', 'item_min': 4}
+            'list_property': {'type': 'list', 'member_type': 'int',
+                              'member_min': 4}
         }
 
         ook_type = object_type.create_ook_type('StrItemMinCheck', schema)
@@ -572,15 +574,15 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         ook_object.list_property.append(1)
         self.assertRaisesRegexp(
             ValueError,
-            r'''The value of "1" for "\[4, 1\]" fails min of 4.''',
+            r'''The value of "1" for "list_property" fails min size of 4.''',
             object_type.validate_object, ook_object)
 
     def test_item_max_setting(self):
-        """Validate 'item_max' setting."""
+        """Validate 'member_max' setting."""
         # Test the item max setting for string items.
         schema = {
             'list_property': {
-                'type': 'list', 'item_type': 'str', 'item_max': 4}
+                'type': 'list', 'member_type': 'str', 'member_max': 4}
         }
 
         ook_type = object_type.create_ook_type('StrItemMinCheck', schema)
@@ -601,14 +603,14 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         ook_object.list_property.append('seven')
         self.assertRaisesRegexp(
             ValueError,
-            r'''The value of "seven" for '''
-            '''"\['four', 'seven'\]" fails max of 4.''',
+            r'''The value of "seven" for "list_property" '''
+            r'''fails max length of 4.''',
             object_type.validate_object, ook_object)
 
         # Test the item min setting for numeric items.
         schema = {
             'list_property': {
-                'type': 'list', 'item_type': 'int', 'item_max': 4}
+                'type': 'list', 'member_type': 'int', 'member_max': 4}
         }
 
         ook_type = object_type.create_ook_type('StrItemMinCheck', schema)
@@ -629,7 +631,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         ook_object.list_property.append(7)
         self.assertRaisesRegexp(
             ValueError,
-            r'''The value of "7" for "\[4, 7\]" fails max of 4.''',
+            r'''The value of "7" for "list_property" fails max size of 4.''',
             object_type.validate_object, ook_object)
 
 

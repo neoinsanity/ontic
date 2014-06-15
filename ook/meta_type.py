@@ -99,12 +99,12 @@ class SchemaProperty(MetaType):
             float. Defaults to None.
         *regex*
             string. Defaults to None.
-        *item_type*
+        *member_type*
             datetime*, date*, time*, str, int, float, bool, dict, set, list,
             none. Default to None.
-        *tem_min*
+        *member_min*
             float. Defaults to None.
-        *item_max*
+        *member_max*
             float, Defaults to None.
 
     """
@@ -131,9 +131,9 @@ class SchemaProperty(MetaType):
             'min': None,
             'max': None,
             'regex': None,
-            'item_type': None,
-            'item_min': None,
-            'item_max': None,
+            'member_type': None,
+            'member_min': None,
+            'member_max': None,
         }),
         'default': MetaType({
             'type': 'bool',
@@ -143,9 +143,9 @@ class SchemaProperty(MetaType):
             'min': None,
             'max': None,
             'regex': None,
-            'item_type': None,
-            'item_min': None,
-            'item_max': None,
+            'member_type': None,
+            'member_min': None,
+            'member_max': None,
         }),
         'required': MetaType({
             'type': 'bool',
@@ -155,9 +155,9 @@ class SchemaProperty(MetaType):
             'min': None,
             'max': None,
             'regex': None,
-            'item_type': None,
-            'item_min': None,
-            'item_max': None,
+            'member_type': None,
+            'member_min': None,
+            'member_max': None,
         }),
         'enum': MetaType({
             'type': 'set',
@@ -167,9 +167,9 @@ class SchemaProperty(MetaType):
             'min': None,
             'max': None,
             'regex': None,
-            'item_type': None,
-            'item_min': None,
-            'item_max': None,
+            'member_type': None,
+            'member_min': None,
+            'member_max': None,
         }),
         'min': MetaType({
             'type': float,
@@ -179,9 +179,9 @@ class SchemaProperty(MetaType):
             'min': None,
             'max': None,
             'regex': None,
-            'item_type': None,
-            'item_min': None,
-            'item_max': None,
+            'member_type': None,
+            'member_min': None,
+            'member_max': None,
         }),
         'max': MetaType({
             'type': float,
@@ -191,9 +191,9 @@ class SchemaProperty(MetaType):
             'min': None,
             'max': None,
             'regex': None,
-            'item_type': None,
-            'item_min': None,
-            'item_max': None,
+            'member_type': None,
+            'member_min': None,
+            'member_max': None,
         }),
         'regex': MetaType({
             'type': 'str',
@@ -203,11 +203,11 @@ class SchemaProperty(MetaType):
             'min': 1,
             'max': None,
             'regex': None,
-            'item_type': None,
-            'item_min': None,
-            'item_max': None,
+            'member_type': None,
+            'member_min': None,
+            'member_max': None,
         }),
-        'item_type': MetaType({
+        'member_type': MetaType({
             'type': 'str',
             'default': None,
             'required': True,
@@ -226,11 +226,11 @@ class SchemaProperty(MetaType):
             'min': None,
             'max': None,
             'regex': None,
-            'item_type': None,
-            'item_min': None,
-            'item_max': None,
+            'member_type': None,
+            'member_min': None,
+            'member_max': None,
         }),
-        'item_min': MetaType({
+        'member_min': MetaType({
             'type': float,
             'default': None,
             'required': True,
@@ -238,11 +238,11 @@ class SchemaProperty(MetaType):
             'min': None,
             'max': None,
             'regex': None,
-            'item_type': None,
-            'item_min': None,
-            'item_max': None,
+            'member_type': None,
+            'member_min': None,
+            'member_max': None,
         }),
-        'item_max': MetaType({
+        'member_max': MetaType({
             'type': float,
             'default': None,
             'required': True,
@@ -250,9 +250,9 @@ class SchemaProperty(MetaType):
             'min': None,
             'max': None,
             'regex': None,
-            'item_type': None,
-            'item_min': None,
-            'item_max': None,
+            'member_type': None,
+            'member_min': None,
+            'member_max': None,
         }),
     })
 
@@ -380,7 +380,7 @@ class SchemaProperty(MetaType):
                         (value, key, list(property_schema.enum)))
                     return  # No further processing can occur
 
-                SchemaProperty.non_none_value_validation(
+                SchemaProperty.non_none_singular_validation(
                     key, property_schema, value, value_errors)
 
     @staticmethod
@@ -407,91 +407,98 @@ class SchemaProperty(MetaType):
                                 (value, key, property_schema.max))
 
         if property_schema.type in {'list', 'set'}:
-            validation_list = list()
+            validators = list()
+
             if property_schema.enum:
-                def validate_enum(item, prop_schema, val_errors):
-                    if not SchemaProperty.enum_validation(
-                            prop_schema, item):
-                        val_errors.append(
-                            'The value "%s" for "%s" not in enumeration %s.' %
-                            (item, value, list(prop_schema.enum)))
+                validators.append(SchemaProperty.validate_enum)
+            if property_schema.member_type:
+                validators.append(SchemaProperty.validate_item_type)
+            if property_schema.regex and property_schema.member_type == 'str':
+                validators.append(SchemaProperty.validate_item_regex)
+            if property_schema.member_min:
+                validators.append(SchemaProperty.validate_item_min)
+            if property_schema.member_max:
+                validators.append(SchemaProperty.validate_item_max)
 
-                validation_list.append(validate_enum)
-
-            if property_schema.item_type:
-                def validate_item_type(item, prop_schema, val_errors):
-                    schema_value_type = TYPE_MAP.get(
-                        prop_schema.item_type)
-                    if not isinstance(item, schema_value_type):
-                        val_errors.append(
-                            'The value for "%s" is not of type "%s": %s' %
-                            (value, prop_schema.item_type, str(item)))
-
-                validation_list.append(validate_item_type)
-
-                if property_schema.regex and property_schema.item_type == 'str':
-                    def validate_item_regex(item, prop_schema, val_errors):
-                        if not re.match(prop_schema.regex, item):
-                            val_errors.append(
-                                'Value "%s" for %s does not meet regex: %s' %
-                                (item, value, prop_schema.regex))
-
-                    validation_list.append(validate_item_regex)
-
-            if property_schema.item_min:
-                def validate_item_min(item, prop_schema, val_errors):
-                    if prop_schema.item_type == 'str':
-                        if len(item) < prop_schema.item_min:
-                            val_errors.append(
-                                'The value of "%s" for "%s" fails min of %s.' %
-                                (item, value, prop_schema.item_min))
-                    elif prop_schema.item_type in COMPARABLE_TYPES:
-                        if item < prop_schema.item_min:
-                            val_errors.append(
-                                'The value of "%s" for "%s" fails min of %s.' %
-                                (item, value, prop_schema.item_min))
-
-                validation_list.append(validate_item_min)
-
-            if property_schema.item_max:
-                def validate_item_max(item, prop_schema, val_errors):
-                    if prop_schema.item_type == 'str':
-                        if len(item) > prop_schema.item_max:
-                            val_errors.append(
-                                'The value of "%s" for "%s" fails max of %s.' %
-                                (item, value, property_schema.item_max))
-                    elif prop_schema.item_type in COMPARABLE_TYPES:
-                        if item > prop_schema.item_max:
-                            val_errors.append(
-                                'The value of "%s" for "%s" fails max of %s.' %
-                                (item, value, prop_schema.item_max))
-
-                validation_list.append(validate_item_max)
-
-            for item_value in value:
-                SchemaProperty.validate_collection_item_value(item_value,
-                                                              property_schema,
-                                                              validation_list,
-                                                              value_errors)
+            for member_value in value:
+                SchemaProperty.validate_collection_values(
+                    key,
+                    member_value,
+                    property_schema,
+                    validators,
+                    value_errors)
 
     @staticmethod
-    def validate_collection_item_value(
-            item, property_schema, validation_list, value_errors):
+    def validate_collection_values(
+            key,
+            member_value,
+            property_schema,
+            validators,
+            value_errors):
         """
 
         :param item:
         :type item: bool, list, set, int, str, float,
         :param property_schema:
         :type property_schema:
-        :param validation_list:
-        :type validation_list: list
+        :param validators:
+        :type validators: list
         :param value_errors:
         :type value_errors: list
         :return:
         :rtype:
         """
-        for validation in validation_list:
-            validation(item, property_schema, value_errors)
+        for validator in validators:
+            validator(key, member_value, property_schema, value_errors)
+
+    @staticmethod
+    def validate_enum(key, member_value, property_schema, val_errors):
+        if not SchemaProperty.enum_validation(property_schema, member_value):
+            val_errors.append(
+                'The value "%s" for "%s" not in enumeration %s.' %
+                (member_value, key, sorted(list(property_schema.enum))))
+
+    @staticmethod
+    def validate_item_type(key, member_value, property_schema, val_errors):
+        schema_value_type = TYPE_MAP.get(
+            property_schema.member_type)
+        if not isinstance(member_value, schema_value_type):
+            val_errors.append(
+                'The value "%s" for "%s" is not of type "%s".' %
+                (str(member_value), key, property_schema.member_type))
+
+    @staticmethod
+    def validate_item_regex(key, member_value, property_schema, val_errors):
+        if not re.match(property_schema.regex, member_value):
+            val_errors.append(
+                'Value "%s" for "%s" does not meet regex: %s' %
+                (member_value, key, property_schema.regex))
+
+    @staticmethod
+    def validate_item_min(key, member_value, property_schema, val_errors):
+        if property_schema.member_type == 'str':
+            if len(member_value) < property_schema.member_min:
+                val_errors.append(
+                    'The value of "%s" for "%s" fails min length of %s.' %
+                    (member_value, key, property_schema.member_min))
+        elif property_schema.member_type in COMPARABLE_TYPES:
+            if member_value < property_schema.member_min:
+                val_errors.append(
+                    'The value of "%s" for "%s" fails min size of %s.' %
+                    (member_value, key, property_schema.member_min))
+
+    @staticmethod
+    def validate_item_max(key, member_value, property_schema, val_errors):
+        if property_schema.member_type == 'str':
+            if len(member_value) > property_schema.member_max:
+                val_errors.append(
+                    'The value of "%s" for "%s" fails max length of %s.' %
+                    (member_value, key, property_schema.member_max))
+        elif property_schema.member_type in COMPARABLE_TYPES:
+            if member_value > property_schema.member_max:
+                val_errors.append(
+                    'The value of "%s" for "%s" fails max size of %s.' %
+                    (member_value, key, property_schema.member_max))
 
     @staticmethod
     def enum_validation(property_schema, value):
@@ -525,7 +532,7 @@ class SchemaProperty(MetaType):
         return True
 
     @staticmethod
-    def non_none_value_validation(key, property_schema, value, value_errors):
+    def non_none_singular_validation(key, property_schema, value, value_errors):
         """ Method to validate an object value meets schema requirements.
 
         :param key:

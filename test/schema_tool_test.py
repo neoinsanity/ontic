@@ -61,9 +61,9 @@ class PerfectSchemaPropertyTestCase(base_test_case.BaseTestCase):
             {
                 'default': False,
                 'enum': None,
-                'item_max': None,
-                'item_min': None,
-                'item_type': None,
+                'member_max': None,
+                'member_min': None,
+                'member_type': None,
                 'max': None,
                 'min': None,
                 'regex': None,
@@ -78,14 +78,14 @@ class PerfectSchemaPropertyTestCase(base_test_case.BaseTestCase):
         self.assertDictEqual(
             {
                 'regex': None,
-                'item_max': None,
+                'member_max': None,
                 'enum': None,
                 'min': None,
                 'default': False,
                 'max': None,
                 'required': False,
-                'item_min': None,
-                'item_type': None,
+                'member_min': None,
+                'member_type': None,
                 'type': None
             }, candidate_schema_property)
 
@@ -101,14 +101,14 @@ class PerfectSchemaPropertyTestCase(base_test_case.BaseTestCase):
         self.assertDictEqual(
             {
                 'regex': None,
-                'item_max': None,
+                'member_max': None,
                 'enum': None,
                 'min': None,
                 'default': False,
                 'max': None,
                 'required': True,
-                'item_min': None,
-                'item_type': None,
+                'member_min': None,
+                'member_type': None,
                 'type': 'int'
             },
             candidate_schema_property)
@@ -119,14 +119,14 @@ class PerfectSchemaPropertyTestCase(base_test_case.BaseTestCase):
         self.assertDictEqual(
             {
                 'regex': None,
-                'item_max': None,
+                'member_max': None,
                 'enum': None,
                 'min': None,
                 'default': False,
                 'max': None,
                 'required': True,
-                'item_min': None,
-                'item_type': None,
+                'member_min': None,
+                'member_type': None,
                 'type': 'int'
             }, candidate_schema_property)
 
@@ -161,26 +161,26 @@ class PerfectSchemaTestCase(base_test_case.BaseTestCase):
             {
                 'prop1': {
                     'regex': None,
-                    'item_max': None,
+                    'member_max': None,
                     'enum': None,
                     'min': None,
                     'default': False,
                     'max': None,
                     'required': False,
-                    'item_min': None,
-                    'item_type': None,
+                    'member_min': None,
+                    'member_type': None,
                     'type': None
                 },
                 'prop2': {
                     'regex': None,
-                    'item_max': None,
+                    'member_max': None,
                     'enum': None,
                     'min': 5,
                     'default': False,
                     'max': None,
                     'required': False,
-                    'item_min': None,
-                    'item_type': None,
+                    'member_min': None,
+                    'member_type': None,
                     'type': 'str'
                 }},
             candidate_schema)
@@ -195,9 +195,9 @@ class PerfectSchemaTestCase(base_test_case.BaseTestCase):
                 'prop1': {
                     'default': False,
                     'enum': None,
-                    'item_max': None,
-                    'item_min': None,
-                    'item_type': None,
+                    'member_max': None,
+                    'member_min': None,
+                    'member_type': None,
                     'max': None,
                     'min': None,
                     'regex': None,
@@ -207,9 +207,9 @@ class PerfectSchemaTestCase(base_test_case.BaseTestCase):
                 'prop2': {
                     'default': False,
                     'enum': None,
-                    'item_max': None,
-                    'item_min': None,
-                    'item_type': None,
+                    'member_max': None,
+                    'member_min': None,
+                    'member_type': None,
                     'max': None,
                     'min': 5,
                     'regex': None,
