@@ -35,7 +35,7 @@ examples::
 
   Class definition of an Ook type with schema.
   >>> class MyType(ook.object_type.BaseType):
-  ...   _OOK_SCHEMA = {'the_property':{'required':True}}
+  ...   OOK_SCHEMA = {'the_property':{'required':True}}
   >>> my_object = MyType()
   >>> ook.object_tools.validate_object(my_object)
     Traceback (most recent call last):

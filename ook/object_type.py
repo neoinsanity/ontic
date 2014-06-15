@@ -3,12 +3,12 @@
 Usage
 ------
 
-The **object_type** module allows for the construction of **Ook** data types. A complete
-configured data type definition would be constructed as::
+The **object_type** module allows for the construction of **Ook** data types.
+An example data type definition would be constructed as::
 
 
     class MyType(BaseType):
-        _OOK_SCHEMA = SchemaType({
+        OOK_SCHEMA = SchemaType({
             'some_property': PropertyType({
                 'type': 'int',
                 'required': True,
@@ -33,7 +33,8 @@ Classes
 class _CoreType(dict):
     """The root type of *Ook* types.
 
-    **_CoreType** ensures that *Ook* objects can be access by either dict key or object attribute.
+    **_CoreType** ensures that *Ook* objects can be access by either dict key
+    or object attribute.
 
     :Example:
     >>> some_object = _CoreType({'key1': 'value1'})
@@ -53,7 +54,8 @@ class _CoreType(dict):
         :param kwargs: Named args to be passed to `dict` parent class.
         :type kwargs: dict
 
-        Initializes the accessor behavior to allow for property access as dict key or object
+        Initializes the accessor behavior to allow for property access as
+        dict key or object
         attribute.
         """
         # noinspection PyTypeChecker
@@ -64,8 +66,8 @@ class _CoreType(dict):
 class SchemaType(_CoreType):
     """The type definition for a schema object.
 
-    The **SchemaType** contains a dictionary of property field names and the corresponding
-    **PropertySchema** definition.
+    The **SchemaType** contains a dictionary of property field names and the
+    corresponding **PropertySchema** definition.
 
     Example SchemaType representation::
 
@@ -82,12 +84,12 @@ class SchemaType(_CoreType):
 class BaseType(_CoreType):
     """BaseType provides the **Ook** schema interface.
 
-    The **BaseType** provides the schema management functionality to a derived **Ook** type
-    instance.
+    The **BaseType** provides the schema management functionality to a
+    derived **Ook** type instance.
     """
 
-    #: The Ook schama pointer.
-    _OOK_SCHEMA = SchemaType()
+    # : The Ook schama pointer.
+    OOK_SCHEMA = SchemaType()
 
     @classmethod
     def get_schema(cls):
@@ -97,7 +99,7 @@ class BaseType(_CoreType):
             child type.
         :rtype: ook.object_type.SchemaType.
         """
-        return cls._OOK_SCHEMA
+        return cls.OOK_SCHEMA
 
 
 class PropertySchema(BaseType):
@@ -106,7 +108,8 @@ class PropertySchema(BaseType):
     *Property Schema Settings*:
 
         *type*
-            datetime*, date*, time*, str, int, float, bool, dict, set, list, none. Defaults to
+            datetime*, date*, time*, str, int, float, bool, dict, set, list,
+            none. Defaults to
             None.
         *required*
             True|False. Defaults False.
@@ -117,55 +120,79 @@ class PropertySchema(BaseType):
         *regex*
             string. Defaults to None.
         *item_type*
-            datetime*, date*, time*, str, int, float, bool, dict, set, list, none. Default to None.
+            datetime*, date*, time*, str, int, float, bool, dict, set, list,
+            none. Default to None.
         *tem_min*
             float. Defaults to None.
         *item_max*
             float, Defaults to None.
-
-    \* - Are to be added in subsequent versions.
     """
-    #: todo: Add support for datetime, date & time
-    _OOK_SCHEMA = BaseType({
-        'type': BaseType({
-            'type': 'str',
-            'required': False,
-            'enum': {'bool', 'dict', 'float', 'int', 'list', 'set', 'str'}
-        }),
-        'required': BaseType({
-            'type': 'bool',
-            'required': False,
-        }),
-        'enum': BaseType({
-            'type': 'set',
-            'required': False,
-        }),
-        'min': BaseType({
-            'type': float,
-            'required': False,
-        }),
-        'max': BaseType({
-            'type': float,
-            'required': False,
-        }),
-        'regex': BaseType({
-            'type': 'str',
-            'required': False,
-            'min': 1,
-        }),
-        'item_type': {
-            'type': 'str',
-            'required': False,
-            'enum': {'bool', 'dict', 'float', 'int', 'list', 'set', 'str'}
-        },
-        'item_min': BaseType({
-            'type': float,
-            'required': False,
-        }),
-        'item_max': BaseType({
-            'type': float,
-            'required': False,
-        }),
-    })
+    # : todo: Add support for datetime, date & time
+    OOK_SCHEMA = BaseType(
+        {
+            'type': BaseType(
+                {
+                    'type': 'str',
+                    'required': False,
+                    'enum': {
+                        'bool',
+                        'dict',
+                        'float',
+                        'int',
+                        'list',
+                        'set',
+                        'str',
+                    }
+                }),
+            'required': BaseType(
+                {
+                    'type': 'bool',
+                    'required': False,
+                }),
+            'enum': BaseType(
+                {
+                    'type': 'set',
+                    'required': False,
+                }),
+            'min': BaseType(
+                {
+                    'type': float,
+                    'required': False,
+                }),
+            'max': BaseType(
+                {
+                    'type': float,
+                    'required': False,
+                }),
+            'regex': BaseType(
+                {
+                    'type': 'str',
+                    'required': False,
+                    'min': 1,
+                }),
+            'item_type': {
+                'type': 'str',
+                'required': False,
+                'enum': {
+                    'bool',
+                    'dict',
+                    'float',
+                    'int',
+                    'list',
+                    'set',
+                    'str',
+                }},
+            'item_min': BaseType(
+                {
+                    'type': float,
+                    'required': False,
+                }),
+            'item_max': BaseType(
+                {
+                    'type': float,
+                    'required': False,
+                }),
+        }
+    )
 
 
