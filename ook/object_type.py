@@ -141,10 +141,9 @@ def validate_value(property_name, ook_object):
 
     :param property_name: The value to be validated against the given
         **SchemaProperty**.
-    :type property_name: basestring
-    :param property_schema: The **SchemaProperty** utilized for validation.
-    :type property_schema:  dict, ook.object_type.BaseType,
-        ook.object_type.SchemaProperty
+    :type property_name: str
+    :param ook_object: Ook defined object to be validated.
+    :type ook_object: object_type.BaseType
     :except ValueError:
 
         - Responds with a value error if the validation is not successful.
@@ -156,8 +155,7 @@ def validate_value(property_name, ook_object):
         raise ValueError(
             '"property_name" is required, cannot be None.')
     if not isinstance(property_name, basestring) or len(property_name) < 1:
-        raise ValueError(
-            '"property_name" is not a valid string.')
+        raise ValueError('"property_name" is not a valid string.')
     if ook_object is None:
         raise ValueError(
             '"ook_object" is required, cannot be None.')
@@ -179,4 +177,3 @@ def validate_value(property_name, ook_object):
 
     if value_errors:
         raise ValueError(str.join(' \n', value_errors))
-
