@@ -32,4 +32,3 @@ class SchemaTypeTest(base_test_case.BaseTestCase):
         self.assertIsNotNone(schema_object)
         self.assertTrue(hasattr(schema_object, 'property1'))
         self.assertTrue('property1' in schema_object)
-

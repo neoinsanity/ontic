@@ -162,7 +162,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
     def test_enum_setting(self):
         """Validate 'enum' schema setting."""
         # Scalar testing
-        ################
+        # ###############
         schema = {
             'enum_property': {'enum': {'some_value', 99}}
         }
@@ -341,7 +341,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
 
         ook_type = object_type.create_ook_type('MaxCheck', schema)
         self.assertIsNotNone(ook_type)
-        #object_types.validate_schema(ook_type.get_schema())
+        # object_types.validate_schema(ook_type.get_schema())
 
         ook_object = ook_type()
 
@@ -682,7 +682,6 @@ class ValidateValueTestCase(base_test_case.BaseTestCase):
             'The value for "prop1" is not of type "int": invalid string value',
             object_type.validate_value, 'prop1', ook_object)
 
-
     def test_validate_value_value_arg(self):
         """Valid value argument testing of validate_value."""
         # Test that scalar property is valid.
@@ -693,4 +692,3 @@ class ValidateValueTestCase(base_test_case.BaseTestCase):
             'GoodValidateValue', single_property_schema)
         ook_object = ook_type({'prop1': 'Hot Dog'})
         object_type.validate_value('prop1', ook_object)
-

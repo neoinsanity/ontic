@@ -131,7 +131,8 @@ class PerfectSchemaPropertyTestCase(base_test_case.BaseTestCase):
             }, candidate_schema_property)
 
     def test_bad_perfect_schema_property(self):
-        """Validate error handling for bad schemas passed to perfect_schema_property."""
+        """Validate error handling for bad schemas passed to
+        perfect_schema_property."""
         self.assertRaisesRegexp(
             ValueError,
             '"candidate_schema_property" must be provided.',
@@ -191,27 +192,29 @@ class PerfectSchemaTestCase(base_test_case.BaseTestCase):
         self.assertEqual(10, len(candidate_schema.prop2))
         self.assertDictEqual(
             {
-                'prop1': {'default': False,
-                          'enum': None,
-                          'item_max': None,
-                          'item_min': None,
-                          'item_type': None,
-                          'max': None,
-                          'min': None,
-                          'regex': None,
-                          'required': False,
-                          'type': None
+                'prop1': {
+                    'default': False,
+                    'enum': None,
+                    'item_max': None,
+                    'item_min': None,
+                    'item_type': None,
+                    'max': None,
+                    'min': None,
+                    'regex': None,
+                    'required': False,
+                    'type': None
                 },
-                'prop2': {'default': False,
-                          'enum': None,
-                          'item_max': None,
-                          'item_min': None,
-                          'item_type': None,
-                          'max': None,
-                          'min': 5,
-                          'regex': None,
-                          'required': False,
-                          'type': 'str'
+                'prop2': {
+                    'default': False,
+                    'enum': None,
+                    'item_max': None,
+                    'item_min': None,
+                    'item_type': None,
+                    'max': None,
+                    'min': 5,
+                    'regex': None,
+                    'required': False,
+                    'type': 'str'
                 }
             }, candidate_schema)
         self.assertIsInstance(candidate_schema.prop1, SchemaProperty)

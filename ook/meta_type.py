@@ -11,6 +11,26 @@ Usage
 from datetime import date, datetime, time
 import re
 
+# : The set of types that can be compared with inequality operators.
+COMPARABLE_TYPES = {'int', 'float', 'date', 'time', 'datetime'}
+
+# : The set of types that may be limited in size.
+BOUNDABLE_TYPES = {'str', 'list', 'dict', 'set'}
+
+# : Used to convert the string declaration of attribute type to native type.
+TYPE_MAP = {
+    'bool': bool,
+    'date': date,
+    'datetime': datetime,
+    'dict': dict,
+    'float': float,
+    'int': int,
+    'list': list,
+    'set': set,
+    'str': basestring,
+    'time': time,
+}
+
 
 class CoreType(dict):
     """The root type of *Ook* types.
@@ -49,7 +69,7 @@ class MetaType(CoreType):
     """
 
     """
-    #: The Ook schema pointer.
+    # : The Ook schema pointer.
     OOK_SCHEMA = None
 
     @classmethod
@@ -88,27 +108,10 @@ class SchemaProperty(MetaType):
             float, Defaults to None.
 
     """
-    #: The set of comparable types.
-    COMPARABLE_TYPES = {'int', 'float', 'date', 'time', 'datetime'}
-
-    #: Used to convert the string declaration of attribute type to native type.
-    TYPE_MAP = {
-        'bool': bool,
-        'date': date,
-        'datetime': datetime,
-        'dict': dict,
-        'float': float,
-        'int': int,
-        'list': list,
-        'set': set,
-        'str': basestring,
-        'time': time,
-    }
-
-    #: The set of supported collection types.
+    # : The set of supported collection types.
     SUPPORTED_COLLECTION_TYPES = {dict, list, set}
 
-    #: The schema definition for the **SchemaProperty** type.
+    # : The schema definition for the **SchemaProperty** type.
     OOK_SCHEMA = CoreType({
         'type': MetaType({
             'type': 'str',
@@ -348,7 +351,7 @@ class SchemaProperty(MetaType):
         :rtype:
         """
         # Divide between single and collection types for validation processing.
-        schema_value_type = SchemaProperty.TYPE_MAP.get(property_schema.type)
+        schema_value_type = TYPE_MAP.get(property_schema.type)
 
         if not schema_value_type:
             # if no schema_type, then just check that the value is in an enum if
@@ -417,7 +420,7 @@ class SchemaProperty(MetaType):
 
             if property_schema.item_type:
                 def validate_item_type(item, prop_schema, val_errors):
-                    schema_value_type = SchemaProperty.TYPE_MAP.get(
+                    schema_value_type = TYPE_MAP.get(
                         prop_schema.item_type)
                     if not isinstance(item, schema_value_type):
                         val_errors.append(
@@ -437,33 +440,31 @@ class SchemaProperty(MetaType):
 
             if property_schema.item_min:
                 def validate_item_min(item, prop_schema, val_errors):
-                    if ((prop_schema.item_type == 'str') and
-                                len(item) < prop_schema.item_min):
-                        val_errors.append(
-                            'The value of "%s" for "%s" fails min of %s.' %
-                            (item, value, prop_schema.item_min))
-                    elif ((prop_schema.item_type in
-                               SchemaProperty.COMPARABLE_TYPES)
-                          and item < prop_schema.item_min):
-                        val_errors.append(
-                            'The value of "%s" for "%s" fails min of %s.' %
-                            (item, value, prop_schema.item_min))
+                    if prop_schema.item_type == 'str':
+                        if len(item) < prop_schema.item_min:
+                            val_errors.append(
+                                'The value of "%s" for "%s" fails min of %s.' %
+                                (item, value, prop_schema.item_min))
+                    elif prop_schema.item_type in COMPARABLE_TYPES:
+                        if item < prop_schema.item_min:
+                            val_errors.append(
+                                'The value of "%s" for "%s" fails min of %s.' %
+                                (item, value, prop_schema.item_min))
 
                 validation_list.append(validate_item_min)
 
             if property_schema.item_max:
                 def validate_item_max(item, prop_schema, val_errors):
-                    if ((prop_schema.item_type == 'str') and
-                                len(item) > prop_schema.item_max):
-                        val_errors.append(
-                            'The value of "%s" for "%s" fails max of %s.' %
-                            (item, value, property_schema.item_max))
-                    elif ((prop_schema.item_type in
-                               SchemaProperty.COMPARABLE_TYPES)
-                          and item > prop_schema.item_max):
-                        val_errors.append(
-                            'The value of "%s" for "%s" fails max of %s.' %
-                            (item, value, prop_schema.item_max))
+                    if prop_schema.item_type == 'str':
+                        if len(item) > prop_schema.item_max:
+                            val_errors.append(
+                                'The value of "%s" for "%s" fails max of %s.' %
+                                (item, value, property_schema.item_max))
+                    elif prop_schema.item_type in COMPARABLE_TYPES:
+                        if item > prop_schema.item_max:
+                            val_errors.append(
+                                'The value of "%s" for "%s" fails max of %s.' %
+                                (item, value, prop_schema.item_max))
 
                 validation_list.append(validate_item_max)
 
@@ -502,26 +503,24 @@ class SchemaProperty(MetaType):
     @staticmethod
     def min_validation(property_schema, value):
         if property_schema.min:
-            if ((property_schema.type == 'str' or
-                         property_schema.type in {'list', 'set', 'dict'})
-                and len(value) < property_schema.min):
-                return False
-            elif (property_schema.type in SchemaProperty.COMPARABLE_TYPES and
-                          value < property_schema.min):
-                return False
+            if property_schema.type in BOUNDABLE_TYPES:
+                if len(value) < property_schema.min:
+                    return False
+            elif property_schema.type in COMPARABLE_TYPES:
+                if value < property_schema.min:
+                    return False
 
         return True
 
     @staticmethod
     def max_validation(property_schema, value):
         if property_schema.max:
-            if ((property_schema.type == 'str' or
-                         property_schema.type in {'list', 'set', 'dict'})
-                and len(value) > property_schema.max):
-                return False
-            elif (property_schema.type in SchemaProperty.COMPARABLE_TYPES and
-                          value > property_schema.max):
-                return False
+            if property_schema.type in BOUNDABLE_TYPES:
+                if len(value) > property_schema.max:
+                    return False
+            elif property_schema.type in COMPARABLE_TYPES:
+                if value > property_schema.max:
+                    return False
 
         return True
 
@@ -557,4 +556,3 @@ class SchemaProperty(MetaType):
                     value_errors.append(
                         'Value "%s" for %s does not meet regex: %s' %
                         (value, key, property_schema.regex))
-
