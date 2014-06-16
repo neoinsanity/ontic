@@ -12,12 +12,12 @@ class ValidateSchemaProperty(base_test_case.BaseTestCase):
         self.assertRaisesRegexp(
             ValueError,
             '"candidate_schema_property" must be provided.',
-            SchemaProperty.validate_schema_property, None)
+            SchemaProperty.validate_schema_property, None, list())
 
         self.assertRaisesRegexp(
             ValueError,
             '"candidate_schema_property" must be SchemaProperty type.',
-            SchemaProperty.validate_schema_property, {})
+            SchemaProperty.validate_schema_property, dict(), list())
 
 
 class ValidateSchemaTestCase(base_test_case.BaseTestCase):

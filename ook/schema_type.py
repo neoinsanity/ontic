@@ -28,7 +28,23 @@ class SchemaType(CoreType):
     """
 
     def __init__(self, *args, **kwargs):
-        CoreType.__init__(self, *args, **kwargs)
+        """
+
+        dict() -> new empty dictionary
+        dict(mapping) -> new dictionary initialized from a mapping object's
+            (key, value) pairs
+        dict(iterable) -> new dictionary initialized as if via:
+            d = {}
+            for k, v in iterable:
+                d[k] = v
+        dict(**kwargs) -> new dictionary initialized with the name=value pairs
+            in the keyword argument list.  For example:  dict(one=1, two=2)
+
+        :param seq:
+        :param kwargs:
+        :return:
+        """
+        super(SchemaType, self).__init__(*args, **kwargs)
         for key, value in self.iteritems():
             if not isinstance(value, SchemaProperty):
                 self[key] = SchemaProperty(value)
@@ -66,6 +82,7 @@ class SchemaType(CoreType):
 
         value_errors = []
         for candidate_property_schema in candidate_schema.values():
-            SchemaProperty.validate_schema_property(candidate_property_schema)
+            SchemaProperty.validate_schema_property(
+                candidate_property_schema, value_errors)
 
         return value_errors

@@ -11,3 +11,6 @@ Classes
 
 .. autoclass:: ook.meta_type.MetaType
     :members:
+
+.. autoclass:: ook.meta_type.SchemaProperty
+    :members:
