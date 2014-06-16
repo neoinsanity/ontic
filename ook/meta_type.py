@@ -1,7 +1,7 @@
 """The base class for deriving types that require schema support.
 
 
-.. image:: images/object_types.jpg
+.. image:: images/metadata_types.jpg
 
 Usage
 ------
@@ -92,29 +92,49 @@ class MetaType(CoreType):
 class SchemaProperty(MetaType):
     """The object type for representing Property schema definitions.
 
-    *Property Schema Settings*:
+    **Property Schema Settings**
+        type
+            :Value Options: bool, date, datetime, dict, float, int, list, None,
+                set, str, time
+            :Default: to None.
 
-        *type*
-            datetime, date, time, str, int, float, bool, dict, set, list, none.
-            Defaults to None.
-        *required*
-            True|False. Defaults False.
-        *min*
-            float. Defaults to None.
-        *max*
-            float. Defaults to None.
-        *regex*
-            string. Defaults to None.
-        *member_type*
-            datetime*, date*, time*, str, int, float, bool, dict, set, list,
-            none. Default to None.
-        *member_min*
-            float. Defaults to None.
-        *member_max*
-            float, Defaults to None.
+        required
+            :Value Options: True, False
+            :Default: False
+
+        default
+            :Value Options: The default is only restricted to the *type*
+                setting, if a type has been set. If no *type* as been set,
+                then default may be any value.
+            :Default: None
+
+        min
+            :Value Options: int, float.
+            :Default: None
+
+        max
+            :Value Options: int, float.
+            :Default: None
+
+        regex
+            :Value Options: string.
+            :Default: None
+
+        member_type
+            :Value Options: bool, date, datetime, dict, float, int, list, None,
+                set, str, time
+            :Default: None
+
+        member_min
+            :Value Options: int, float.
+            :Default: None
+
+        member_max
+            :Value Options: int, float
+            :Default: None
 
     """
-    # : The schema definition for the **SchemaProperty** type.
+    # The schema definition for the **SchemaProperty** type.
     OOK_SCHEMA = CoreType({
         'type': MetaType({
             'type': 'str',
