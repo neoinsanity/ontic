@@ -1,6 +1,6 @@
 from test_utils import base_test_case
 
-from ook.meta_type import SchemaProperty
+from ook.meta_type import PropertySchema
 from ook.schema_type import SchemaType
 
 
@@ -12,12 +12,12 @@ class ValidateSchemaProperty(base_test_case.BaseTestCase):
         self.assertRaisesRegexp(
             ValueError,
             '"candidate_schema_property" must be provided.',
-            SchemaProperty.validate_schema_property, None, list())
+            PropertySchema.validate_schema_property, None, list())
 
         self.assertRaisesRegexp(
             ValueError,
-            '"candidate_schema_property" must be SchemaProperty type.',
-            SchemaProperty.validate_schema_property, dict(), list())
+            '"candidate_schema_property" must be PropertySchema type.',
+            PropertySchema.validate_schema_property, dict(), list())
 
 
 class ValidateSchemaTestCase(base_test_case.BaseTestCase):
@@ -55,11 +55,11 @@ class PerfectSchemaPropertyTestCase(base_test_case.BaseTestCase):
 
     def test_perfect_empty_schema_property(self):
         """Validate the perfection of an empty schema property."""
-        candidate_schema_property = SchemaProperty()
+        candidate_schema_property = PropertySchema()
         self.assertEqual(10, len(candidate_schema_property))
         self.assertDictEqual(
             {
-                'default': False,
+                'default': None,
                 'enum': None,
                 'member_max': None,
                 'member_min': None,
@@ -72,7 +72,7 @@ class PerfectSchemaPropertyTestCase(base_test_case.BaseTestCase):
             },
             candidate_schema_property)
 
-        SchemaProperty.perfect_schema_property(candidate_schema_property)
+        PropertySchema.perfect_schema_property(candidate_schema_property)
 
         self.assertEqual(10, len(candidate_schema_property))
         self.assertDictEqual(
@@ -81,7 +81,7 @@ class PerfectSchemaPropertyTestCase(base_test_case.BaseTestCase):
                 'member_max': None,
                 'enum': None,
                 'min': None,
-                'default': False,
+                'default': None,
                 'max': None,
                 'required': False,
                 'member_min': None,
@@ -91,7 +91,7 @@ class PerfectSchemaPropertyTestCase(base_test_case.BaseTestCase):
 
     def test_perfect_partial_schema_property(self):
         """Validate the perfection of a partial schema definition."""
-        candidate_schema_property = SchemaProperty(
+        candidate_schema_property = PropertySchema(
             {
                 'type': 'int',
                 'required': True,
@@ -104,7 +104,7 @@ class PerfectSchemaPropertyTestCase(base_test_case.BaseTestCase):
                 'member_max': None,
                 'enum': None,
                 'min': None,
-                'default': False,
+                'default': None,
                 'max': None,
                 'required': True,
                 'member_min': None,
@@ -113,7 +113,7 @@ class PerfectSchemaPropertyTestCase(base_test_case.BaseTestCase):
             },
             candidate_schema_property)
 
-        SchemaProperty.perfect_schema_property(candidate_schema_property)
+        PropertySchema.perfect_schema_property(candidate_schema_property)
 
         self.assertEqual(10, len(candidate_schema_property))
         self.assertDictEqual(
@@ -122,7 +122,7 @@ class PerfectSchemaPropertyTestCase(base_test_case.BaseTestCase):
                 'member_max': None,
                 'enum': None,
                 'min': None,
-                'default': False,
+                'default': None,
                 'max': None,
                 'required': True,
                 'member_min': None,
@@ -136,12 +136,12 @@ class PerfectSchemaPropertyTestCase(base_test_case.BaseTestCase):
         self.assertRaisesRegexp(
             ValueError,
             '"candidate_schema_property" must be provided.',
-            SchemaProperty.perfect_schema_property, None)
+            PropertySchema.perfect_schema_property, None)
 
         self.assertRaisesRegexp(
             ValueError,
-            '"candidate_schema_property" must be SchemaProperty type.',
-            SchemaProperty.perfect_schema_property, {})
+            '"candidate_schema_property" must be PropertySchema type.',
+            PropertySchema.perfect_schema_property, {})
 
 
 class PerfectSchemaTestCase(base_test_case.BaseTestCase):
@@ -150,8 +150,8 @@ class PerfectSchemaTestCase(base_test_case.BaseTestCase):
     def test_perfect_schema_type(self):
         """Validate 'perfect_schema' method usage."""
         candidate_schema = SchemaType({
-            'prop1': SchemaProperty(),
-            'prop2': SchemaProperty({'type': 'str', 'min': 5})
+            'prop1': PropertySchema(),
+            'prop2': PropertySchema({'type': 'str', 'min': 5})
         })
         self.assertEqual(2, len(candidate_schema))
         self.assertEqual(10, len(candidate_schema.prop1))
@@ -164,7 +164,7 @@ class PerfectSchemaTestCase(base_test_case.BaseTestCase):
                     'member_max': None,
                     'enum': None,
                     'min': None,
-                    'default': False,
+                    'default': None,
                     'max': None,
                     'required': False,
                     'member_min': None,
@@ -176,7 +176,7 @@ class PerfectSchemaTestCase(base_test_case.BaseTestCase):
                     'member_max': None,
                     'enum': None,
                     'min': 5,
-                    'default': False,
+                    'default': None,
                     'max': None,
                     'required': False,
                     'member_min': None,
@@ -193,7 +193,7 @@ class PerfectSchemaTestCase(base_test_case.BaseTestCase):
         self.assertDictEqual(
             {
                 'prop1': {
-                    'default': False,
+                    'default': None,
                     'enum': None,
                     'member_max': None,
                     'member_min': None,
@@ -205,7 +205,7 @@ class PerfectSchemaTestCase(base_test_case.BaseTestCase):
                     'type': None
                 },
                 'prop2': {
-                    'default': False,
+                    'default': None,
                     'enum': None,
                     'member_max': None,
                     'member_min': None,
@@ -217,8 +217,8 @@ class PerfectSchemaTestCase(base_test_case.BaseTestCase):
                     'type': 'str'
                 }
             }, candidate_schema)
-        self.assertIsInstance(candidate_schema.prop1, SchemaProperty)
-        self.assertIsInstance(candidate_schema.prop2, SchemaProperty)
+        self.assertIsInstance(candidate_schema.prop1, PropertySchema)
+        self.assertIsInstance(candidate_schema.prop2, PropertySchema)
 
     def test_bad_perfect_schema(self):
         """Validate proper error handling in 'perfect_schema' method."""

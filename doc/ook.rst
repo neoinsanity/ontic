@@ -1,3 +1,6 @@
+
+.. image:: images/ook.jpg
+
 Getting Started with OoK
 =========================
 

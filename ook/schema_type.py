@@ -1,5 +1,7 @@
 """The classes utilized to construct schemas for object definitions.
 
+.. image:: images/schema_type.jpg
+
 Usage
 ------
 
@@ -8,19 +10,19 @@ Classes
 
 """
 from ook import meta_type
-from ook.meta_type import CoreType, SchemaProperty
+from ook.meta_type import CoreType, PropertySchema
 
 
 class SchemaType(CoreType):
     """The type definition for a schema object.
 
     The **SchemaType** contains a dictionary of property field names and
-    the corresponding **SchemaProperty** definition.
+    the corresponding **PropertySchema** definition.
 
     Example SchemaType representation::
 
         SchemaType({
-          'some_property': SchemaProperty({
+          'some_property': PropertySchema({
                 'type': 'str',
                 'required': True
             })
@@ -46,8 +48,8 @@ class SchemaType(CoreType):
         """
         super(SchemaType, self).__init__(*args, **kwargs)
         for key, value in self.iteritems():
-            if not isinstance(value, SchemaProperty):
-                self[key] = SchemaProperty(value)
+            if not isinstance(value, PropertySchema):
+                self[key] = PropertySchema(value)
 
     @staticmethod
     def perfect_schema(candidate_schema):
@@ -64,7 +66,7 @@ class SchemaType(CoreType):
             raise ValueError('"candidate_schema" must be of SchemaType.')
 
         for property_schema in candidate_schema.values():
-            SchemaProperty.perfect_schema_property(property_schema)
+            PropertySchema.perfect_schema_property(property_schema)
 
     @staticmethod
     def validate_schema(candidate_schema):
@@ -82,7 +84,7 @@ class SchemaType(CoreType):
 
         value_errors = []
         for candidate_property_schema in candidate_schema.values():
-            SchemaProperty.validate_schema_property(
+            PropertySchema.validate_schema_property(
                 candidate_property_schema, value_errors)
 
         return value_errors

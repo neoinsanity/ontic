@@ -3,6 +3,8 @@
 The **object_type** provides the methods to create and validate **Ook**
 types and objects.
 
+.. image:: images/object_type.jpg
+
 Usage
 -----
 
@@ -65,7 +67,7 @@ complete configured data type definition would be constructed as::
 
 """
 
-from meta_type import MetaType, SchemaProperty
+from meta_type import MetaType, PropertySchema
 from schema_type import SchemaType
 
 
@@ -129,7 +131,7 @@ def validate_object(the_object):
     for property_name, property_schema in the_object.get_schema().iteritems():
         value = the_object.get(property_name, None)
 
-        SchemaProperty.validate_value(
+        PropertySchema.validate_value(
             property_name, property_schema, value, value_errors)
 
     if value_errors:
@@ -137,10 +139,10 @@ def validate_object(the_object):
 
 
 def validate_value(property_name, ook_object):
-    """Validate a value against a given **SchemaProperty**
+    """Validate a value against a given **PropertySchema**
 
     :param property_name: The value to be validated against the given
-        **SchemaProperty**.
+        **PropertySchema**.
     :type property_name: str
     :param ook_object: Ook defined object to be validated.
     :type ook_object: object_type.BaseType
@@ -149,7 +151,7 @@ def validate_value(property_name, ook_object):
         - Responds with a value error if the validation is not successful.
 
         - "property_schema" is not provided or not a dict, **BaseType**,
-            or **SchemaProperty**
+            or **PropertySchema**
     """
     if property_name is None:
         raise ValueError(
@@ -172,7 +174,7 @@ def validate_value(property_name, ook_object):
 
     value = ook_object.get(property_name, None)
 
-    SchemaProperty.validate_value(
+    PropertySchema.validate_value(
         property_name, property_schema, value, value_errors)
 
     if value_errors:

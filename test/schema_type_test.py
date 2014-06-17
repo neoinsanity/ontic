@@ -2,19 +2,19 @@
 
 from test_utils import base_test_case
 
-from ook.meta_type import SchemaProperty
+from ook.meta_type import PropertySchema
 from ook.schema_type import SchemaType
 
 
 class SchemaPropertyTest(base_test_case.BaseTestCase):
-    """SchemaProperty test cases."""
+    """PropertySchema test cases."""
 
     def test_schema_property_instantiation(self):
-        """SchemaProperty instantiation testing to confirm dict behavior."""
-        schema_property = SchemaProperty({'type': 'int', 'required': True})
+        """PropertySchema instantiation testing to confirm dict behavior."""
+        schema_property = PropertySchema({'type': 'int', 'required': True})
         self.assertIsNotNone(schema_property)
 
-        schema_property = SchemaProperty({'type': 'int', 'required': False})
+        schema_property = PropertySchema({'type': 'int', 'required': False})
         self.assertIsNotNone(schema_property)
 
 

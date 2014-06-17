@@ -37,10 +37,8 @@ TYPE_MAP = {
 class CoreType(dict):
     """The root type of *Ook* types.
 
-    **CoreType** ensures that *Ook* objects can be access by either dict key
-    or object attribute.
-
-    :Example:
+    **CoreType** ensures that *Ook* object properties can be accessed by either
+    dict key or object attribute. For example::
 
     >>> some_object = CoreType({'key1': 'value1'})
     >>> assert some_object.key1 == 'value1'
@@ -56,18 +54,23 @@ class CoreType(dict):
 
         Initializes the accessor behavior to allow for property access as
         dict key or object attribute.
-        dict() -> new empty dictionary
-        dict(mapping) -> new dictionary initialized from a mapping object's
-            (key, value) pairs
-        dict(iterable) -> new dictionary initialized as if via:
-            d = {}
-            for k, v in iterable:
-                d[k] = v
-        dict(**kwargs) -> new dictionary initialized with the name=value pairs
-            in the keyword argument list.  For example:  dict(one=1, two=2)
 
-        :param seq: Args to be passed to `dict` parent class.
-        :param kwargs: Named args to be passed to `dict` parent class.
+        Dict Style Initialization
+            CoreType() -> new empty CoreType
+
+            CoreType(mapping) -> new CoreType initialized from a mapping
+            object's (key, value) pairs
+
+            CoreType(iterable) -> new CoreType initialized as if via::
+
+                d = CoreType()
+                for k, v in iterable:
+                    d[k] = v
+
+            CoreType(\*\*kwargs) -> new CoreType initialized with the
+            name=value pairs in the keyword argument list.  For example::
+
+                CoreType(one=1, two=2)
         """
         super(CoreType, self).__init__(*args, **kwargs)
 
@@ -75,66 +78,105 @@ class CoreType(dict):
 
 
 class MetaType(CoreType):
+    """Interface for type definition of **Ook** schema defined classes.
+
+    Dict Style Initialization
+        MetaType() -> new empty MetaType
+
+        MetaType(mapping) -> new MetaType initialized from a mapping object's
+            (key, value) pairs
+
+        MetaType(iterable) -> new MetaType initialized as if via::
+
+            d = MetaType()
+            for k, v in iterable:
+                d[k] = v
+
+        MetaType(\*\*kwargs) -> new MetaType initialized with the name=value
+        pairs in the keyword argument list.  For example::
+
+            MetaType(one=1, two=2)
+    """
     # : The Ook schema pointer.
     OOK_SCHEMA = None
 
     @classmethod
     def get_schema(cls):
-        """Returns the **SchemaType** instance for a given **Ook** type.
+        """Returns the schema object for the a given type definition.
 
         :return: The schema metadata definition for the BaseType derived
             child type.
-        :rtype: ook.object_type.SchemaType.
+        :rtype: ook.meta_type.CoreType, ook.object_type.SchemaType
         """
         return cls.OOK_SCHEMA
 
 
-class SchemaProperty(MetaType):
+class PropertySchema(MetaType):
     """The object type for representing Property schema definitions.
 
-    **Property Schema Settings**
+    The PropertySchema class is used to define individual properties of an
+    object.
+
+    **Property Schema Options**
         type
-            :Value Options: bool, date, datetime, dict, float, int, list, None,
+            :Type: bool, date, datetime, dict, float, int, list, None,
                 set, str, time
             :Default: to None.
 
         required
-            :Value Options: True, False
+            :Type: True, False
             :Default: False
 
         default
-            :Value Options: The default is only restricted to the *type*
+            :Type: The default is only restricted to the *type*
                 setting, if a type has been set. If no *type* as been set,
                 then default may be any value.
             :Default: None
 
         min
-            :Value Options: int, float.
+            :Type: int, float.
             :Default: None
 
         max
-            :Value Options: int, float.
+            :Type: int, float.
             :Default: None
 
         regex
-            :Value Options: string.
+            :Type: string.
             :Default: None
 
         member_type
-            :Value Options: bool, date, datetime, dict, float, int, list, None,
+            :Type: bool, date, datetime, dict, float, int, list, None,
                 set, str, time
             :Default: None
 
         member_min
-            :Value Options: int, float.
+            :Type: int, float.
             :Default: None
 
         member_max
-            :Value Options: int, float
+            :Type: int, float
             :Default: None
 
+    Examples::
+
+        >>> foo_property = PropertySchema({
+        ...     'type': 'str',
+        ...     'required': True,
+        ...     'default': 'Undefined',
+        ... })
+
+        >>> bar_property = PropertySchema()
+        >>> bar_property.type = 'int'
+        >>> bar_property.required = False
+        >>> bar_property.min = 3
+
+        >>> nutty_property = PropertySchema()
+        >>> nutty_property['type'] = str
+        >>> nutty_property['required'] = True
+        >>> nutty_property['min'] = 5
     """
-    # The schema definition for the **SchemaProperty** type.
+    # The schema definition for the **PropertySchema** type.
     OOK_SCHEMA = CoreType({
         'type': MetaType({
             'type': 'str',
@@ -159,8 +201,8 @@ class SchemaProperty(MetaType):
             'member_max': None,
         }),
         'default': MetaType({
-            'type': 'bool',
-            'default': False,
+            'type': None,
+            'default': None,
             'required': False,
             'enum': None,
             'min': None,
@@ -282,22 +324,37 @@ class SchemaProperty(MetaType):
     def __init__(self, *args, **kwargs):
         """Initializes in accordance with dict specification.
 
-        dict() -> new empty dictionary
-        dict(mapping) -> new dictionary initialized from a mapping object's
-            (key, value) pairs
-        dict(iterable) -> new dictionary initialized as if via:
-            d = {}
-            for k, v in iterable:
-                d[k] = v
-        dict(**kwargs) -> new dictionary initialized with the name=value pairs
-            in the keyword argument list.  For example:  dict(one=1, two=2)
-        """
-        super(SchemaProperty, self).__init__(*args, **kwargs)
+        PropertySchema initialization can be done with a Dict object or with
+        None. A PropertySchema defined with None is legal and valid. It is
+        therefore possible to define a property with no restrictions to
+        assignment or requirement.
 
-        SchemaProperty.perfect_schema_property(self)
+        Dict Style Initialization
+            *PropertySchema* supports dict style initialization.
+
+            PropertySchema() -> new empty PropertySchema
+
+            PropertySchema(mapping) -> new PropertySchema initialized from a
+            mapping object's (key, value) pairs
+
+            PropertySchema(iterable) -> new PropertySchema initialized as if
+            via::
+
+                d = PropertySchema()
+                for k, v in iterable:
+                    d[k] = v
+
+            PropertySchema(\*\*kwargs) -> new PropertySchema initialized with
+            the name=value pairs in the keyword argument list.  For example::
+
+                PropertySchema(one=1, two=2)
+        """
+        super(PropertySchema, self).__init__(*args, **kwargs)
+
+        PropertySchema.perfect_schema_property(self)
 
         value_errors = list()
-        SchemaProperty.validate_schema_property(self, value_errors)
+        PropertySchema.validate_schema_property(self, value_errors)
         if value_errors:
             raise ValueError(str.join(' \n-- ', value_errors))
 
@@ -306,7 +363,7 @@ class SchemaProperty(MetaType):
         """Method to validate a schema property definition.
 
         :param candidate_schema_property: The schema property to be validated.
-        :type candidate_schema_property: ook.metadata_type.SchemaProperty
+        :type candidate_schema_property: ook.metadata_type.PropertySchema
         :param value_errors: A list that is utilized to collect the errors found
             during schema validation.
         :type value_errors: list<str>
@@ -314,15 +371,15 @@ class SchemaProperty(MetaType):
         """
         if candidate_schema_property is None:
             raise ValueError('"candidate_schema_property" must be provided.')
-        if not isinstance(candidate_schema_property, SchemaProperty):
+        if not isinstance(candidate_schema_property, PropertySchema):
             raise ValueError(
-                '"candidate_schema_property" must be SchemaProperty type.')
+                '"candidate_schema_property" must be PropertySchema type.')
 
         for schema_name, schema_setting in (
                 candidate_schema_property.get_schema().iteritems()):
             setting_value = candidate_schema_property.get(schema_name, None)
 
-            SchemaProperty.validate_value(
+            PropertySchema.validate_value(
                 schema_name,
                 schema_setting,
                 setting_value,
@@ -337,16 +394,18 @@ class SchemaProperty(MetaType):
         properties that are not included, the method will add those
         properties to the default value.
 
-        :param candidate_schema_property:
+        :param candidate_schema_property: The PropertySchema that is to be
+            clean and restricted.
+        :type candidate_schema_property: ook.meta_type.PropertySchema
         :rtype: None
         :raise: ValueError: If the candidate_schema_property is None, or not
-            of type *SchemaProperty*.
+            of type *PropertySchema*.
         """
         if candidate_schema_property is None:
             raise ValueError('"candidate_schema_property" must be provided.')
-        if not isinstance(candidate_schema_property, SchemaProperty):
+        if not isinstance(candidate_schema_property, PropertySchema):
             raise ValueError(
-                '"candidate_schema_property" must be SchemaProperty type.')
+                '"candidate_schema_property" must be PropertySchema type.')
 
         schema_property_schema = candidate_schema_property.get_schema()
 
@@ -369,7 +428,7 @@ class SchemaProperty(MetaType):
         :type name: str
         :param property_schema: The property schema that contains the validation
             rules.
-        :type property_schema: meta_type.SchemaProperty
+        :type property_schema: meta_type.PropertySchema
         :param value: The value that is to be validated.
         :type value: object
         :param value_errors: A list that is utilized to collect the errors found
@@ -382,7 +441,7 @@ class SchemaProperty(MetaType):
             return  # No other validation can occur without the required value
 
         if value is not None:
-            SchemaProperty.validate_non_none_value(
+            PropertySchema.validate_non_none_value(
                 name, property_schema, value, value_errors)
 
     @staticmethod
@@ -396,7 +455,7 @@ class SchemaProperty(MetaType):
         :param key: The name of the property to be validated.
         :type key: str
         :param property_schema: The property schema to utilize for validation.
-        :type property_schema: ook.metadata_type.SchemaProperty
+        :type property_schema: ook.metadata_type.PropertySchema
         :param value: The non-None value to be validated.
         :type value: object
         :param value_errors: A list of errors found for a given value. If any
@@ -411,7 +470,7 @@ class SchemaProperty(MetaType):
         if not schema_value_type:
             # if no schema_type, then just check that
             # the value is in an enum if necessary.
-            if not SchemaProperty.enum_validation(property_schema, value):
+            if not PropertySchema.enum_validation(property_schema, value):
                 value_errors.append(
                     'The value "%s" for "%s" not in enumeration %s.' %
                     (value, key, list(property_schema.enum)))
@@ -426,16 +485,16 @@ class SchemaProperty(MetaType):
                 # validate without errors.
 
             if schema_value_type in COLLECTION_TYPES:
-                SchemaProperty.validate_collection_members(
+                PropertySchema.validate_collection_members(
                     key, property_schema, value, value_errors)
             else:
-                if not SchemaProperty.enum_validation(property_schema, value):
+                if not PropertySchema.enum_validation(property_schema, value):
                     value_errors.append(
                         'The value "%s" for "%s" not in enumeration %s.' %
                         (value, key, list(property_schema.enum)))
                     return  # No further processing can occur
 
-                SchemaProperty.non_none_singular_validation(
+                PropertySchema.non_none_singular_validation(
                     key, property_schema, value, value_errors)
 
     @staticmethod
@@ -456,11 +515,11 @@ class SchemaProperty(MetaType):
         :type value_errors: list<str>
         :rtype: None
         """
-        if not SchemaProperty.min_validation(property_schema, value):
+        if not PropertySchema.min_validation(property_schema, value):
             value_errors.append('The value of "%s" for "%s" fails min of %s.' %
                                 (value, key, property_schema.min))
 
-        if not SchemaProperty.max_validation(property_schema, value):
+        if not PropertySchema.max_validation(property_schema, value):
             value_errors.append('The value of "%s" for "%s" fails max of %s.' %
                                 (value, key, property_schema.max))
 
@@ -468,18 +527,18 @@ class SchemaProperty(MetaType):
             validators = list()
 
             if property_schema.enum:
-                validators.append(SchemaProperty.validate_member_enum)
+                validators.append(PropertySchema.validate_member_enum)
             if property_schema.member_type:
-                validators.append(SchemaProperty.validate_member_type)
+                validators.append(PropertySchema.validate_member_type)
             if property_schema.regex and property_schema.member_type == 'str':
-                validators.append(SchemaProperty.validate_member_regex)
+                validators.append(PropertySchema.validate_member_regex)
             if property_schema.member_min:
-                validators.append(SchemaProperty.validate_member_min)
+                validators.append(PropertySchema.validate_member_min)
             if property_schema.member_max:
-                validators.append(SchemaProperty.validate_member_max)
+                validators.append(PropertySchema.validate_member_max)
 
             for member_value in value:
-                SchemaProperty.execute_collection_validators(
+                PropertySchema.execute_collection_validators(
                     key,
                     member_value,
                     property_schema,
@@ -529,7 +588,7 @@ class SchemaProperty(MetaType):
         :type value_errors: list<str>
         :rtype: None
         """
-        if not SchemaProperty.enum_validation(property_schema, member_value):
+        if not PropertySchema.enum_validation(property_schema, member_value):
             value_errors.append(
                 'The value "%s" for "%s" not in enumeration %s.' %
                 (member_value, key, sorted(list(property_schema.enum))))
@@ -568,7 +627,7 @@ class SchemaProperty(MetaType):
             validate.
         :type member_value: str
         :param property_schema: The property schema to utilize for validation.
-        :type property_schema: ook.metadata_type.SchemaProperty
+        :type property_schema: ook.metadata_type.PropertySchema
         :param value_errors: A list of errors found for a given value. If the
             validation fails, then an error message is added to the
             value_errors list.
@@ -590,7 +649,7 @@ class SchemaProperty(MetaType):
             validate.
         :type member_value: str, int, float, date, datetime, time
         :param property_schema: The property schema to utilize for validation.
-        :type property_schema: ook.metadata_type.SchemaProperty
+        :type property_schema: ook.metadata_type.PropertySchema
         :param value_errors: A list of errors found for a given value. If the
             validation fails, then an error message is added to the
             value_errors list.
@@ -713,12 +772,12 @@ class SchemaProperty(MetaType):
         :rtype: None
         """
         # min
-        if not SchemaProperty.min_validation(property_schema, value):
+        if not PropertySchema.min_validation(property_schema, value):
             value_errors.append('The value of "%s" for "%s" fails min of %s.' %
                                 (value, key, property_schema.min))
 
         # max
-        if not SchemaProperty.max_validation(property_schema, value):
+        if not PropertySchema.max_validation(property_schema, value):
             value_errors.append('The value of "%s" for "%s" fails max of %s.' %
                                 (value, key, property_schema.max))
 
