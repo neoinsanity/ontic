@@ -5,6 +5,45 @@
 
 Usage
 ------
+
+The **meta_type** module contains three classes that are used in the
+definition and instantiation of object instances.  The root class is
+:class:`CoreType`, which is derived from the Python :class:`dict`.
+
+Derived from :class:`CoreType` is :class:`MetaType`, which provides the
+interface for retrieving a schema from an object schema definition via the
+:meth:`MetaType.get_schema()`.
+
+The :class:`PropertySchema` is utilized to define a schema for a single
+property. This includes setting data type, required, and other such common
+schema definition conventions. See :ref:`property-schema-settings-table` for
+details on the :class:`PropertySchema` settings available.
+
+.. _property-schema-settings-table:
+
+Property Schema Settings
+-------------------------
+
+Can this be the issue.
+
+============ ====== ======== ========  =================================
+name         type   default  required  enum
+============ ====== ======== ========  =================================
+type         str    None     False     bool, dict, float, int,
+                                       list, set, str, date, , datetime
+default      None   None     False     None
+required     bool   False    False     None
+enum         set    None     False     None
+min          float  None     False     None
+max          float  None     False     None
+regex        str    None     False     None
+member_type  str    None     False     bool, dict, float, int,
+                                       list, set, str, date, , datetime
+member_min   float  None     False     None
+member_max   float  None     False     None
+============ ====== ======== ========  =================================
+
+
 """
 
 from datetime import date, datetime, time
@@ -104,9 +143,9 @@ class MetaType(CoreType):
     def get_schema(cls):
         """Returns the schema object for the a given type definition.
 
-        :return: The schema metadata definition for the BaseType derived
-            child type.
-        :rtype: ook.meta_type.CoreType, ook.object_type.SchemaType
+        :return: The schema metadata definition for a :class:`PropertySchema`
+            or a :class:`ook.object_type.BaseType` derived child class.
+        :rtype: :class:`CoreType`, :class:`ook.schema_type.SchemaType`
         """
         return cls.OOK_SCHEMA
 
@@ -115,68 +154,42 @@ class PropertySchema(MetaType):
     """The object type for representing Property schema definitions.
 
     The PropertySchema class is used to define individual properties of an
-    object.
-
-    **Property Schema Options**
-        type
-            :Type: bool, date, datetime, dict, float, int, list, None,
-                set, str, time
-            :Default: to None.
-
-        required
-            :Type: True, False
-            :Default: False
-
-        default
-            :Type: The default is only restricted to the *type*
-                setting, if a type has been set. If no *type* as been set,
-                then default may be any value.
-            :Default: None
-
-        min
-            :Type: int, float.
-            :Default: None
-
-        max
-            :Type: int, float.
-            :Default: None
-
-        regex
-            :Type: string.
-            :Default: None
-
-        member_type
-            :Type: bool, date, datetime, dict, float, int, list, None,
-                set, str, time
-            :Default: None
-
-        member_min
-            :Type: int, float.
-            :Default: None
-
-        member_max
-            :Type: int, float
-            :Default: None
+    object. For the complete set of property schema settings to define a
+    property, see :ref:`property-schema-settings-table`
 
     Examples::
 
-        >>> foo_property = PropertySchema({
+        There are a number of ways to create a PropertySchema for us in
+        validation of a property. The most straight forward is to define
+        create a property schema with a dictionary.
+
+        >>> foo_schema = PropertySchema({
         ...     'type': 'str',
         ...     'required': True,
         ...     'default': 'Undefined',
         ... })
 
-        >>> bar_property = PropertySchema()
-        >>> bar_property.type = 'int'
-        >>> bar_property.required = False
-        >>> bar_property.min = 3
+        PropertySchema also support the full range of dict style of
+        instantiation.
 
-        >>> nutty_property = PropertySchema()
-        >>> nutty_property['type'] = str
-        >>> nutty_property['required'] = True
-        >>> nutty_property['min'] = 5
+        >>> boo_schema = PropertySchema([('type','str'),('required',True)])
+        >>> moo_schema = PropertySchema(type='str', default='Cow')
+
+        PropertySchema can also be assembled pragmatically.
+
+        >>> bar_schema = PropertySchema()
+        >>> bar_schema.type = 'int'
+        >>> bar_schema.required = False
+        >>> bar_schema.min = 3
+        >>> PropertySchema.validate_schema_property(bar_schema, [])
+
+        >>> nutty_schema = PropertySchema()
+        >>> nutty_schema['type'] = str
+        >>> nutty_schema['required'] = True
+        >>> nutty_schema['min'] = 5
+        >>> PropertySchema.validate_schema_property(nutty_schema, [])
     """
-    # The schema definition for the **PropertySchema** type.
+    # : The schema definition for the **PropertySchema** type.
     OOK_SCHEMA = CoreType({
         'type': MetaType({
             'type': 'str',
@@ -363,7 +376,7 @@ class PropertySchema(MetaType):
         """Method to validate a schema property definition.
 
         :param candidate_schema_property: The schema property to be validated.
-        :type candidate_schema_property: ook.metadata_type.PropertySchema
+        :type candidate_schema_property: :class:`PropertySchema`
         :param value_errors: A list that is utilized to collect the errors found
             during schema validation.
         :type value_errors: list<str>
@@ -396,7 +409,7 @@ class PropertySchema(MetaType):
 
         :param candidate_schema_property: The PropertySchema that is to be
             clean and restricted.
-        :type candidate_schema_property: ook.meta_type.PropertySchema
+        :type candidate_schema_property: :class:`PropertySchema`
         :rtype: None
         :raise: ValueError: If the candidate_schema_property is None, or not
             of type *PropertySchema*.
@@ -428,7 +441,7 @@ class PropertySchema(MetaType):
         :type name: str
         :param property_schema: The property schema that contains the validation
             rules.
-        :type property_schema: meta_type.PropertySchema
+        :type property_schema: :class:`PropertySchema`
         :param value: The value that is to be validated.
         :type value: object
         :param value_errors: A list that is utilized to collect the errors found
@@ -455,7 +468,7 @@ class PropertySchema(MetaType):
         :param key: The name of the property to be validated.
         :type key: str
         :param property_schema: The property schema to utilize for validation.
-        :type property_schema: ook.metadata_type.PropertySchema
+        :type property_schema: :class:`PropertySchema`
         :param value: The non-None value to be validated.
         :type value: object
         :param value_errors: A list of errors found for a given value. If any
@@ -506,7 +519,7 @@ class PropertySchema(MetaType):
         :param key: The name of the collection property to validate.
         :type key: str
         :param property_schema: The property schema to utilize for validation.
-        :type property_schema: ook.metadata_type.PropertySchema
+        :type property_schema: :class:`PropertySchema`
         :param value: The collection whose members will be validated.
         :type value: list, set
         :param value_errors: A list of errors found for a given collection.
@@ -559,7 +572,7 @@ class PropertySchema(MetaType):
         :param member_value: The member of the collection property to validate.
         :type member_value: str, int, float, date, datetime, time
         :param property_schema: The property schema to utilize for validation.
-        :type property_schema: ook.metadata_type.PropertySchema
+        :type property_schema: :class:`PropertySchema`
         :param validators: A list of validation methods to execute.
         :type validators: list<types.MethodType>
         :param value_errors: A list of errors found for a given value. If any
@@ -581,7 +594,7 @@ class PropertySchema(MetaType):
             validate.
         :type member_value: str, int, float, date, datetime, time
         :param property_schema: The property schema to utilize for validation.
-        :type property_schema: ook.metadata_type.PropertySchema
+        :type property_schema: :class:`PropertySchema`
         :param value_errors: A list of errors found for a given value. If the
             validate fails, then an error message is added to the
             value_errors list.
@@ -603,7 +616,7 @@ class PropertySchema(MetaType):
             validate.
         :type member_value: object
         :param property_schema: The property schema to utilize for validation.
-        :type property_schema: ook.metadata_type.PropertySchema
+        :type property_schema: :class:`PropertySchema`
         :param value_errors: A list of errors found for a given value. If the
             validation fails, then an error message is added to the
             value_errors list.
@@ -627,7 +640,7 @@ class PropertySchema(MetaType):
             validate.
         :type member_value: str
         :param property_schema: The property schema to utilize for validation.
-        :type property_schema: ook.metadata_type.PropertySchema
+        :type property_schema: :class:`PropertySchema`
         :param value_errors: A list of errors found for a given value. If the
             validation fails, then an error message is added to the
             value_errors list.
@@ -649,7 +662,7 @@ class PropertySchema(MetaType):
             validate.
         :type member_value: str, int, float, date, datetime, time
         :param property_schema: The property schema to utilize for validation.
-        :type property_schema: ook.metadata_type.PropertySchema
+        :type property_schema: :class:`PropertySchema`
         :param value_errors: A list of errors found for a given value. If the
             validation fails, then an error message is added to the
             value_errors list.
@@ -677,7 +690,7 @@ class PropertySchema(MetaType):
             validate.
         :type member_value: str, int, float, date, datetime, time
         :param property_schema: The property schema to utilize for validation.
-        :type property_schema: ook.metadata.PropertySchema
+        :type property_schema: :class:`PropertySchema`
         :param value_errors: A list of errors found for a given value. If the
             validation fails, then an error message is added to the
             value_errors list.
@@ -700,7 +713,7 @@ class PropertySchema(MetaType):
         """Validate a non-collection property for value in an enumeration set.
 
         :param property_schema: The property schema to utilize for validation.
-        :type property_schema: ook.metadata_type.PropertySchema
+        :type property_schema: :class:`PropertySchema`
         :param value: The value of the property to be validated.
         :type value: object
         :return: True if the validation is successful, else False.
@@ -716,7 +729,7 @@ class PropertySchema(MetaType):
         """Validate a non-collection property for minimum allowable value.
 
         :param property_schema: The property schema to utilize for validation.
-        :type property_schema: ook.metadata_type.PropertySchema
+        :type property_schema: :class:`PropertySchema`
         :param value: The value of the property to be validated.
         :type value: str, int, float, date, datetime, time, dict, list, set
         :return: True if the validation is successful, else False.
@@ -737,7 +750,7 @@ class PropertySchema(MetaType):
         """Validates a non-collection property for maximum allowable value.
 
         :param property_schema: The property schema to utilize for validation.
-        :type property_schema: ook.metadata_type.PropertySchema
+        :type property_schema: :class:`PropertySchema`
         :param value: The value of the property to be validated.
         :type value: str, int, float, date, datetime, time, dict, list, set
         :return: True if the validation is successful, else False.
@@ -763,7 +776,7 @@ class PropertySchema(MetaType):
         :param key: The name of the property that is being validated.
         :type key: str
         :param property_schema: The schema definition for the target property.
-        :type property_schema: ook.meta_type.PropertySchema
+        :type property_schema: :class:`PropertySchema`
         :param value: The value to be tested against the given schema.
         :type value: str, int, float, date, datetime, time, dict, list, set
         :param value_errors: A list of the validation errors discovered. The
