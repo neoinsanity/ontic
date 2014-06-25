@@ -41,7 +41,7 @@ class ValidateSchemaTestCase(base_test_case.BaseTestCase):
         # Dict test
         SchemaType.validate_schema(schema)
 
-        # BaseType test
+        # ObjectType test
         base_type_schema = SchemaType(schema)
         SchemaType.validate_schema(base_type_schema)
 

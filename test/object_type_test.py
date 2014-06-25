@@ -3,10 +3,10 @@ from ook import object_type
 from test.test_utils import base_test_case
 
 
-class BaseTypeTest(base_test_case.BaseTestCase):
-    """BaseType test cases."""
+class ObjectTypeTest(base_test_case.BaseTestCase):
+    """ObjectType test cases."""
 
     def test_dynamic_access(self):
-        """BaseType property access as a Dict and an Attribute."""
-        base_object = object_type.BaseType()
-        self.assert_dynamic_accessing(base_object)
+        """ObjectType property access as a Dict and an Attribute."""
+        some_type = object_type.ObjectType()
+        self.assert_dynamic_accessing(some_type)

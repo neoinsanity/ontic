@@ -6,5 +6,5 @@ Object Class
 Classes
 --------
 
-.. autoclass:: ook.object_type.BaseType
+.. autoclass:: ook.object_type.ObjectType
     :members:

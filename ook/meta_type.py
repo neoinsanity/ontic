@@ -144,7 +144,7 @@ class MetaType(CoreType):
         """Returns the schema object for the a given type definition.
 
         :return: The schema metadata definition for a :class:`PropertySchema`
-            or a :class:`ook.object_type.BaseType` derived child class.
+            or a :class:`ook.object_type.ObjectType` derived child class.
         :rtype: :class:`CoreType`, :class:`ook.schema_type.SchemaType`
         """
         return cls.OOK_SCHEMA

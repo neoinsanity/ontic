@@ -32,8 +32,7 @@ type are child classes of the :class:`~ook.object_types` class.
 Object Tools
 -------------
 
-**Ook** objects created by either subclassing :class:`~ook.object_type
-.BaseType` or via
+**Ook** objects created by either subclassing :class:`ObjectType` or via
 :meth:`~create_ook_type`, will need to be validated. Utilize the
 **Ook** object :meth:`~ook.object_type.validate_object` method for validation.
 
@@ -47,7 +46,7 @@ Usage
 The **object_type** module allows for the construction of **Ook** data types. A
 complete configured data type definition would be constructed as::
 
-    class MyType(BaseType):
+    class MyType(ObjectType):
         OOK_SCHEMA = SchemaType({
             'some_property': PropertyType({
                 'type': 'int',
@@ -71,10 +70,10 @@ from meta_type import MetaType, PropertySchema
 from schema_type import SchemaType
 
 
-class BaseType(MetaType):
-    """BaseType provides the **Ook** schema interface.
+class ObjectType(MetaType):
+    """ObjectType provides the **Ook** schema interface.
 
-    The **BaseType** provides the schema management functionality to a derived
+    The **ObjectType** provides the schema management functionality to a derived
     **Ook** type instance.
     """
 
@@ -83,11 +82,11 @@ def create_ook_type(name, schema):
     """Create an **Ook** type to generate objects with a given schema.
 
     :param name: The name to apply to the created class, with
-        object_type.BaseType as parent.
+        object_type.ObjectType as parent.
     :type name: str
     :param schema: A representation of the schema in dictionary format.
     :type schema: dict
-    :return: A class whose base is object_type.BaseType.
+    :return: A class whose base is object_type.ObjectType.
     :rtype: ClassType
     :except ValueError: String name required. Dict or SchemaType schema
         required.
@@ -99,7 +98,7 @@ def create_ook_type(name, schema):
     if not isinstance(schema, dict):
         raise ValueError('The schema must be a dict or SchemaType.')
 
-    ook_type = type(name, (BaseType, ), dict())
+    ook_type = type(name, (ObjectType, ), dict())
 
     if not isinstance(schema, SchemaType):
         schema = SchemaType(schema)
@@ -113,18 +112,18 @@ def validate_object(the_object):
     """Method that will validate if an object meets the schema requirements.
 
     :param the_object: An object instance whose type is a child class of
-        :class:`~ook.object_type.BaseType`
-    :type the_object: ook.object_type.BaseType
+        :class:`~ook.object_type.ObjectType`
+    :type the_object: ook.object_type.ObjectType
     :except ValueError:
-        * *the_object* is not a :class:`~ook.object_type.BaseType`.
+        * *the_object* is not a :class:`~ook.object_type.ObjectType`.
 
         * A property of *the_object* does not meet schema requirements.
 
     """
-    if not isinstance(the_object, BaseType):
+    if not isinstance(the_object, ObjectType):
         raise ValueError(
             'Validation can only support validation of objects derived from '
-            'ook.BaseType.')
+            'ook.ObjectType.')
 
     value_errors = []
 
@@ -145,12 +144,12 @@ def validate_value(property_name, ook_object):
         **PropertySchema**.
     :type property_name: str
     :param ook_object: Ook defined object to be validated.
-    :type ook_object: object_type.BaseType
+    :type ook_object: object_type.ObjectType
     :except ValueError:
 
         - Responds with a value error if the validation is not successful.
 
-        - "property_schema" is not provided or not a dict, **BaseType**,
+        - "property_schema" is not provided or not a dict, **ObjectType**,
             or **PropertySchema**
     """
     if property_name is None:
@@ -161,9 +160,9 @@ def validate_value(property_name, ook_object):
     if ook_object is None:
         raise ValueError(
             '"ook_object" is required, cannot be None.')
-    if not isinstance(ook_object, BaseType):
+    if not isinstance(ook_object, ObjectType):
         raise ValueError(
-            '"ook_object" must be BaseType or child type of BaseType.')
+            '"ook_object" must be ObjectType or child type of ObjectType.')
 
     value_errors = []
 

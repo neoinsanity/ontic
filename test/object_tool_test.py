@@ -51,13 +51,13 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         self.assertRaisesRegexp(
             ValueError,
             'Validation can only support validation of objects derived from '
-            'ook.BaseType.',
+            'ook.ObjectType.',
             object_type.validate_object, None)
         self.assertRaisesRegexp(
             ValueError,
             'Validation can only support validation of objects derived from '
-            'ook.BaseType.',
-            object_type.validate_object, 'Not a BaseType')
+            'ook.ObjectType.',
+            object_type.validate_object, 'Not a ObjectType')
 
     def test_type_setting(self):
         """Validate 'type' schema setting."""
@@ -637,7 +637,7 @@ class ValidateValueTestCase(base_test_case.BaseTestCase):
 
         self.assertRaisesRegexp(
             ValueError,
-            '"ook_object" must be BaseType or child type of BaseType',
+            '"ook_object" must be ObjectType or child type of ObjectType',
             object_type.validate_value, 'some_value', "can't be string")
 
         ook_type = object_type.create_ook_type(
