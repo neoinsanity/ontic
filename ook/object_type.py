@@ -82,14 +82,14 @@ def create_ook_type(name, schema):
     """Create an **Ook** type to generate objects with a given schema.
 
     :param name: The name to apply to the created class, with
-        object_type.ObjectType as parent.
+        :class:`ObjectType` as parent.
     :type name: str
     :param schema: A representation of the schema in dictionary format.
     :type schema: dict
-    :return: A class whose base is object_type.ObjectType.
+    :return: A class whose base is :class:`ObjectType`.
     :rtype: ClassType
-    :except ValueError: String name required. Dict or SchemaType schema
-        required.
+    :except ValueError: String name required. Dict or
+        :class:`ook.schema_type.SchemaType` schema required.
     """
     if name is None or name is '':
         raise ValueError('The string "name" argument is required.')
@@ -108,17 +108,24 @@ def create_ook_type(name, schema):
     return ook_type
 
 
-def validate_object(the_object):
+def validate_object(the_object, raise_value_error = True):
     """Method that will validate if an object meets the schema requirements.
 
     :param the_object: An object instance whose type is a child class of
-        :class:`~ook.object_type.ObjectType`
-    :type the_object: ook.object_type.ObjectType
+        :class:`ObjectType`
+    :type the_object: :class:``ObjectType`
+    :param raise_value_error: If True, then *validate_object* will
+        throw a *ValueException* upon validation failure. If False, then a
+        list of validation errors is returned. Defaults to True.
+    :type raise_value_error: bool
+    :return: If no validation errors are found, then an empty list is
+        returned. If validation fails, then a list of the errors is returned
+        if the *raise_value_error* is set to True.
+    :rtype: list<str>
     :except ValueError:
         * *the_object* is not a :class:`~ook.object_type.ObjectType`.
 
         * A property of *the_object* does not meet schema requirements.
-
     """
     if not isinstance(the_object, ObjectType):
         raise ValueError(
@@ -133,24 +140,31 @@ def validate_object(the_object):
         PropertySchema.validate_value(
             property_name, property_schema, value, value_errors)
 
-    if value_errors:
+    if value_errors and raise_value_error:
         raise ValueError(str.join(' \n', value_errors))
 
+    return value_errors
 
-def validate_value(property_name, ook_object):
-    """Validate a value against a given **PropertySchema**
+
+def validate_value(property_name, ook_object, raise_value_error=True):
+    """Validate a specific value of a given :class:`ObjectType` instance.
 
     :param property_name: The value to be validated against the given
         **PropertySchema**.
     :type property_name: str
     :param ook_object: Ook defined object to be validated.
     :type ook_object: object_type.ObjectType
-    :except ValueError:
-
-        - Responds with a value error if the validation is not successful.
-
-        - "property_schema" is not provided or not a dict, **ObjectType**,
-            or **PropertySchema**
+    :param raise_value_error: If True, then *validate_object* will
+        throw a *ValueException* upon validation failure. If False, then a
+        list of validation errors is returned. Defaults to True.
+    :type raise_value_error: bool
+    :return: If no validation errors are found, then an empty list is
+        returned. If validation fails, then a list of the errors is returned
+        if the *raise_value_error* is set to True.
+    :rtype: list<str>
+    :except ValueError: Responds with a value error if the validation is not
+        successful. The *ValueError* will not be raised if *raise_value_error*
+        is set to False.
     """
     if property_name is None:
         raise ValueError(
@@ -176,5 +190,7 @@ def validate_value(property_name, ook_object):
     PropertySchema.validate_value(
         property_name, property_schema, value, value_errors)
 
-    if value_errors:
+    if value_errors and raise_value_error:
         raise ValueError(str.join(' \n', value_errors))
+
+    return value_errors
