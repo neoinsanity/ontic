@@ -65,7 +65,7 @@ complete configured data type definition would be constructed as::
     my_object['some_property'] = 7
 
 """
-
+import meta_type
 from meta_type import MetaType, PropertySchema
 from schema_type import SchemaType
 from validation_exception import ValidationException
@@ -138,7 +138,7 @@ def validate_object(the_object, raise_value_error=True):
     for property_name, property_schema in the_object.get_schema().iteritems():
         value = the_object.get(property_name, None)
 
-        PropertySchema.validate_value(
+        meta_type.validate_value(
             property_name, property_schema, value, value_errors)
 
     if value_errors and raise_value_error:
@@ -188,7 +188,7 @@ def validate_value(property_name, ook_object, raise_value_error=True):
 
     value = ook_object.get(property_name, None)
 
-    PropertySchema.validate_value(
+    meta_type.validate_value(
         property_name, property_schema, value, value_errors)
 
     if value_errors and raise_value_error:
