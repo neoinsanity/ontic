@@ -53,11 +53,10 @@ class SchemaType(CoreType):
 
     @staticmethod
     def perfect_schema(candidate_schema):
-        """
+        """Method to clean and perfect a given schema.
 
         :param candidate_schema:
-        :type candidate_schema:
-        :return:
+        :type candidate_schema: dict, ook.schema_type.SchemaType
         :rtype:
         """
         if candidate_schema is None:

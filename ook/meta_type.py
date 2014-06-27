@@ -49,6 +49,8 @@ member_max   float  None     False     None
 from datetime import date, datetime, time
 import re
 
+from validation_exception import ValidationException
+
 # : The set of supported collection types.
 COLLECTION_TYPES = {dict, list, set}
 
@@ -181,13 +183,15 @@ class PropertySchema(MetaType):
         >>> bar_schema.type = 'int'
         >>> bar_schema.required = False
         >>> bar_schema.min = 3
-        >>> PropertySchema.validate_schema_property(bar_schema, [])
+        >>> val_errors = PropertySchema.validate_schema_property(bar_schema)
+        >>> assert len(val_errors) == 0
 
         >>> nutty_schema = PropertySchema()
-        >>> nutty_schema['type'] = str
+        >>> nutty_schema['type'] = 'str'
         >>> nutty_schema['required'] = True
         >>> nutty_schema['min'] = 5
-        >>> PropertySchema.validate_schema_property(nutty_schema, [])
+        >>> val_errors = PropertySchema.validate_schema_property(nutty_schema)
+        >>> assert len(val_errors) == 0
     """
     # : The schema definition for the **PropertySchema** type.
     OOK_SCHEMA = CoreType({
@@ -366,27 +370,31 @@ class PropertySchema(MetaType):
 
         PropertySchema.perfect_schema_property(self)
 
-        value_errors = list()
-        PropertySchema.validate_schema_property(self, value_errors)
-        if value_errors:
-            raise ValueError(str.join(' \n-- ', value_errors))
+        PropertySchema.validate_schema_property(self)
 
     @staticmethod
-    def validate_schema_property(candidate_schema_property, value_errors):
+    def validate_schema_property(candidate_schema_property,
+                                 raise_value_error=True):
         """Method to validate a schema property definition.
 
         :param candidate_schema_property: The schema property to be validated.
         :type candidate_schema_property: :class:`PropertySchema`
-        :param value_errors: A list that is utilized to collect the errors found
-            during schema validation.
-        :type value_errors: list<str>
-        :rtype: None
+        :return: If no validation errors are found, then an empty list is
+            returned. If validation fails, then a list of the errors is returned
+            if the *raise_value_error* is set to True.
+        :rtype: list<str>
+        :raises ValueError: *the_candidate_schema_property* is not an
+            :class:`~ook.object_type.ObjectType`.
+        :raises ValueError: A property of *candidate_schema_property* does not
+            meet schema requirements.
         """
         if candidate_schema_property is None:
             raise ValueError('"candidate_schema_property" must be provided.')
         if not isinstance(candidate_schema_property, PropertySchema):
             raise ValueError(
                 '"candidate_schema_property" must be PropertySchema type.')
+
+        value_errors = list()
 
         for schema_name, schema_setting in (
                 candidate_schema_property.get_schema().iteritems()):
@@ -397,6 +405,11 @@ class PropertySchema(MetaType):
                 schema_setting,
                 setting_value,
                 value_errors)
+
+        if value_errors and raise_value_error:
+            raise ValidationException(value_errors)
+
+        return value_errors
 
     @staticmethod
     def perfect_schema_property(candidate_schema_property):

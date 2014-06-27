@@ -68,6 +68,7 @@ complete configured data type definition would be constructed as::
 
 from meta_type import MetaType, PropertySchema
 from schema_type import SchemaType
+from validation_exception import ValidationException
 
 
 class ObjectType(MetaType):
@@ -108,7 +109,7 @@ def create_ook_type(name, schema):
     return ook_type
 
 
-def validate_object(the_object, raise_value_error = True):
+def validate_object(the_object, raise_value_error=True):
     """Method that will validate if an object meets the schema requirements.
 
     :param the_object: An object instance whose type is a child class of
@@ -141,7 +142,7 @@ def validate_object(the_object, raise_value_error = True):
             property_name, property_schema, value, value_errors)
 
     if value_errors and raise_value_error:
-        raise ValueError(str.join(' \n', value_errors))
+        raise ValidationException(value_errors)
 
     return value_errors
 
@@ -191,6 +192,6 @@ def validate_value(property_name, ook_object, raise_value_error=True):
         property_name, property_schema, value, value_errors)
 
     if value_errors and raise_value_error:
-        raise ValueError(str.join(' \n', value_errors))
+        raise ValidationException(value_errors)
 
     return value_errors
