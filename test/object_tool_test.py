@@ -52,12 +52,12 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         self.assertRaisesRegexp(
             ValueError,
             'Validation can only support validation of objects derived from '
-            'ook.ObjectType.',
+            'ook.object_type.ObjectType.',
             object_type.validate_object, None)
         self.assertRaisesRegexp(
             ValueError,
             'Validation can only support validation of objects derived from '
-            'ook.ObjectType.',
+            'ook.object_type.ObjectType.',
             object_type.validate_object, 'Not a ObjectType')
 
     def test_type_setting(self):

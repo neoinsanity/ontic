@@ -3,12 +3,17 @@
 
 .. image:: images/metadata_types.jpg
 
+.. contents::
+
+======
 Usage
-------
+======
 
 The **meta_type** module contains three classes that are used in the
 definition and instantiation of object instances.  The root class is
-:class:`CoreType`, which is derived from the Python :class:`dict`.
+:class:`CoreType`, which is derived from the Python :class:`dict`. The
+primary feature of the :class:`CoreType` is provide the means to access
+properties of an object as a *dict* elements or as object attributes.
 
 Derived from :class:`CoreType` is :class:`MetaType`, which provides the
 interface for retrieving a schema from an object schema definition via the
@@ -19,12 +24,23 @@ property. This includes setting data type, required, and other such common
 schema definition conventions. See :ref:`property-schema-settings-table` for
 details on the :class:`PropertySchema` settings available.
 
+It would is a rare case that requires the use of :class:`CoreType` or
+:class:`MetaType`. For most the majority of cases, the use of
+:class:`PropertySchema` is sufficient. With that in mind, the remainder of
+this section will focus on the use of :class:`PropertySchema`
+
+Creating Property Schema
+-------------------------
+
+
+
+Utilizing Property Schema
+--------------------------
+
 .. _property-schema-settings-table:
 
 Property Schema Settings
 -------------------------
-
-Can this be the issue.
 
 ============ ====== ======== ========  =================================
 name         type   default  required  enum
@@ -43,6 +59,62 @@ member_min   float  None     False     None
 member_max   float  None     False     None
 ============ ====== ======== ========  =================================
 
+*type*
+    The *type* settings restricts a property to a known type. If no type is
+    defined, then any value type maybe assigned to the property.
+*default*
+    If the value is of a property is ``None``, then the default value is
+    applied to the property during validation. Note: the default value is
+    only applied to an instance during instance creation, or when a call to
+    :meth:`perfect_schema_property`. The default is not applied during
+    validation.
+*required*
+    A *PropertySchema* with a required setting of *True*, will fail
+    validation if the property value is *None*.
+*enum*
+    An *enum* setting is a set of values that the property value must adhere
+    to. If the *type* setting is provided, then the choices provided by
+    *enum* must be of that type. If no *type* is provided, then the choices
+    in the *enum* set may be of any type, even mixed type.
+*min*
+    The *min* setting has differing behavior, based on the *type* setting. If
+    no *type* setting is provided, then *min* test will not occur. For the
+    boundable types (str, list, dict, set) the *min* setting will test that
+    the value length is not less than the minimum. For the comparable types
+    (int, float, data, time, datatime) the *min* setting will test that the
+    value is not less than the minimum.
+*max*
+    The *max setting has differing behavior, based on the *type* setting. If
+    no *type* setting is provided, the *max* test will not occur. For the
+    boundable types (str, list, dict, set) the *max* setting will test that
+    the value length is not more than the maximum. For the comparable types
+    (int, float, date, time, datetime) the *max* setting will test that the
+    value is not more than the maximum.
+*regex*
+    The *regex* setting is only tested if the *type* or *member_type* setting
+    is 'str' and the *regex* setting is not None. When active, the *regex*
+    setting will be used to test the given string value.  If the property
+    value is 'None', then no regex testing will be done.
+*member_type*
+    The *member_type* setting is used to restrict the value type for property
+    *type* 'list' or 'set'. It does so ensuring that each member of the
+    collection is of the type designated by *member_type*.
+*member_min*
+    The *member_min* setting has differing behavior, based on the
+    *member_type* setting. If no *member_type* setting is provided, then
+    *member_min* test will not occur. For the boundable types
+    (str, list, dict, set), the *member_min* setting will test that the
+    value length is not less than the minimum. For the comparable types
+    (int, float, date, time, datetime) the *member_minimum* setting will test
+    that the value is not less than the minimum.
+*member_max*
+    The *member_max* setting has differing behavior, based on the
+    *member_max* setting. If no *member_type* setting is provided,
+    then *member_max* test will not occur. For the boundable types
+    (str, list, dict, set), the *member_max* setting will test that the
+    value length is not more than the maximum. For the comparable types
+    (int, float, date, time, datetime) the *member_max* setting will test
+    that the value is not more than the maximum.
 
 """
 
@@ -400,7 +472,8 @@ def validate_schema_property(candidate_schema_property,
             candidate_schema_property.get_schema().iteritems()):
         setting_value = candidate_schema_property.get(schema_name, None)
 
-        validate_value(schema_name, schema_setting, setting_value, value_errors)
+        value_errors.extend(
+            validate_value(schema_name, schema_setting, setting_value))
 
     if value_errors and raise_value_error:
         raise ValidationException(value_errors)
@@ -441,9 +514,11 @@ def perfect_schema_property(candidate_schema_property):
         if property_name not in candidate_schema_property:
             candidate_schema_property[
                 property_name] = property_schema.default
+        if not candidate_schema_property[property_name]:
+            candidate_schema_property[property_name] = property_schema.default
 
 
-def validate_value(name, property_schema, value, value_errors):
+def validate_value(name, property_schema, value):
     """Method to validate a given value against a given property schema.
 
     :param name: The name of the value to be validated.
@@ -453,17 +528,20 @@ def validate_value(name, property_schema, value, value_errors):
     :type property_schema: :class:`PropertySchema`
     :param value: The value that is to be validated.
     :type value: object
-    :param value_errors: A list that is utilized to collect the errors found
+    :return: A list that is utilized to collect the errors found
         during schema validation.
-    :type value_errors: list<str>
+    :rtype value_errors: list<str>
     """
+    value_errors = []
     # required: True | False
     if property_schema.required and value is None:
         value_errors.append('The value for "%s" is required.' % name)
-        return  # No other validation can occur without the required value
+        return value_errors # No other validation can occur without a value
 
     if value is not None:
         validate_non_none_value(name, property_schema, value, value_errors)
+
+    return value_errors
 
 
 def validate_non_none_value(key, property_schema, value, value_errors):
