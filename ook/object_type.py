@@ -89,7 +89,7 @@ def create_ook_type(name, schema):
     :type schema: dict
     :return: A class whose base is :class:`ObjectType`.
     :rtype: ClassType
-    :except ValueError: String name required. Dict or
+    :raises ValueError: String name required. Dict or
         :class:`ook.schema_type.SchemaType` schema required.
     """
     if name is None or name is '':
@@ -123,7 +123,7 @@ def validate_object(the_object, raise_value_error=True):
         returned. If validation fails, then a list of the errors is returned
         if the *raise_value_error* is set to True.
     :rtype: list<str>
-    :except ValueError:
+    :raises ValueError:
         * *the_object* is not a :class:`~ook.object_type.ObjectType`.
 
         * A property of *the_object* does not meet schema requirements.
@@ -147,7 +147,7 @@ def validate_object(the_object, raise_value_error=True):
     return value_errors
 
 
-def validate_value(property_name, ook_object, raise_value_error=True):
+def validate_value(property_name, ook_object, raise_validation_error=True):
     """Validate a specific value of a given :class:`ObjectType` instance.
 
     :param property_name: The value to be validated against the given
@@ -155,17 +155,17 @@ def validate_value(property_name, ook_object, raise_value_error=True):
     :type property_name: str
     :param ook_object: Ook defined object to be validated.
     :type ook_object: object_type.ObjectType
-    :param raise_value_error: If True, then *validate_object* will
+    :param raise_validation_error: If True, then *validate_object* will
         throw a *ValueException* upon validation failure. If False, then a
         list of validation errors is returned. Defaults to True.
-    :type raise_value_error: bool
+    :type raise_validation_error: bool
     :return: If no validation errors are found, then an empty list is
         returned. If validation fails, then a list of the errors is returned
-        if the *raise_value_error* is set to True.
+        if the *raise_validation_error* is set to True.
     :rtype: list<str>
-    :except ValueError: Responds with a value error if the validation is not
-        successful. The *ValueError* will not be raised if *raise_value_error*
-        is set to False.
+    :raises ValueError: Responds with a value error if the validation is not
+        successful. The *ValueError* will not be raised if
+        *raise_validation_error* is set to False.
     """
     if property_name is None:
         raise ValueError(
@@ -191,7 +191,7 @@ def validate_value(property_name, ook_object, raise_value_error=True):
     value_errors.extend(
         meta_type.validate_value(property_name, property_schema, value))
 
-    if value_errors and raise_value_error:
+    if value_errors and raise_validation_error:
         raise ValidationException(value_errors)
 
     return value_errors

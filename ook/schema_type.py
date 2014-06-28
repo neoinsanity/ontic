@@ -65,7 +65,7 @@ class SchemaType(CoreType):
             raise ValueError('"candidate_schema" must be of SchemaType.')
 
         for property_schema in candidate_schema.values():
-            meta_type.perfect_schema_property(property_schema)
+            meta_type.perfect_property_schema(property_schema)
 
     @staticmethod
     def validate_schema(candidate_schema):
@@ -83,7 +83,7 @@ class SchemaType(CoreType):
 
         value_errors = []
         for candidate_property_schema in candidate_schema.values():
-            meta_type.validate_schema_property(
+            meta_type.validate_property_schema(
                 candidate_property_schema, value_errors)
 
         return value_errors

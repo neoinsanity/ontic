@@ -72,10 +72,10 @@ non_none_singular_validation
 
 ---------------------------------------
 
-perfect_schema_property
+perfect_property_schema
 ------------------------
 
-.. autofunction:: perfect_schema_property
+.. autofunction:: perfect_property_schema
 
 ---------------------------------------
 
@@ -128,10 +128,10 @@ validate_non_none_value
 
 ---------------------------------------
 
-validate_schema_property
+validate_property_schema
 -------------------------
 
-.. autofunction:: validate_schema_property
+.. autofunction:: validate_property_schema
 
 ---------------------------------------
 

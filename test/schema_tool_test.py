@@ -5,19 +5,19 @@ from ook.schema_type import SchemaType
 
 
 class ValidateSchemaProperty(base_test_case.BaseTestCase):
-    """Various tests of the 'validate_schema_property' method."""
+    """Various tests of the 'validate_property_schema' method."""
 
     def test_bad_validate_schema_property(self):
-        """Test bad use cases of validate_schema_property."""
+        """Test bad use cases of validate_property_schema."""
         self.assertRaisesRegexp(
             ValueError,
-            '"candidate_schema_property" must be provided.',
-            meta_type.validate_schema_property, None, list())
+            '"candidate_property_schema" must be provided.',
+            meta_type.validate_property_schema, None, list())
 
         self.assertRaisesRegexp(
             ValueError,
-            '"candidate_schema_property" must be PropertySchema type.',
-            meta_type.validate_schema_property, dict(), list())
+            '"candidate_property_schema" must be PropertySchema type.',
+            meta_type.validate_property_schema, dict(), list())
 
 
 class ValidateSchemaTestCase(base_test_case.BaseTestCase):
@@ -51,7 +51,7 @@ class ValidateSchemaTestCase(base_test_case.BaseTestCase):
 
 
 class PerfectSchemaPropertyTestCase(base_test_case.BaseTestCase):
-    """Test cases for the perfect_schema_property method."""
+    """Test cases for the perfect_property_schema method."""
 
     def test_perfect_empty_schema_property(self):
         """Validate the perfection of an empty schema property."""
@@ -72,7 +72,7 @@ class PerfectSchemaPropertyTestCase(base_test_case.BaseTestCase):
             },
             candidate_schema_property)
 
-        meta_type.perfect_schema_property(candidate_schema_property)
+        meta_type.perfect_property_schema(candidate_schema_property)
 
         self.assertEqual(10, len(candidate_schema_property))
         self.assertDictEqual(
@@ -113,7 +113,7 @@ class PerfectSchemaPropertyTestCase(base_test_case.BaseTestCase):
             },
             candidate_schema_property)
 
-        meta_type.perfect_schema_property(candidate_schema_property)
+        meta_type.perfect_property_schema(candidate_schema_property)
 
         self.assertEqual(10, len(candidate_schema_property))
         self.assertDictEqual(
@@ -132,16 +132,16 @@ class PerfectSchemaPropertyTestCase(base_test_case.BaseTestCase):
 
     def test_bad_perfect_schema_property(self):
         """Validate error handling for bad schemas passed to
-        perfect_schema_property."""
+        perfect_property_schema."""
         self.assertRaisesRegexp(
             ValueError,
-            '"candidate_schema_property" must be provided.',
-            meta_type.perfect_schema_property, None)
+            '"candidate_property_schema" must be provided.',
+            meta_type.perfect_property_schema, None)
 
         self.assertRaisesRegexp(
             ValueError,
-            '"candidate_schema_property" must be PropertySchema type.',
-            meta_type.perfect_schema_property, {})
+            '"candidate_property_schema" must be PropertySchema type.',
+            meta_type.perfect_property_schema, {})
 
 
 class PerfectSchemaTestCase(base_test_case.BaseTestCase):

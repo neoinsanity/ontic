@@ -32,10 +32,70 @@ this section will focus on the use of :class:`PropertySchema`
 Creating Property Schema
 -------------------------
 
+For general purposes, consider utilizing :class:`ook.schema_type.SchemaType`,
+for defining complete models. However, if you need validators for individual
+properties, then direct use of :class:`PropertySchema` is a solution.
 
+There are a number of ways to create a :class:`SchemaProperty`. Take a look
+at :class:`SchemaProperty` class documentation for a complete exposition on
+the means of instantiating an instance.
+
+The most straight forward way to create an instance of a
+:class:`SchemaProperty`:
+
+>>> prop_schema = PropertySchema(type='str', required=True, min=3)
+>>> prop_schema
+{'regex': None, 'enum': None, 'min': 3, 'default': None, 'max': None, \
+'required': True, 'member_type': None, 'member_min': None, 'type': 'str', \
+'member_max': None}
+
+Demonstrated above is the creation of a property schema of type string. In
+addition the property schema forces the value of the property to required and
+of minimum length of 4.
+
+Along with the schema settings explicitly set in the constructor, there are a
+number of other property schema settings that may be utilized. These
+additional settings can be viewed in the output of the *prop_schema* object.
+For the details on the property schema settings, see
+:ref:`property-schema-settings-table`.
+
+A :class:`PropertySchema` can be created or modified dynamically. If done so,
+then the final schema instance should be validated with the use of the method
+:meth:`validate_property_schema`.
 
 Utilizing Property Schema
 --------------------------
+
+Validation of a value utilizing the *prop_schema* created, is done with the
+:meth:`validate_value' method.`
+
+>>> prop_schema = PropertySchema(type='str', required=True)
+>>> some_value = 'The cat is on the roof.'
+>>> validate_value(
+...     name='some_value', property_schema=prop_schema, value=some_value)
+[]
+
+:class:`validate_value` returns an empty list if there are no errors.
+
+The *name* parameter of the :meth:`validate_value`, is used to construct
+friendly error messages. For example:
+
+>>> validate_value('some_prop', prop_schema, None)
+['The value for "some_prop" is required.']
+
+The following example demonstrates how a :class:`PropertySchema` being
+instantiated with a dictionary. Subsequently the a bad value is passed with
+multiple validation errors.
+
+>>> other_schema = PropertySchema({
+...     'type': 'str',
+...     'max': 3,
+...     'enum': {'dog', 'rat', 'cat'}
+... })
+>>> validate_value('other_prop', other_schema, 'frog')
+['The value "frog" for "other_prop" not in enumeration \
+[\\\'rat\\\', \\\'dog\\\', \\\'cat\\\'].', 'The value of "frog" for \
+"other_prop" fails max of 3.']
 
 .. _property-schema-settings-table:
 
@@ -255,14 +315,14 @@ class PropertySchema(MetaType):
         >>> bar_schema.type = 'int'
         >>> bar_schema.required = False
         >>> bar_schema.min = 3
-        >>> val_errors = validate_schema_property(bar_schema)
+        >>> val_errors = validate_property_schema(bar_schema)
         >>> assert len(val_errors) == 0
 
         >>> nutty_schema = PropertySchema()
         >>> nutty_schema['type'] = 'str'
         >>> nutty_schema['required'] = True
         >>> nutty_schema['min'] = 5
-        >>> val_errors = validate_schema_property(nutty_schema)
+        >>> val_errors = validate_property_schema(nutty_schema)
         >>> assert len(val_errors) == 0
     """
     # : The schema definition for the **PropertySchema** type.
@@ -440,37 +500,41 @@ class PropertySchema(MetaType):
         """
         super(PropertySchema, self).__init__(*args, **kwargs)
 
-        perfect_schema_property(self)
+        perfect_property_schema(self)
 
-        validate_schema_property(self)
+        validate_property_schema(self)
 
 
-def validate_schema_property(candidate_schema_property,
+def validate_property_schema(candidate_property_schema,
                              raise_value_error=True):
-    """Method to validate a schema property definition.
+    """Method to validate a property schema definition.
 
-    :param candidate_schema_property: The schema property to be validated.
-    :type candidate_schema_property: :class:`PropertySchema`
+    :param candidate_property_schema: The schema property to be validated.
+    :type candidate_property_schema: :class:`PropertySchema`
+    :param raise_validation_error: If True, then *validate_object* will
+        throw a *ValueException* upon validation failure. If False, then a
+        list of validation errors is returned. Defaults to True.
+    :type raise_validation_error: bool
     :return: If no validation errors are found, then an empty list is
         returned. If validation fails, then a list of the errors is returned
         if the *raise_value_error* is set to True.
     :rtype: list<str>
     :raises ValueError: *the_candidate_schema_property* is not an
         :class:`~ook.object_type.ObjectType`.
-    :raises ValueError: A property of *candidate_schema_property* does not
-        meet schema requirements.
+    :raises ValidationException: A property of *candidate_property_schema*
+        does not meet schema requirements.
     """
-    if candidate_schema_property is None:
-        raise ValueError('"candidate_schema_property" must be provided.')
-    if not isinstance(candidate_schema_property, PropertySchema):
+    if candidate_property_schema is None:
+        raise ValueError('"candidate_property_schema" must be provided.')
+    if not isinstance(candidate_property_schema, PropertySchema):
         raise ValueError(
-            '"candidate_schema_property" must be PropertySchema type.')
+            '"candidate_property_schema" must be PropertySchema type.')
 
     value_errors = list()
 
     for schema_name, schema_setting in (
-            candidate_schema_property.get_schema().iteritems()):
-        setting_value = candidate_schema_property.get(schema_name, None)
+            candidate_property_schema.get_schema().iteritems()):
+        setting_value = candidate_property_schema.get(schema_name, None)
 
         value_errors.extend(
             validate_value(schema_name, schema_setting, setting_value))
@@ -481,7 +545,7 @@ def validate_schema_property(candidate_schema_property,
     return value_errors
 
 
-def perfect_schema_property(candidate_schema_property):
+def perfect_property_schema(candidate_property_schema):
     """Method to ensure the completeness of a given schema property.
 
     This method ensures completeness by stripping out any properties that
@@ -489,33 +553,33 @@ def perfect_schema_property(candidate_schema_property):
     properties that are not included, the method will add those
     properties to the default value.
 
-    :param candidate_schema_property: The PropertySchema that is to be
+    :param candidate_property_schema: The PropertySchema that is to be
         clean and restricted.
-    :type candidate_schema_property: :class:`PropertySchema`
+    :type candidate_property_schema: :class:`PropertySchema`
     :rtype: None
-    :raise: ValueError: If the candidate_schema_property is None, or not
+    :raise: ValueError: If the candidate_property_schema is None, or not
         of type *PropertySchema*.
     """
-    if candidate_schema_property is None:
-        raise ValueError('"candidate_schema_property" must be provided.')
-    if not isinstance(candidate_schema_property, PropertySchema):
+    if candidate_property_schema is None:
+        raise ValueError('"candidate_property_schema" must be provided.')
+    if not isinstance(candidate_property_schema, PropertySchema):
         raise ValueError(
-            '"candidate_schema_property" must be PropertySchema type.')
+            '"candidate_property_schema" must be PropertySchema type.')
 
-    schema_property_schema = candidate_schema_property.get_schema()
+    schema_property_schema = candidate_property_schema.get_schema()
 
-    extra_properties = set(candidate_schema_property.keys()) - set(
+    extra_properties = set(candidate_property_schema.keys()) - set(
         schema_property_schema.keys())
     for property_name in extra_properties:
-        del candidate_schema_property[property_name]
+        del candidate_property_schema[property_name]
 
     for property_name, property_schema in (
             schema_property_schema.iteritems()):
-        if property_name not in candidate_schema_property:
-            candidate_schema_property[
+        if property_name not in candidate_property_schema:
+            candidate_property_schema[
                 property_name] = property_schema.default
-        if not candidate_schema_property[property_name]:
-            candidate_schema_property[property_name] = property_schema.default
+        if not candidate_property_schema[property_name]:
+            candidate_property_schema[property_name] = property_schema.default
 
 
 def validate_value(name, property_schema, value):
@@ -530,13 +594,13 @@ def validate_value(name, property_schema, value):
     :type value: object
     :return: A list that is utilized to collect the errors found
         during schema validation.
-    :rtype value_errors: list<str>
+    :rtype: list<str>
     """
     value_errors = []
     # required: True | False
     if property_schema.required and value is None:
         value_errors.append('The value for "%s" is required.' % name)
-        return value_errors # No other validation can occur without a value
+        return value_errors  # No other validation can occur without a value
 
     if value is not None:
         validate_non_none_value(name, property_schema, value, value_errors)
@@ -587,12 +651,6 @@ def validate_non_none_value(key, property_schema, value, value_errors):
             validate_collection_members(
                 key, property_schema, value, value_errors)
         else:
-            if not enum_validation(property_schema, value):
-                value_errors.append(
-                    'The value "%s" for "%s" not in enumeration %s.' %
-                    (value, key, list(property_schema.enum)))
-                return  # No further processing can occur
-
             non_none_singular_validation(
                 key, property_schema, value, value_errors)
 
@@ -870,6 +928,11 @@ def non_none_singular_validation(key, property_schema, value, value_errors):
     :type value_errors: list<str>
     :rtype: None
     """
+    # enum
+    if not enum_validation(property_schema, value):
+        value_errors.append('The value "%s" for "%s" not in enumeration %s.' %
+                            (value, key, list(property_schema.enum)))
+
     # min
     if not min_validation(property_schema, value):
         value_errors.append('The value of "%s" for "%s" fails min of %s.' %
