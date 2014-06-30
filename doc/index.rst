@@ -23,7 +23,7 @@ example::
 As **Ook** objects are designed to be utilized as pure data objects, they
 implement the python *dict* interface. So anywhere you can use or pass a dict
 object, you can pass an **Ook** object. **Ook** objects can even be
-initialized with a dictionary, as exampled below::
+initialized like a dictionary, as exampled below::
 
   >>> an_object = ook.object_type.ObjectType({'the_property':'the_value'})
   >>> assert an_object.the_property = 'the_value'
@@ -60,6 +60,9 @@ and dynamic definition of Ook type with schema.
     ValueError: The value for "the_property" is required.
   >>> my_object['the_property'] = 'Some value'
   >>> ook.object_type.validate_object(my_object)
+
+For full coverage of schema definitions and usage details,
+see :ref:`getting-started-with-ook`.
 
 .. warning::
     The limitation to this approach is that **Ook** objects should not be

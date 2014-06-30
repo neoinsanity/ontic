@@ -1,8 +1,12 @@
+.. _getting-started-with-ook:
+
 =========================
 Getting Started with Ook
 =========================
 
 .. image:: images/ook.jpg
+
+
 
 Creation of Ook Types
 ======================
