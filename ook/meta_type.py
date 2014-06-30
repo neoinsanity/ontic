@@ -581,6 +581,7 @@ def perfect_property_schema(candidate_property_schema):
         if property_name not in candidate_property_schema:
             candidate_property_schema[
                 property_name] = property_schema.default
+            continue
         if not candidate_property_schema[property_name]:
             candidate_property_schema[property_name] = property_schema.default
 

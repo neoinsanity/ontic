@@ -84,8 +84,39 @@ def create_ook_type(name, schema):
     return ook_type
 
 
+def perfect_object(the_object):
+    """Function to ensure complete attribute settings for a given object.
+
+    Perfecting an object instance will strip out any properties not defined in
+    the corresponding object type. If there are any missing properties in the
+    object, those properties will be added and set to the default value or
+    None, if no default has been set.
+
+    :param the_object:
+    :type the_object: :class:`ook.object_type.ObjectType`
+    :rtype: None
+    """
+    if the_object is None:
+        raise ValueError('"the_object" must be provided.')
+    if not isinstance(the_object, ObjectType):
+        raise ValueError('"the_object" must be ObjectType type.')
+
+    schema = the_object.get_schema()
+
+    extra_properties = set(the_object.keys()) - set(schema.keys())
+    for property_name in extra_properties:
+        del the_object[property_name]
+
+    for property_name, property_schema in schema.iteritems():
+        if property_name not in the_object:
+            the_object[property_name] = property_schema.default
+            continue
+        if not the_object[property_name]:
+            the_object[property_name] = property_schema.default
+
+
 def validate_object(the_object, raise_validation_exception=True):
-    """Method that will validate if an object meets the schema requirements.
+    """Function that will validate if an object meets the schema requirements.
 
     :param the_object: An object instance whose type is a child class of
         :class:`ObjectType`.

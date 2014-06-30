@@ -45,6 +45,48 @@ class CreateOokTypeTestCase(base_test_case.BaseTestCase):
         self.assertIsInstance(ook_object, ook_type)
 
 
+class PerfectObjectTestCase(base_test_case.BaseTestCase):
+    """Test object_type.perfect_object method."""
+
+    def test_bad_perfect_usage(self):
+        """"""
+        self.assertRaisesRegexp(
+            ValueError,
+            r'"the_object" must be provided.',
+            object_type.perfect_object, None)
+
+        self.assertRaisesRegexp(
+            ValueError,
+            r'"the_object" must be ObjectType type.',
+            object_type.perfect_object, {})
+
+
+    def test_valid_perfect_usage(self):
+        """Ensure that the perfect behavior is correct."""
+        schema_def = SchemaType({
+            'prop_1': {'type': 'int'},
+            'prop_2': {'type': 'int', 'default': 20},
+            'prop_3': {'type': 'int', 'default': 30},
+            'prop_4': {'type': 'int', 'default': 40},
+        })
+        ook_type = object_type.create_ook_type('PerfectOok', schema_def)
+
+        ook_object = ook_type()
+        ook_object.prop_1 = 1
+        ook_object.prop_3 = None
+        ook_object.prop_4 = 400
+        ook_object.extra_prop = 'Extra'
+
+        expected_dict = {
+            'prop_1': 1,
+            'prop_2': 20,
+            'prop_3': 30,
+            'prop_4': 400
+        }
+        object_type.perfect_object(ook_object)
+        self.assertDictEqual(expected_dict, ook_object)
+
+
 class ValidateObjectTestCase(base_test_case.BaseTestCase):
     """Test object_types.validate_object method basics."""
 
@@ -65,14 +107,14 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         """Ensure that validate_object handles error reporting."""
         schema_instance = SchemaType(some_attr={'type': 'int'})
         ook_type = object_type.create_ook_type('ValidateCheck',
-                                                schema_instance)
+                                               schema_instance)
         ook_object = ook_type()
         ook_object.some_attr = 'WRONG'
 
         self.assertRaisesRegexp(
             ValidationException,
             r"""The value for "some_attr" is not of type "int": WRONG""",
-            object_type.validate_object,ook_object)
+            object_type.validate_object, ook_object)
 
         expected_errors = [
             'The value for "some_attr" is not of type "int": WRONG']
