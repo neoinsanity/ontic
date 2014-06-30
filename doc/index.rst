@@ -12,7 +12,7 @@ to NoSql packages, take some form of the dict as input. Attribute access is
 easier to type when writing code, hence the attribute access. By way of
 example::
 
-  >>> an_object = ook.object_type.BaseType()
+  >>> an_object = ook.object_type.ObjectType()
   >>> an_object['property1'] = 1
   >>> assert an_object.property1 == 1
   >>> an_object.property2 = 2
@@ -25,17 +25,17 @@ implement the python *dict* interface. So anywhere you can use or pass a dict
 object, you can pass an **Ook** object. **Ook** objects can even be
 initialized with a dictionary, as exampled below::
 
-  >>> an_object = ook.object_type.BaseType({'the_property':'the_value'})
+  >>> an_object = ook.object_type.ObjectType({'the_property':'the_value'})
   >>> assert an_object.the_property = 'the_value'
   >>> assert an_object['the_property'] = 'the_value'
 
 In addition **Ook** provides schema and validation features to aid in working
 with data representations. Schemas and corresponding types can be generated
 at runtime, or types can be defined as classes that derive from the **Ook**
-*BaseType*. Here's some quick examples::
+*ObjectType*. Here's some quick examples::
 
   Class definition of an Ook type with schema.
-  >>> class MyType(ook.object_type.BaseType):
+  >>> class MyType(ook.object_type.ObjectType):
   ...   OOK_SCHEMA = {'the_property':{'required':True}}
   >>> my_object = MyType()
   >>> ook.object_type.validate_object(my_object)
@@ -82,6 +82,7 @@ API Specification
   ook.meta_type
   ook.object_type
   ook.schema_type
+  ook.validation_exception
 
 
 Indices and Tables

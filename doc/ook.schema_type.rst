@@ -1,5 +1,30 @@
-Schema Classes
+====================
+SchemaType Module
 ====================
 
 .. automodule:: ook.schema_type
-  :members:
+
+Classes
+========
+
+SchemaType
+-----------
+
+.. autoclass:: SchemaType
+    :special-members: __init__
+    :members:
+
+Functions
+==========
+
+perfect_schema
+---------------
+
+.. autofunction:: perfect_schema
+
+---------------------------------------
+
+validate_schema
+----------------
+
+.. autofunction:: validate_schema

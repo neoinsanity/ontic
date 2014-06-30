@@ -1,78 +1,55 @@
 """The fundamental *Ook* base data types for creation of derived child classes.
 
-The **object_type** provides the methods to create and validate **Ook**
-types and objects.
+.. image:: images/object_type.jpg
 
+.. contents::
+
+======
 Usage
------
+======
 
-There are two basic operations provided by **object_type**; schema
-definition and object
-handling. Schema definition entails type creation and validation.
+Create Object Types
+--------------------
 
-Schema Tools
--------------
+The *object_type* module provides the ::class::`ObjectType` and a set of
+functions to handle the creation and validation of *ObjectType* instances.
 
-To validate a schema definition, utilize the :meth:`~ook.object_type
-.validate_schema` method.
+Construction of **Ook** data types as a class definition::
 
-Schema are composed of :class:`~ook.object_type.PropertySchema` objects. If
-there is a need,
-individual **PropertySchema** objects can be validated individually with the
-:meth:`~ook.object_type.validate_property` method.
+    >>> class MyType(ObjectType):
+    ...     OOK_SCHEMA = SchemaType({
+    ...         'some_property': {
+    ...             'type': 'int',
+    ...             'required': True,
+    ...         },
+    ...         'other_property': {
+    ...             'type': 'str',
+    ...             'required': False,
+    ...             'enum': {'Enum1', 'Enum2', 'Enum3'}
+    ...         },
+    ...     })
+    >>> my_object = MyType()
+    >>> my_object.some_property = 7
+    >>> # or
+    >>> my_object['some_property'] = 7
+    >>> validate_object(my_object)
 
-To create a python type for a given :class:`~ook.object_type.SchemaType`
-utilize the
-:meth:`~ook.object_type.create_ook_type` method. **Ook** object instances
-created by a generated
-type are child classes of the :class:`~ook.object_types` class.
 
-Object Tools
--------------
 
-**Ook** objects created by either subclassing :class:`~ook.object_type
-.BaseType` or via
-:meth:`~create_ook_type`, will need to be validated. Utilize the
-**Ook** object :meth:`~ook.object_type.validate_object` method for validation.
-
-If the need should arise for validation of an **Ook** object by value,
-utilize the
-:meth:`~ook.object_type.validate_value` method.
-
-Usage
-------
-
-The **object_type** module allows for the construction of **Ook** data types. A
-complete configured data type definition would be constructed as::
-
-    class MyType(BaseType):
-        OOK_SCHEMA = SchemaType({
-            'some_property': PropertyType({
-                'type': 'int',
-                'required': True,
-            }),
-            'other_property': PropertyType({
-                'type': 'str',
-                'required': False,
-                'enum': {'Enum1', 'Enum2', 'Enum3'}
-            }),
-        })
-
-    my_object = MyType()
-    my_object.some_property = 7
-    # or
-    my_object['some_property'] = 7
+Dynamic Object Type Definition
+-------------------------------
 
 """
-
-from meta_type import MetaType, SchemaProperty
+import meta_type
+from meta_type import MetaType, PropertySchema
 from schema_type import SchemaType
+from validation_exception import ValidationException
 
 
-class BaseType(MetaType):
-    """BaseType provides the **Ook** schema interface.
+class ObjectType(MetaType):
+    """ObjectType provides the **Ook** schema interface.
 
-    The **BaseType** provides the schema management functionality to a derived
+    The **ObjectType** provides the schema management functionality to a derived
     **Ook** type instance.
     """
 
@@ -81,14 +58,14 @@ def create_ook_type(name, schema):
     """Create an **Ook** type to generate objects with a given schema.
 
     :param name: The name to apply to the created class, with
-        object_type.BaseType as parent.
+        :class:`ObjectType` as parent.
     :type name: str
     :param schema: A representation of the schema in dictionary format.
-    :type schema: dict
-    :return: A class whose base is object_type.BaseType.
+    :type schema: dict, :class:`ook.schema_type.SchemaType`
+    :return: A class whose base is :class:`ObjectType`.
     :rtype: ClassType
-    :except ValueError: String name required. Dict or SchemaType schema
-        required.
+    :raises ValueError: String name required. Dict or
+        :class:`ook.schema_type.SchemaType` schema required.
     """
     if name is None or name is '':
         raise ValueError('The string "name" argument is required.')
@@ -97,7 +74,7 @@ def create_ook_type(name, schema):
     if not isinstance(schema, dict):
         raise ValueError('The schema must be a dict or SchemaType.')
 
-    ook_type = type(name, (BaseType, ), dict())
+    ook_type = type(name, (ObjectType, ), dict())
 
     if not isinstance(schema, SchemaType):
         schema = SchemaType(schema)
@@ -107,49 +84,70 @@ def create_ook_type(name, schema):
     return ook_type
 
 
-def validate_object(the_object):
+def validate_object(the_object, raise_validation_exception=True):
     """Method that will validate if an object meets the schema requirements.
 
     :param the_object: An object instance whose type is a child class of
-        :class:`~ook.object_type.BaseType`
-    :type the_object: ook.object_type.BaseType
-    :except ValueError:
-        * *the_object* is not a :class:`~ook.object_type.BaseType`.
-
+        :class:`ObjectType`.
+    :type the_object: :class:`ObjectType`
+    :param raise_validation_exception: If True, then *validate_object* will
+        throw a *ValueException* upon validation failure. If False, then a
+        list of validation errors is returned. Defaults to True.
+    :type raise_validation_exception: bool
+    :return: If no validation errors are found, then *None* is
+        returned. If validation fails, then a list of the errors is returned
+        if the *raise_validation_exception* is set to True.
+    :rtype: list<str>, None
+    :raises ValueError: if *the_object* is not a
+        :class:`~ook.object_type.ObjectType`.
+    :raises:
         * A property of *the_object* does not meet schema requirements.
-
     """
-    if not isinstance(the_object, BaseType):
+    if not isinstance(the_object, ObjectType):
         raise ValueError(
             'Validation can only support validation of objects derived from '
-            'ook.BaseType.')
+            'ook.object_type.ObjectType.')
 
     value_errors = []
 
     for property_name, property_schema in the_object.get_schema().iteritems():
         value = the_object.get(property_name, None)
 
-        SchemaProperty.validate_value(
-            property_name, property_schema, value, value_errors)
+        value_errors.extend(
+            meta_type.validate_value(property_name, property_schema, value))
 
     if value_errors:
-        raise ValueError(str.join(' \n', value_errors))
+        if raise_validation_exception:
+            raise ValidationException(value_errors)
+        else:
+            return value_errors
+    else:
+        return None
 
 
-def validate_value(property_name, ook_object):
-    """Validate a value against a given **SchemaProperty**
+def validate_value(property_name, ook_object, raise_validation_exception=True):
+    """Validate a specific value of a given :class:`ObjectType` instance.
 
     :param property_name: The value to be validated against the given
-        **SchemaProperty**.
+        **PropertySchema**.
     :type property_name: str
     :param ook_object: Ook defined object to be validated.
-    :type ook_object: object_type.BaseType
-    :except ValueError:
-
-        - Responds with a value error if the validation is not successful.
-
-        - "property_schema" is not provided or not a dict, **BaseType**,
-            or **SchemaProperty**
+    :type ook_object: object_type.ObjectType
+    :param raise_validation_exception: If True, then *validate_object* will
+        throw a *ValueException* upon validation failure. If False, then a
+        list of validation errors is returned. Defaults to True.
+    :type raise_validation_exception: bool
+    :return: If no validation errors are found, then *None* is
+        returned. If validation fails, then a list of the errors is returned
+        if the *raise_validation_exception* is set to True.
+    :rtype: list<str>, None
+    :raises ValueError: If *property_name* is not provided or is not a valid
+        string.
+    :raises ValueError: If *ook_object* is None, or not instance of
+        *ObjectType*.
+    :raises ValidationException: If the validation is not successful. The
+        *ValidationException* will not be raised if *raise_validation_exception* is
+        set to False.
     """
     if property_name is None:
         raise ValueError(
@@ -159,9 +157,9 @@ def validate_value(property_name, ook_object):
     if ook_object is None:
         raise ValueError(
             '"ook_object" is required, cannot be None.')
-    if not isinstance(ook_object, BaseType):
+    if not isinstance(ook_object, ObjectType):
         raise ValueError(
-            '"ook_object" must be BaseType or child type of BaseType.')
+            '"ook_object" must be ObjectType or child type of ObjectType.')
 
     value_errors = []
 
@@ -172,8 +170,13 @@ def validate_value(property_name, ook_object):
 
     value = ook_object.get(property_name, None)
 
-    SchemaProperty.validate_value(
-        property_name, property_schema, value, value_errors)
+    value_errors.extend(
+        meta_type.validate_value(property_name, property_schema, value))
 
     if value_errors:
-        raise ValueError(str.join(' \n', value_errors))
+        if raise_validation_exception:
+            raise ValidationException(value_errors)
+        else:
+            return value_errors
+    else:
+        return None
