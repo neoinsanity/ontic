@@ -113,8 +113,12 @@ def validate_object(the_object, raise_validation_exception=True):
     for property_name, property_schema in the_object.get_schema().iteritems():
         value = the_object.get(property_name, None)
 
-        value_errors.extend(
-            meta_type.validate_value(property_name, property_schema, value))
+        errors = validate_value(
+            property_name,
+            the_object,
+            raise_validation_exception=False)
+        if errors:
+            value_errors.extend(errors)
 
     if value_errors:
         if raise_validation_exception:
@@ -146,7 +150,8 @@ def validate_value(property_name, ook_object, raise_validation_exception=True):
     :raises ValueError: If *ook_object* is None, or not instance of
         *ObjectType*.
     :raises ValidationException: If the validation is not successful. The
-        *ValidationException* will not be raised if *raise_validation_exception* is
+        *ValidationException* will not be raised if
+        *raise_validation_exception* is
         set to False.
     """
     if property_name is None:

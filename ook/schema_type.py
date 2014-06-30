@@ -156,8 +156,11 @@ def validate_schema(candidate_schema, raise_validation_exception=True):
 
     value_errors = []
     for candidate_property_schema in candidate_schema.values():
-        meta_type.validate_property_schema(
-            candidate_property_schema, value_errors)
+        errors = meta_type.validate_property_schema(
+            candidate_property_schema,
+            raise_validation_exception=False)
+        if errors:
+            value_errors.extend(errors)
 
     if value_errors:
         if raise_validation_exception:

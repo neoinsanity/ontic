@@ -4,6 +4,7 @@ from datetime import date, datetime, time
 from test_utils import base_test_case
 
 from ook import object_type
+from ook.meta_type import PropertySchema
 from ook.schema_type import SchemaType
 from ook.validation_exception import ValidationException
 
@@ -59,6 +60,32 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
             'Validation can only support validation of objects derived from '
             'ook.object_type.ObjectType.',
             object_type.validate_object, 'Not a ObjectType')
+
+    def test_validation_exception_handling(self):
+        """Ensure that validate_object handles error reporting."""
+        schema_instance = SchemaType(some_attr={'type': 'int'})
+        ook_type = object_type.create_ook_type('ValidateCheck',
+                                                schema_instance)
+        ook_object = ook_type()
+        ook_object.some_attr = 'WRONG'
+
+        self.assertRaisesRegexp(
+            ValidationException,
+            r"""The value for "some_attr" is not of type "int": WRONG""",
+            object_type.validate_object,ook_object)
+
+        expected_errors = [
+            'The value for "some_attr" is not of type "int": WRONG']
+
+        try:
+            object_type.validate_object(ook_object)
+            self.fail('ValidationException should have been thrown.')
+        except ValidationException as ve:
+            self.assertListEqual(expected_errors, ve.validation_errors)
+
+        errors = object_type.validate_object(ook_object,
+                                             raise_validation_exception=False)
+        self.assertListEqual(expected_errors, errors)
 
     def test_type_setting(self):
         """Validate 'type' schema setting."""
@@ -340,7 +367,6 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
 
         ook_type = object_type.create_ook_type('MaxCheck', schema)
         self.assertIsNotNone(ook_type)
-        # object_types.validate_schema(ook_type.get_schema())
 
         ook_object = ook_type()
 
@@ -680,11 +706,30 @@ class ValidateValueTestCase(base_test_case.BaseTestCase):
             '"property_name" is not a recognized property.',
             object_type.validate_value, 'illegal property name', ook_object)
 
-        ook_object.prop1 = 'invalid string value'
+    def test_validate_value_exception_handling(self):
+        """Ensure validation exception handling by validation_object method."""
+        schema_instance = SchemaType(some_attr={'type': 'int'})
+        ook_type = object_type.create_ook_type('ValidateCheck', schema_instance)
+        ook_object = ook_type()
+        ook_object.some_attr = 'WRONG'
+
         self.assertRaisesRegexp(
             ValidationException,
-            'The value for "prop1" is not of type "int": invalid string value',
-            object_type.validate_value, 'prop1', ook_object)
+            r"""The value for "some_attr" is not of type "int": WRONG""",
+            object_type.validate_value, 'some_attr', ook_object)
+
+        expected_errors = [
+            'The value for "some_attr" is not of type "int": WRONG']
+
+        try:
+            object_type.validate_value('some_attr', ook_object)
+            self.fail('A ValidateException should have been thrown.')
+        except ValidationException as ve:
+            self.assertListEqual(expected_errors, ve.validation_errors)
+
+        errors = object_type.validate_value('some_attr', ook_object,
+                                            raise_validation_exception=False)
+        self.assertListEqual(expected_errors, errors)
 
     def test_validate_value_value_arg(self):
         """Valid value argument testing of validate_value."""
