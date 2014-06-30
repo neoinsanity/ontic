@@ -82,6 +82,7 @@ API Specification
   ook.meta_type
   ook.object_type
   ook.schema_type
+  ook.validation_exception
 
 
 Indices and Tables

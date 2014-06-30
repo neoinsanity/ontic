@@ -316,14 +316,14 @@ class PropertySchema(MetaType):
         >>> bar_schema.required = False
         >>> bar_schema.min = 3
         >>> val_errors = validate_property_schema(bar_schema)
-        >>> assert len(val_errors) == 0
+        >>> assert val_errors == None
 
         >>> nutty_schema = PropertySchema()
         >>> nutty_schema['type'] = 'str'
         >>> nutty_schema['required'] = True
         >>> nutty_schema['min'] = 5
         >>> val_errors = validate_property_schema(nutty_schema)
-        >>> assert len(val_errors) == 0
+        >>> assert val_errors == None
     """
     # : The schema definition for the **PropertySchema** type.
     OOK_SCHEMA = CoreType({
@@ -506,19 +506,19 @@ class PropertySchema(MetaType):
 
 
 def validate_property_schema(candidate_property_schema,
-                             raise_value_error=True):
+                             raise_validation_exception=True):
     """Method to validate a property schema definition.
 
     :param candidate_property_schema: The schema property to be validated.
     :type candidate_property_schema: :class:`PropertySchema`
-    :param raise_validation_error: If True, then *validate_object* will
-        throw a *ValueException* upon validation failure. If False, then a
-        list of validation errors is returned. Defaults to True.
-    :type raise_validation_error: bool
-    :return: If no validation errors are found, then an empty list is
+    :param raise_validation_exception: If True, then *validate_property_schema*
+        will throw a *ValueException* upon validation failure. If False,
+        then a list of validation errors is returned. Defaults to True.
+    :type raise_validation_exception: bool
+    :return: If no validation errors are found, then *None* is
         returned. If validation fails, then a list of the errors is returned
-        if the *raise_value_error* is set to True.
-    :rtype: list<str>
+        if the *raise_validation_exception* is set to True.
+    :rtype: list<str>, None
     :raises ValueError: *the_candidate_schema_property* is not an
         :class:`~ook.object_type.ObjectType`.
     :raises ValidationException: A property of *candidate_property_schema*
@@ -539,10 +539,13 @@ def validate_property_schema(candidate_property_schema,
         value_errors.extend(
             validate_value(schema_name, schema_setting, setting_value))
 
-    if value_errors and raise_value_error:
-        raise ValidationException(value_errors)
-
-    return value_errors
+    if value_errors:
+        if raise_validation_exception:
+            raise ValidationException(value_errors)
+        else:
+            return value_errors
+    else:
+        return None
 
 
 def perfect_property_schema(candidate_property_schema):

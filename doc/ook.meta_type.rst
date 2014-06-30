@@ -1,17 +1,16 @@
-====================
-Module
-====================
+==============================================
+CoreType, MetaType, and PropertySchema Module
+==============================================
 
 .. automodule:: ook.meta_type
 
-========
 Classes
 ========
 
 CoreType
 ---------
 
-.. autoclass:: ook.meta_type.CoreType
+.. autoclass:: CoreType
     :special-members: __init__
     :members:
 
@@ -20,8 +19,8 @@ CoreType
 MetaType
 ---------
 
-.. autoclass:: ook.meta_type.MetaType
-    :special-members:
+.. autoclass:: MetaType
+    :special-members: __init__
     :members:
 
 ---------------------------------------
@@ -29,11 +28,10 @@ MetaType
 PropertySchema
 ---------------
 
-.. autoclass:: ook.meta_type.PropertySchema
-    :special-members:
+.. autoclass:: PropertySchema
+    :special-members: __init__
     :members:
 
-==========
 Functions
 ==========
 

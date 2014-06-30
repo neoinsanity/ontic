@@ -2,15 +2,59 @@
 
 .. image:: images/schema_type.jpg
 
-Usage
-------
+.. contents::
 
-Classes
---------
+======
+Usage
+======
+
+The *schema_type* module contains the class :class:`SchemaType` and a set of
+functions to create and validate schema. *SchemaType* are used to validate
+:class:`ook.object_type.ObjectType` derived instances.
+
+Creating Schema
+----------------
+
+A *SchemaType* is defined as a dictionary with the key entry being the name
+of the property. The value portion of the dictionary is a
+:class:`ook.meta_type.PropertySchema` instance::
+
+    >>> a_schema = SchemaType({
+    ...     'property_name': PropertySchema({'type': 'str'})
+    ... })
+
+While the example above give a strict definition of a schema, creation of a
+schema can omit the use of the *PropertySchema*, as the *SchemaType*
+instantiation will convert a dict value to a *PropertySchema* object. The
+above example can be simplified to be::
+
+    >>> a_schema = SchemaType({
+    ...     'property_name': {'type': 'str'}
+    ... })
+
+The *SchemaType* also supports the dict style of instantiation via parameter
+naming::
+
+    >>> a_schema = SchemaType(property_name={'type': 'str'})
+
+Dynamic Schema
+-----------------
+
+In cases where necessary, a *SchemaType* can be created dynamically::
+
+    >>> a_schema = SchemaType()
+    >>> a_schema['property_name'] = PropertySchema({'type': 'str'})
+
+To aid in the handling of dynamic models, utilize the :meth:`perfect_schema`
+and :meth:`validate_schema`.
+
+    >>> perfect_schema(a_schema)
+    >>> errors = validate_schema(a_schema)
 
 """
 from ook import meta_type
 from ook.meta_type import CoreType, PropertySchema
+from ook.validation_exception import ValidationException
 
 
 class SchemaType(CoreType):
@@ -27,63 +71,98 @@ class SchemaType(CoreType):
                 'required': True
             })
         })
+
+    For a complete list of :class:`ook.meta_type.PropertySchema`, see
+    :ref:`property-schema-settings-table`.
     """
 
     def __init__(self, *args, **kwargs):
-        """
+        """Initializes in accordance with dict specification.
 
-        dict() -> new empty dictionary
-        dict(mapping) -> new dictionary initialized from a mapping object's
-            (key, value) pairs
-        dict(iterable) -> new dictionary initialized as if via:
-            d = {}
-            for k, v in iterable:
-                d[k] = v
-        dict(**kwargs) -> new dictionary initialized with the name=value pairs
-            in the keyword argument list.  For example:  dict(one=1, two=2)
+        Dict Style Initialization
+            *SchemaType* supports dict style initialization.
 
-        :param seq:
-        :param kwargs:
-        :return:
+            SchemaType() -> new empty SchemaType
+
+            SchemaType(mapping) -> new SchemaType initialized from a mapping
+            object's (key, value) pairs
+
+            SchemaType(iterable) -> new SchemaType initialized as if via::
+
+                d = SchemaType()
+                for k, v in iterable:
+                    d[k] = v
+
+            SchemaType(\*\*kwargs) -> new SchemaType initialized with the
+            name=value pairs in the keyword argument list.  For example::
+
+                SchemaType(one={. . .}, two={. . .})
         """
         super(SchemaType, self).__init__(*args, **kwargs)
         for key, value in self.iteritems():
             if not isinstance(value, PropertySchema):
                 self[key] = PropertySchema(value)
 
-    @staticmethod
-    def perfect_schema(candidate_schema):
-        """Method to clean and perfect a given schema.
 
-        :param candidate_schema:
-        :type candidate_schema: dict, ook.schema_type.SchemaType
-        :rtype:
-        """
-        if candidate_schema is None:
-            raise ValueError('"candidate_schema" must be provided.')
-        if not isinstance(candidate_schema, SchemaType):
-            raise ValueError('"candidate_schema" must be of SchemaType.')
+def perfect_schema(candidate_schema):
+    """Method to clean and perfect a given schema.
 
-        for property_schema in candidate_schema.values():
-            meta_type.perfect_property_schema(property_schema)
+    The *perfect_schema* will fill in any missing schema setting for each of
+    the :class:`ook.meta_type.PropertySchema`. This function should be used
+    to ensure property schema completeness.
 
-    @staticmethod
-    def validate_schema(candidate_schema):
-        """
+    :param candidate_schema: The schema that is to be perfected.
+    :type candidate_schema: :class:`ook.schema_type.SchemaType`
+    :rtype: None
+    """
+    if candidate_schema is None:
+        raise ValueError('"candidate_schema" must be provided.')
+    if not isinstance(candidate_schema, SchemaType):
+        raise ValueError('"candidate_schema" must be of SchemaType.')
 
-        :param candidate_schema:
-        :type candidate_schema:
-        :return:
-        :rtype:
-        """
-        if candidate_schema is None:
-            raise ValueError('"candidate_schema" must be provided.')
-        if not isinstance(candidate_schema, SchemaType):
-            raise ValueError('"candidate_schema" must be of SchemaType.')
+    for property_schema in candidate_schema.values():
+        meta_type.perfect_property_schema(property_schema)
 
-        value_errors = []
-        for candidate_property_schema in candidate_schema.values():
-            meta_type.validate_property_schema(
-                candidate_property_schema, value_errors)
 
-        return value_errors
+def validate_schema(candidate_schema, raise_validation_exception=True):
+    """Validate a given :class:`SchemaType`.
+
+    This method will iterate through all of the
+    :class:`ook.meta_type.PropertySchema` and validate that each definition
+    is valid.  The method will collect all of the errors and return those as
+    a list of strings or raise a
+    :class:`ook.validation_exception.ValidationException`. The switch in
+    behavior is determined by the *raise_validation_exception*
+
+    :param candidate_schema: The chema to be validated.
+    :type candidate_schema: :class:`SchemaType`
+    :param raise_validation_exception: If True, then *validate_schema* will
+        throw a *ValidationException* upon validation failure. If False, then a
+        list of validation errors is returned. Defaults to True.
+    :type raise_validation_exception: bool
+    :return: If no validation errors are found, then *None* is
+        returned. If validation fails, then a list of the errors is returned,
+        if the *raise_value_error* is not set to True.
+    :rtype: list<str>, None
+    :raises ValueError: *candidate_schema* is None, or not of type
+        :class:`SchemaType`.
+    :raises ValidationException: A property of *candidate_schema* does not
+        meet schema requirements.
+    """
+    if candidate_schema is None:
+        raise ValueError('"candidate_schema" must be provided.')
+    if not isinstance(candidate_schema, SchemaType):
+        raise ValueError('"candidate_schema" must be of SchemaType.')
+
+    value_errors = []
+    for candidate_property_schema in candidate_schema.values():
+        meta_type.validate_property_schema(
+            candidate_property_schema, value_errors)
+
+    if value_errors:
+        if raise_validation_exception:
+            raise ValidationException(value_errors)
+        else:
+            return value_errors
+    else:
+        return None
