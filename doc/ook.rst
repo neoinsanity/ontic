@@ -9,4 +9,3 @@ Creation of Ook Types
 
 Creation of Ook Objects
 ------------------------
-
