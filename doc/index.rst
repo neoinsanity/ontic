@@ -61,7 +61,7 @@ and dynamic definition of Ook type with schema.
   >>> my_object['the_property'] = 'Some value'
   >>> ook.object_type.validate_object(my_object)
 
-.. important::
+.. warning::
     The limitation to this approach is that **Ook** objects should not be
     monkey patched with any public methods.
 
