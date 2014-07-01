@@ -49,7 +49,7 @@ class PerfectObjectTestCase(base_test_case.BaseTestCase):
     """Test object_type.perfect_object method."""
 
     def test_bad_perfect_usage(self):
-        """"""
+        """Ensure handling of bad arguments to perfect)_object method."""
         self.assertRaisesRegexp(
             ValueError,
             r'"the_object" must be provided.',
