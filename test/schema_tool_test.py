@@ -1,24 +1,10 @@
 from test_utils import base_test_case
 
 from ook import meta_type
+from ook.meta_type import PropertySchema
 from ook import schema_type
 from ook.schema_type import SchemaType
-
-
-class ValidateSchemaProperty(base_test_case.BaseTestCase):
-    """Various tests of the 'validate_property_schema' method."""
-
-    def test_bad_validate_schema_property(self):
-        """Test bad use cases of validate_property_schema."""
-        self.assertRaisesRegexp(
-            ValueError,
-            '"candidate_property_schema" must be provided.',
-            meta_type.validate_property_schema, None, list())
-
-        self.assertRaisesRegexp(
-            ValueError,
-            '"candidate_property_schema" must be PropertySchema type.',
-            meta_type.validate_property_schema, dict(), list())
+from ook.validation_exception import ValidationException
 
 
 class ValidateSchemaTestCase(base_test_case.BaseTestCase):
@@ -49,6 +35,32 @@ class ValidateSchemaTestCase(base_test_case.BaseTestCase):
         # SchemaType test
         schema_type_schema = SchemaType(schema)
         schema_type.validate_schema(schema_type_schema)
+
+    def test_validate_schema_exception_handling(self):
+        """Ensure validate_schema covers basic exception reporting."""
+        property_schema = PropertySchema()
+        property_schema.required = 'UNDEFINED'
+        schema_instance = SchemaType()
+        schema_instance.some_attr = property_schema
+
+        self.assertRaisesRegexp(
+            ValidationException,
+            r"""The value for "required" is not of type "bool": UNDEFINED""",
+            schema_type.validate_schema, schema_instance)
+
+        expected_errors_list = [
+            'The value for "required" is not of type "bool": UNDEFINED']
+
+        try:
+            schema_type.validate_schema(schema_instance)
+            self.fail('A ValidationException should have been thrown.')
+        except ValidationException as ve:
+            self.assertListEqual(expected_errors_list, ve.validation_errors)
+
+        errors = schema_type.validate_schema(
+            schema_instance,
+            raise_validation_exception=False)
+        self.assertListEqual(expected_errors_list, errors)
 
 
 class PerfectSchemaPropertyTestCase(base_test_case.BaseTestCase):

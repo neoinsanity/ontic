@@ -2,7 +2,9 @@
 
 from test_utils import base_test_case
 
-from ook.meta_type import CoreType, MetaType
+from ook import meta_type
+from ook.meta_type import CoreType, MetaType, PropertySchema
+from ook.validation_exception import ValidationException
 
 
 class CoreTypeTest(base_test_case.BaseTestCase):
@@ -33,6 +35,10 @@ class CoreTypeTest(base_test_case.BaseTestCase):
         core_object = CoreType()
         self.assert_dynamic_accessing(core_object)
 
+
+class MetaTypeTest(base_test_case.BaseTestCase):
+    """MetaType test cases"""
+
     def test_meta_type_instantiation(self):
         """MetaType instantiation testing to confirm dict behavior."""
         meta_object = MetaType()
@@ -57,3 +63,99 @@ class CoreTypeTest(base_test_case.BaseTestCase):
         """MetaType property access as a Dict and an Attribute."""
         meta_object = MetaType()
         self.assert_dynamic_accessing(meta_object)
+
+
+class PropertySchemaTest(base_test_case.BaseTestCase):
+    """PropertySchema test cases"""
+
+    def test_property_schema_instantiation(self):
+        """PropertySchema instantiation testing to confirm dict behavior."""
+        property_schema = PropertySchema()
+        self.assertIsNotNone(property_schema)
+
+        expected_schema = {
+            'default': None,
+            'enum': None,
+            'max': 7,
+            'member_max': None,
+            'member_min': None,
+            'member_type': None,
+            'min': 3,
+            'regex': None,
+            'required': True,
+            'type': 'int'
+        }
+
+        property_schema = PropertySchema({
+            'type': 'int',
+            'required': True,
+            'min': 3,
+            'max': 7,
+        })
+        self.assertIsNotNone(property_schema)
+        self.assertDictEqual(expected_schema, property_schema)
+
+        property_schema = PropertySchema(
+            type='int', required=True, min=3, max=7)
+        self.assertIsNotNone(property_schema)
+        self.assertDictEqual(expected_schema, property_schema)
+
+        property_schema = PropertySchema(
+            [['type', 'int'], ['required', True], ['min', 3], ['max', 7]])
+        self.assertIsNotNone(property_schema)
+        self.assertDictEqual(expected_schema, property_schema)
+
+    def test_property_schema_instantiation_failure(self):
+        """Validate error reporting for bad PropertySchema definition."""
+        bad_schema_test_case = {'type': 'UNDEFINED'}
+
+        self.assertRaisesRegexp(
+            ValidationException,
+            r"""The value "UNDEFINED" for "type" not in enumeration """
+            r"""\['set', 'int', 'float', 'list', 'datetime', 'dict', 'str', """
+            r"""'time', 'date', 'bool'\].""",
+            PropertySchema, bad_schema_test_case)
+
+
+class ValidateSchemaProperty(base_test_case.BaseTestCase):
+    """Various tests of the 'validate_property_schema' method."""
+
+    def test_bad_validate_schema_property_call(self):
+        """Test bad use cases of validate_property_schema function call."""
+        self.assertRaisesRegexp(
+            ValueError,
+            '"candidate_property_schema" must be provided.',
+            meta_type.validate_property_schema, None, list())
+
+        self.assertRaisesRegexp(
+            ValueError,
+            '"candidate_property_schema" must be PropertySchema type.',
+            meta_type.validate_property_schema, dict(), list())
+
+    def test_validate_schema_property_exception(self):
+        """Test validate_schema validation exception handling."""
+        invalid_property_schema = PropertySchema()
+        invalid_property_schema.type = 'UNKNOWN'
+
+        self.assertRaisesRegexp(
+            ValidationException,
+            r"""The value "UNKNOWN" for "type" not in enumeration \['set', """
+            r"""'int', 'float', 'list', 'datetime', 'dict', 'str', 'time', """
+            r"""'date', 'bool'\].""",
+            meta_type.validate_property_schema, invalid_property_schema)
+
+        expected_errors_list = [
+            'The value "UNKNOWN" for "type" not in enumeration '
+            '[\'set\', \'int\', \'float\', \'list\', \'datetime\', '
+            '\'dict\', \'str\', \'time\', \'date\', \'bool\'].']
+
+        try:
+            meta_type.validate_property_schema(invalid_property_schema)
+            self.fail('A ValidationException should have been thrown')
+        except ValidationException as ve:
+            self.assertListEqual(expected_errors_list, ve.validation_errors)
+
+        value_errors = meta_type.validate_property_schema(
+            invalid_property_schema,
+            raise_validation_exception=False)
+        self.assertListEqual(expected_errors_list, value_errors)

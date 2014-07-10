@@ -581,6 +581,7 @@ def perfect_property_schema(candidate_property_schema):
         if property_name not in candidate_property_schema:
             candidate_property_schema[
                 property_name] = property_schema.default
+            continue
         if not candidate_property_schema[property_name]:
             candidate_property_schema[property_name] = property_schema.default
 
@@ -821,7 +822,8 @@ def validate_member_min(key, member_value, property_schema, value_errors):
             value_errors.append(
                 'The value of "%s" for "%s" fails min length of %s.' %
                 (member_value, key, property_schema.member_min))
-    elif property_schema.member_type in COMPARABLE_TYPES:
+
+    if property_schema.member_type in COMPARABLE_TYPES:
         if member_value < property_schema.member_min:
             value_errors.append(
                 'The value of "%s" for "%s" fails min size of %s.' %
@@ -849,7 +851,8 @@ def validate_member_max(key, member_value, property_schema, value_errors):
             value_errors.append(
                 'The value of "%s" for "%s" fails max length of %s.' %
                 (member_value, key, property_schema.member_max))
-    elif property_schema.member_type in COMPARABLE_TYPES:
+
+    if property_schema.member_type in COMPARABLE_TYPES:
         if member_value > property_schema.member_max:
             value_errors.append(
                 'The value of "%s" for "%s" fails max size of %s.' %
@@ -886,7 +889,7 @@ def min_validation(property_schema, value):
         if property_schema.type in BOUNDABLE_TYPES:
             if len(value) < property_schema.min:
                 return False
-        elif property_schema.type in COMPARABLE_TYPES:
+        if property_schema.type in COMPARABLE_TYPES:
             if value < property_schema.min:
                 return False
 
@@ -907,7 +910,7 @@ def max_validation(property_schema, value):
         if property_schema.type in BOUNDABLE_TYPES:
             if len(value) > property_schema.max:
                 return False
-        elif property_schema.type in COMPARABLE_TYPES:
+        if property_schema.type in COMPARABLE_TYPES:
             if value > property_schema.max:
                 return False
 

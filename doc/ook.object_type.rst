@@ -24,6 +24,13 @@ create_ook_type
 
 ---------------------------------------
 
+perfect_object
+---------------
+
+.. autofunction:: perfect_object
+
+---------------------------------------
+
 validate_object
 ----------------
 
