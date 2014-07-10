@@ -67,7 +67,7 @@ def create_ook_type(name, schema):
 
     *create_ook_type* function creates an :class:`ObjectType` with a given
     name and schema definition. The schema definition can be a dict instance
-    that is a valid  schema definition or a :class:`ook.schema_type.SchemaType`.
+    that is a valid  schema definition or a :class:`ontic.schema_type.SchemaType`.
     This makes the following forms valid::
 
         MyType = create_ook_type('MyType', {'prop':{'type':'int'}})
@@ -79,11 +79,11 @@ def create_ook_type(name, schema):
         :class:`ObjectType` as parent.
     :type name: str
     :param schema: A representation of the schema in dictionary format.
-    :type schema: dict, :class:`ook.schema_type.SchemaType`
+    :type schema: dict, :class:`ontic.schema_type.SchemaType`
     :return: A class whose base is :class:`ObjectType`.
     :rtype: ClassType
     :raises ValueError: String name required. Dict or
-        :class:`ook.schema_type.SchemaType` schema required.
+        :class:`ontic.schema_type.SchemaType` schema required.
     """
     if name is None or name is '':
         raise ValueError('The string "name" argument is required.')
@@ -147,14 +147,14 @@ def validate_object(the_object, raise_validation_exception=True):
         if the *raise_validation_exception* is set to True.
     :rtype: list<str>, None
     :raises ValueError: if *the_object* is not a
-        :class:`~ook.object_type.ObjectType`.
+        :class:`~ontic.object_type.ObjectType`.
     :raises:
         * A property of *the_object* does not meet schema requirements.
     """
     if not isinstance(the_object, ObjectType):
         raise ValueError(
             'Validation can only support validation of objects derived from '
-            'ook.object_type.ObjectType.')
+            'ontic.object_type.ObjectType.')
 
     value_errors = []
 

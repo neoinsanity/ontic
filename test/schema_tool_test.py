@@ -1,10 +1,10 @@
 from test_utils import base_test_case
 
-from ook import meta_type
-from ook.meta_type import PropertySchema
-from ook import schema_type
-from ook.schema_type import SchemaType
-from ook.validation_exception import ValidationException
+from ontic import meta_type
+from ontic.meta_type import PropertySchema
+from ontic import schema_type
+from ontic.schema_type import SchemaType
+from ontic.validation_exception import ValidationException
 
 
 class ValidateSchemaTestCase(base_test_case.BaseTestCase):

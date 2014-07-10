@@ -278,8 +278,8 @@ class MetaType(CoreType):
         """Returns the schema object for the a given type definition.
 
         :return: The schema metadata definition for a :class:`PropertySchema`
-            or a :class:`ook.object_type.ObjectType` derived child class.
-        :rtype: :class:`CoreType`, :class:`ook.schema_type.SchemaType`
+            or a :class:`ontic.object_type.ObjectType` derived child class.
+        :rtype: :class:`CoreType`, :class:`ontic.schema_type.SchemaType`
         """
         return cls.OOK_SCHEMA
 
@@ -520,7 +520,7 @@ def validate_property_schema(candidate_property_schema,
         if the *raise_validation_exception* is set to True.
     :rtype: list<str>, None
     :raises ValueError: *the_candidate_schema_property* is not an
-        :class:`~ook.object_type.ObjectType`.
+        :class:`~ontic.object_type.ObjectType`.
     :raises ValidationException: A property of *candidate_property_schema*
         does not meet schema requirements.
     """

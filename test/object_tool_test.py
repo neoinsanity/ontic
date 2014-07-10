@@ -3,17 +3,17 @@ from datetime import date, datetime, time
 
 from test_utils import base_test_case
 
-from ook import object_type
-from ook.meta_type import PropertySchema
-from ook.schema_type import SchemaType
-from ook.validation_exception import ValidationException
+from ontic import object_type
+from ontic.meta_type import PropertySchema
+from ontic.schema_type import SchemaType
+from ontic.validation_exception import ValidationException
 
 
 class CreateOokTypeTestCase(base_test_case.BaseTestCase):
     """Test the dynamic creation of Ook types."""
 
     def test_create_ook_type_arg_errors(self):
-        """Assert the create ook type arg errors."""
+        """Assert the create ontic type arg errors."""
         self.assertRaisesRegexp(
             ValueError, 'The string "name" argument is required.',
             object_type.create_ook_type, name=None, schema=dict())
@@ -95,12 +95,12 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         self.assertRaisesRegexp(
             ValueError,
             'Validation can only support validation of objects derived from '
-            'ook.object_type.ObjectType.',
+            'ontic.object_type.ObjectType.',
             object_type.validate_object, None)
         self.assertRaisesRegexp(
             ValueError,
             'Validation can only support validation of objects derived from '
-            'ook.object_type.ObjectType.',
+            'ontic.object_type.ObjectType.',
             object_type.validate_object, 'Not a ObjectType')
 
     def test_validation_exception_handling(self):

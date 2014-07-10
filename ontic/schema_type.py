@@ -52,9 +52,9 @@ and :meth:`validate_schema`.
     >>> errors = validate_schema(a_schema)
 
 """
-from ook import meta_type
-from ook.meta_type import CoreType, PropertySchema
-from ook.validation_exception import ValidationException
+from ontic import meta_type
+from ontic.meta_type import CoreType, PropertySchema
+from ontic.validation_exception import ValidationException
 
 
 class SchemaType(CoreType):
@@ -72,7 +72,7 @@ class SchemaType(CoreType):
             })
         })
 
-    For a complete list of :class:`ook.meta_type.PropertySchema`, see
+    For a complete list of :class:`ontic.meta_type.PropertySchema`, see
     :ref:`property-schema-settings-table`.
     """
 
@@ -108,7 +108,7 @@ def perfect_schema(candidate_schema):
     """Method to clean and perfect a given schema.
 
     The *perfect_schema* will fill in any missing schema setting for each of
-    the :class:`ook.meta_type.PropertySchema`. This function should be used
+    the :class:`ontic.meta_type.PropertySchema`. This function should be used
     to ensure property schema completeness.
 
     :param candidate_schema: The schema that is to be perfected.
@@ -128,10 +128,10 @@ def validate_schema(candidate_schema, raise_validation_exception=True):
     """Validate a given :class:`SchemaType`.
 
     This method will iterate through all of the
-    :class:`ook.meta_type.PropertySchema` and validate that each definition
+    :class:`ontic.meta_type.PropertySchema` and validate that each definition
     is valid.  The method will collect all of the errors and return those as
     a list of strings or raise a
-    :class:`ook.validation_exception.ValidationException`. The switch in
+    :class:`ontic.validation_exception.ValidationException`. The switch in
     behavior is determined by the *raise_validation_exception*
 
     :param candidate_schema: The chema to be validated.

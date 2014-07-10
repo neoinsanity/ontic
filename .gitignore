@@ -6,7 +6,7 @@
 venv/
 BUILD/
 .coverage
-ook.egg-info/
+ontic.egg-info/
 
 # Deployment cruft.
 dist/

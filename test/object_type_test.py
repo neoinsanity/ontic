@@ -1,5 +1,5 @@
 """Test the basic functionality of the base and core data types."""
-from ook import object_type
+from ontic import object_type
 from test.test_utils import base_test_case
 
 
