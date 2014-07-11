@@ -13,7 +13,7 @@ to NoSql packages, take some form of the dict as input. Attribute access is
 easier to type when writing code, hence the attribute access. By way of
 example::
 
-  >>> an_object = ontic.object_type.ObjectType()
+  >>> an_object = ontic.ontic_type.OnticType()
   >>> an_object['property1'] = 1
   >>> assert an_object.property1 == 1
   >>> an_object.property2 = 2
@@ -26,41 +26,41 @@ implement the python *dict* interface. So anywhere you can use or pass a dict
 object, you can pass an **Ontic** object. **Ontic** objects can even be
 initialized like a dictionary, as exampled below::
 
-  >>> an_object = ontic.object_type.ObjectType({'the_property':'the_value'})
+  >>> an_object = ontic.ontic_type.OnticType({'the_property':'the_value'})
   >>> assert an_object.the_property = 'the_value'
   >>> assert an_object['the_property'] = 'the_value'
 
 In addition **Ontic** provides schema and validation features to aid in working
 with data representations. Schemas and corresponding types can be generated
 at runtime, or types can be defined as classes that derive from the **Ontic**
-*ObjectType*. Here's some quick examples::
+*OnticType*. Here's some quick examples::
 
   Class definition of an Ontic type with schema.
-  >>> class MyType(ontic.object_type.ObjectType):
+  >>> class MyType(ontic.ontic_type.OnticType):
   ...   ONTIC_SCHEMA = {'the_property':{'required':True}}
   >>> my_object = MyType()
-  >>> ontic.object_type.validate_object(my_object)
+  >>> ontic.ontic_type.validate_object(my_object)
     Traceback (most recent call last):
       File "<stdin>", line 1, in <module>
-      File "ontic/object_type.py", line 137, in validate_object
+      File "ontic/ontic_type.py", line 137, in validate_object
         raise ValidationException(str.join(' \n-- ', value_errors))
     ValidationException: The value for "the_property" is required.
   >>> my_object.the_property = 99
-  >>> ontic.object_type.validate_object(my_object)
+  >>> ontic.ontic_type.validate_object(my_object)
 
 and dynamic definition of Ontic type with schema.
 
-  >>> my_type = ontic.object_type.create_ontic_type(
+  >>> my_type = ontic.ontic_type.create_ontic_type(
   ...   'MyType', {'the_property':{'required':True}})
   >>> my_object = my_type()
-  >>> ontic.object_type.validate_object(my_object)
+  >>> ontic.ontic_type.validate_object(my_object)
     Traceback (most recent call last):
       File "<stdin>", line 1, in <module>
-      File "ontic/object_type.py", line 137, in validate_object
+      File "ontic/ontic_type.py", line 137, in validate_object
         raise ValueError(str.join(' \n-- ', value_errors))
     ValidationException: The value for "the_property" is required.
   >>> my_object['the_property'] = 'Some value'
-  >>> ontic.object_type.validate_object(my_object)
+  >>> ontic.ontic_type.validate_object(my_object)
 
 For full coverage of schema definitions and usage details,
 see :ref:`getting-started-with-ontic`.
@@ -84,7 +84,7 @@ API Specification
   :maxdepth: 2
 
   ontic.meta_type
-  ontic.object_type
+  ontic.ontic_type
   ontic.schema_type
   ontic.validation_exception
 

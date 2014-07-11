@@ -1,16 +1,16 @@
 ====================
-Object Type Module
+Ontic Type Module
 ====================
 
-.. automodule:: ontic.object_type
+.. automodule:: ontic.ontic_type
 
 Classes
 ========
 
-ObjectType
+OnticType
 -----------
 
-.. autoclass:: ontic.object_type.ObjectType
+.. autoclass:: ontic.ontic_type.OnticType
     :special-members: __init__
     :members:
 
@@ -18,7 +18,7 @@ Functions
 ==========
 
 create_ontic_type
-----------------
+------------------
 
 .. autofunction:: create_ontic_type
 

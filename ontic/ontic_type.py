@@ -11,12 +11,12 @@ Usage
 Create Object Types
 --------------------
 
-The *object_type* module provides the ::class::`ObjectType` and a set of
-functions to handle the creation and validation of *ObjectType* instances.
+The *object_type* module provides the ::class::`OnticType` and a set of
+functions to handle the creation and validation of *OnticType* instances.
 
 Construction of **Ontic** data types as a class definition::
 
-    >>> class MyType(ObjectType):
+    >>> class MyType(OnticType):
     ...     ONTIC_SCHEMA = SchemaType({
     ...         'some_property': {
     ...             'type': 'int',
@@ -37,7 +37,7 @@ Construction of **Ontic** data types as a class definition::
 Dynamic Object Type Definition
 -------------------------------
 
-It is also possible to create :class:`ObjectType` derived types dynamically
+It is also possible to create :class:`OnticType` derived types dynamically
 with the use of the :meth:`create_ontic_type` function.
 
     >>> some_type = create_ontic_type('SomeType', {'prop':{'type':'int'}})
@@ -54,10 +54,10 @@ from schema_type import SchemaType
 from validation_exception import ValidationException
 
 
-class ObjectType(MetaType):
-    """ObjectType provides the **Ontic** schema interface.
+class OnticType(MetaType):
+    """OnticType provides the **Ontic** schema interface.
 
-    The **ObjectType** provides the schema management functionality to a
+    The **OnticType** provides the schema management functionality to a
     derived **Ontic** type instance.
     """
 
@@ -65,7 +65,7 @@ class ObjectType(MetaType):
 def create_ontic_type(name, schema):
     """Create an **Ontic** type to generate objects with a given schema.
 
-    *create_ontic_type* function creates an :class:`ObjectType` with a given
+    *create_ontic_type* function creates an :class:`OnticType` with a given
     name and schema definition. The schema definition can be a dict instance
     that is a valid  schema definition or a
     :class:`ontic.schema_type.SchemaType`. This makes the following forms
@@ -77,11 +77,11 @@ def create_ontic_type(name, schema):
         MyType = create_ontic_type('MyType', schema_instance)
 
     :param name: The name to apply to the created class, with
-        :class:`ObjectType` as parent.
+        :class:`OnticType` as parent.
     :type name: str
     :param schema: A representation of the schema in dictionary format.
     :type schema: dict, :class:`ontic.schema_type.SchemaType`
-    :return: A class whose base is :class:`ObjectType`.
+    :return: A class whose base is :class:`OnticType`.
     :rtype: ClassType
     :raises ValueError: String name required. Dict or
         :class:`ontic.schema_type.SchemaType` schema required.
@@ -93,7 +93,7 @@ def create_ontic_type(name, schema):
     if not isinstance(schema, dict):
         raise ValueError('The schema must be a dict or SchemaType.')
 
-    ontic_type = type(name, (ObjectType, ), dict())
+    ontic_type = type(name, (OnticType, ), dict())
 
     if not isinstance(schema, SchemaType):
         schema = SchemaType(schema)
@@ -112,13 +112,13 @@ def perfect_object(the_object):
     None, if no default has been set.
 
     :param the_object: Ab object instance that is to be perfected.
-    :type the_object: :class:`ontic.object_type.ObjectType`
+    :type the_object: :class:`ontic.ontic_type.OnticType`
     :rtype: None
     """
     if the_object is None:
         raise ValueError('"the_object" must be provided.')
-    if not isinstance(the_object, ObjectType):
-        raise ValueError('"the_object" must be ObjectType type.')
+    if not isinstance(the_object, OnticType):
+        raise ValueError('"the_object" must be OnticType type.')
 
     schema = the_object.get_schema()
 
@@ -138,7 +138,7 @@ def validate_object(the_object, raise_validation_exception=True):
     """Function that will validate if an object meets the schema requirements.
 
     :param the_object: An object instant to be validity tested.
-    :type the_object: :class:`ObjectType`
+    :type the_object: :class:`OnticType`
     :param raise_validation_exception: If True, then *validate_object* will
         throw a *ValueException* upon validation failure. If False, then a
         list of validation errors is returned. Defaults to True.
@@ -148,14 +148,14 @@ def validate_object(the_object, raise_validation_exception=True):
         if the *raise_validation_exception* is set to True.
     :rtype: list<str>, None
     :raises ValueError: if *the_object* is not a
-        :class:`~ontic.object_type.ObjectType`.
+        :class:`~ontic.object_type.OnticType`.
     :raises:
         * A property of *the_object* does not meet schema requirements.
     """
-    if not isinstance(the_object, ObjectType):
+    if not isinstance(the_object, OnticType):
         raise ValueError(
             'Validation can only support validation of objects derived from '
-            'ontic.object_type.ObjectType.')
+            'ontic.object_type.OnticType.')
 
     value_errors = []
 
@@ -181,13 +181,13 @@ def validate_object(the_object, raise_validation_exception=True):
 def validate_value(property_name,
                    ontic_object,
                    raise_validation_exception=True):
-    """Validate a specific value of a given :class:`ObjectType` instance.
+    """Validate a specific value of a given :class:`OnticType` instance.
 
     :param property_name: The value to be validated against the given
         **PropertySchema**.
     :type property_name: basestring
     :param ontic_object: Ontic defined object to be validated.
-    :type ontic_object: object_type.ObjectType
+    :type ontic_object: ontic_type.OnticType
     :param raise_validation_exception: If True, then *validate_object* will
         throw a *ValueException* upon validation failure. If False, then a
         list of validation errors is returned. Defaults to True.
@@ -199,7 +199,7 @@ def validate_value(property_name,
     :raises ValueError: If *property_name* is not provided or is not a valid
         string.
     :raises ValueError: If *ontic_object* is None, or not instance of
-        *ObjectType*.
+        *OnticType*.
     :raises ValidationException: If the validation is not successful. The
         *ValidationException* will not be raised if
         *raise_validation_exception* is
@@ -213,9 +213,9 @@ def validate_value(property_name,
     if ontic_object is None:
         raise ValueError(
             '"ontic_object" is required, cannot be None.')
-    if not isinstance(ontic_object, ObjectType):
+    if not isinstance(ontic_object, OnticType):
         raise ValueError(
-            '"ontic_object" must be ObjectType or child type of ObjectType.')
+            '"ontic_object" must be OnticType or child type of OnticType.')
 
     value_errors = []
 

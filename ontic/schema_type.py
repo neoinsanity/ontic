@@ -10,7 +10,7 @@ Usage
 
 The *schema_type* module contains the class :class:`SchemaType` and a set of
 functions to create and validate schema. *SchemaType* are used to validate
-:class:`ontic.object_type.ObjectType` derived instances.
+:class:`ontic.ontic_type.OnticType` derived instances.
 
 Creating Schema
 ----------------
