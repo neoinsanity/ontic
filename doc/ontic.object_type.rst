@@ -2,7 +2,7 @@
 Object Type Module
 ====================
 
-.. automodule:: ook.object_type
+.. automodule:: ontic.object_type
 
 Classes
 ========
@@ -10,17 +10,17 @@ Classes
 ObjectType
 -----------
 
-.. autoclass:: ook.object_type.ObjectType
+.. autoclass:: ontic.object_type.ObjectType
     :special-members: __init__
     :members:
 
 Functions
 ==========
 
-create_ook_type
+create_ontic_type
 ----------------
 
-.. autofunction:: create_ook_type
+.. autofunction:: create_ontic_type
 
 ---------------------------------------
 

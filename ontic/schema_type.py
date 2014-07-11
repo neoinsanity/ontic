@@ -10,14 +10,14 @@ Usage
 
 The *schema_type* module contains the class :class:`SchemaType` and a set of
 functions to create and validate schema. *SchemaType* are used to validate
-:class:`ook.object_type.ObjectType` derived instances.
+:class:`ontic.object_type.ObjectType` derived instances.
 
 Creating Schema
 ----------------
 
 A *SchemaType* is defined as a dictionary with the key entry being the name
 of the property. The value portion of the dictionary is a
-:class:`ook.meta_type.PropertySchema` instance::
+:class:`ontic.meta_type.PropertySchema` instance::
 
     >>> a_schema = SchemaType({
     ...     'property_name': PropertySchema({'type': 'str'})
@@ -112,7 +112,7 @@ def perfect_schema(candidate_schema):
     to ensure property schema completeness.
 
     :param candidate_schema: The schema that is to be perfected.
-    :type candidate_schema: :class:`ook.schema_type.SchemaType`
+    :type candidate_schema: :class:`ontic.schema_type.SchemaType`
     :rtype: None
     """
     if candidate_schema is None:
@@ -134,7 +134,7 @@ def validate_schema(candidate_schema, raise_validation_exception=True):
     :class:`ontic.validation_exception.ValidationException`. The switch in
     behavior is determined by the *raise_validation_exception*
 
-    :param candidate_schema: The chema to be validated.
+    :param candidate_schema: The schema to be validated.
     :type candidate_schema: :class:`SchemaType`
     :param raise_validation_exception: If True, then *validate_schema* will
         throw a *ValidationException* upon validation failure. If False, then a

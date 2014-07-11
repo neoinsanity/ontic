@@ -1,4 +1,4 @@
-"""The fundamental *Ook* base data types for creation of derived child classes.
+"""The fundamental *Ontic* base data types for creation of derived child classes.
 
 .. image:: images/object_type.jpg
 
@@ -14,10 +14,10 @@ Create Object Types
 The *object_type* module provides the ::class::`ObjectType` and a set of
 functions to handle the creation and validation of *ObjectType* instances.
 
-Construction of **Ook** data types as a class definition::
+Construction of **Ontic** data types as a class definition::
 
     >>> class MyType(ObjectType):
-    ...     OOK_SCHEMA = SchemaType({
+    ...     ONTIC_SCHEMA = SchemaType({
     ...         'some_property': {
     ...             'type': 'int',
     ...             'required': True,
@@ -38,9 +38,9 @@ Dynamic Object Type Definition
 -------------------------------
 
 It is also possible to create :class:`ObjectType` derived types dynamically
-with the use of the :meth:`create_ook_type` function.
+with the use of the :meth:`create_ontic_type` function.
 
-    >>> some_type = create_ook_type('SomeType', {'prop':{'type':'int'}})
+    >>> some_type = create_ontic_type('SomeType', {'prop':{'type':'int'}})
     >>> my_object = some_type(prop=3)
     >>> my_object
     {'prop': 3}
@@ -49,31 +49,32 @@ with the use of the :meth:`create_ook_type` function.
 
 """
 import meta_type
-from meta_type import MetaType, PropertySchema
+from meta_type import MetaType
 from schema_type import SchemaType
 from validation_exception import ValidationException
 
 
 class ObjectType(MetaType):
-    """ObjectType provides the **Ook** schema interface.
+    """ObjectType provides the **Ontic** schema interface.
 
-    The **ObjectType** provides the schema management functionality to a derived
-    **Ook** type instance.
+    The **ObjectType** provides the schema management functionality to a
+    derived **Ontic** type instance.
     """
 
 
-def create_ook_type(name, schema):
-    """Create an **Ook** type to generate objects with a given schema.
+def create_ontic_type(name, schema):
+    """Create an **Ontic** type to generate objects with a given schema.
 
-    *create_ook_type* function creates an :class:`ObjectType` with a given
+    *create_ontic_type* function creates an :class:`ObjectType` with a given
     name and schema definition. The schema definition can be a dict instance
-    that is a valid  schema definition or a :class:`ontic.schema_type.SchemaType`.
-    This makes the following forms valid::
+    that is a valid  schema definition or a
+    :class:`ontic.schema_type.SchemaType`. This makes the following forms
+    valid::
 
-        MyType = create_ook_type('MyType', {'prop':{'type':'int'}})
+        MyType = create_ontic_type('MyType', {'prop':{'type':'int'}})
 
         schema_instance = SchemaType(prop={'type':'int'})
-        MyType = create_ook_type('MyType', schema_instance)
+        MyType = create_ontic_type('MyType', schema_instance)
 
     :param name: The name to apply to the created class, with
         :class:`ObjectType` as parent.
@@ -92,14 +93,14 @@ def create_ook_type(name, schema):
     if not isinstance(schema, dict):
         raise ValueError('The schema must be a dict or SchemaType.')
 
-    ook_type = type(name, (ObjectType, ), dict())
+    ontic_type = type(name, (ObjectType, ), dict())
 
     if not isinstance(schema, SchemaType):
         schema = SchemaType(schema)
 
-    ook_type.OOK_SCHEMA = schema
+    ontic_type.ONTIC_SCHEMA = schema
 
-    return ook_type
+    return ontic_type
 
 
 def perfect_object(the_object):
@@ -111,7 +112,7 @@ def perfect_object(the_object):
     None, if no default has been set.
 
     :param the_object: Ab object instance that is to be perfected.
-    :type the_object: :class:`ook.object_type.ObjectType`
+    :type the_object: :class:`ontic.object_type.ObjectType`
     :rtype: None
     """
     if the_object is None:
@@ -177,14 +178,16 @@ def validate_object(the_object, raise_validation_exception=True):
         return None
 
 
-def validate_value(property_name, ook_object, raise_validation_exception=True):
+def validate_value(property_name,
+                   ontic_object,
+                   raise_validation_exception=True):
     """Validate a specific value of a given :class:`ObjectType` instance.
 
     :param property_name: The value to be validated against the given
         **PropertySchema**.
-    :type property_name: str
-    :param ook_object: Ook defined object to be validated.
-    :type ook_object: object_type.ObjectType
+    :type property_name: basestring
+    :param ontic_object: Ontic defined object to be validated.
+    :type ontic_object: object_type.ObjectType
     :param raise_validation_exception: If True, then *validate_object* will
         throw a *ValueException* upon validation failure. If False, then a
         list of validation errors is returned. Defaults to True.
@@ -195,7 +198,7 @@ def validate_value(property_name, ook_object, raise_validation_exception=True):
     :rtype: list<str>, None
     :raises ValueError: If *property_name* is not provided or is not a valid
         string.
-    :raises ValueError: If *ook_object* is None, or not instance of
+    :raises ValueError: If *ontic_object* is None, or not instance of
         *ObjectType*.
     :raises ValidationException: If the validation is not successful. The
         *ValidationException* will not be raised if
@@ -207,21 +210,21 @@ def validate_value(property_name, ook_object, raise_validation_exception=True):
             '"property_name" is required, cannot be None.')
     if not isinstance(property_name, basestring) or len(property_name) < 1:
         raise ValueError('"property_name" is not a valid string.')
-    if ook_object is None:
+    if ontic_object is None:
         raise ValueError(
-            '"ook_object" is required, cannot be None.')
-    if not isinstance(ook_object, ObjectType):
+            '"ontic_object" is required, cannot be None.')
+    if not isinstance(ontic_object, ObjectType):
         raise ValueError(
-            '"ook_object" must be ObjectType or child type of ObjectType.')
+            '"ontic_object" must be ObjectType or child type of ObjectType.')
 
     value_errors = []
 
-    property_schema = ook_object.get_schema().get(property_name)
+    property_schema = ontic_object.get_schema().get(property_name)
     if property_schema is None:
         raise ValueError(
             '"property_name" is not a recognized property.')
 
-    value = ook_object.get(property_name, None)
+    value = ontic_object.get(property_name, None)
 
     value_errors.extend(
         meta_type.validate_value(property_name, property_schema, value))

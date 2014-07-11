@@ -2,7 +2,7 @@
 CoreType, MetaType, and PropertySchema Module
 ==============================================
 
-.. automodule:: ook.meta_type
+.. automodule:: ontic.meta_type
 
 Classes
 ========

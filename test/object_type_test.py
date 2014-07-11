@@ -9,7 +9,7 @@ class ObjectTypeTest(base_test_case.BaseTestCase):
     def test_object_type_instantiation(self):
         """ObjectType instantiation to confirm dict behavior"""
         schema = {'prop': {'type': 'int'}}
-        my_type = object_type.create_ook_type('MyType', schema)
+        my_type = object_type.create_ontic_type('MyType', schema)
 
         expected_dict = {'prop': 3}
 
