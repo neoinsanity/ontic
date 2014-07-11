@@ -1,6 +1,6 @@
 """The fundamental *Ontic* base data types for creation of derived child classes.
 
-.. image:: images/object_type.jpg
+.. image:: images/ontic_type.jpg
 
 .. contents::
 

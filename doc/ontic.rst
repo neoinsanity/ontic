@@ -17,12 +17,17 @@ The example for the simplest **Ontic** object is::
   >>> my_object.other_property = 3
   >>> my_object
 
-
-
-
-
 Creation of Ontic Types
 ========================
+
+Schema Definitions
+-------------------
+
+Ontic Class Definitions
+------------------------
+
+Dynamic Type Definitions
+-------------------------
 
 Working with Ontic Objects
 ===========================
