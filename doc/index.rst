@@ -36,8 +36,10 @@ at runtime, or types can be defined as classes that derive from the **Ontic**
 *OnticType*. Here's some quick examples::
 
   Class definition of an Ontic type with schema.
-  >>> class MyType(ontic.ontic_type.OnticType):
-  ...   ONTIC_SCHEMA = {'the_property':{'required':True}}
+  >>> from ontic.ontic_type import OnticType
+  >>> from ontic_schema_type import SchemaType
+  >>> class MyType(OnticType):
+  ...   ONTIC_SCHEMA = SchemaType({'the_property':{'required':True}})
   >>> my_object = MyType()
   >>> ontic.ontic_type.validate_object(my_object)
     Traceback (most recent call last):
@@ -74,14 +76,14 @@ see :ref:`getting-started-with-ontic`.
 Usage Documentation
 --------------------
 .. toctree::
-  :maxdepth: 2
+  :maxdepth: 3
 
   ontic
 
 API Specification
 ------------------
 .. toctree::
-  :maxdepth: 2
+  :maxdepth: 3
 
   ontic.meta_type
   ontic.ontic_type

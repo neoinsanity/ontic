@@ -99,25 +99,24 @@ multiple validation errors.
 
 .. _property-schema-settings-table:
 
-Property Schema Settings
--------------------------
+.. table:: Property Schema Settings
 
-============ ====== ======== ========  =================================
-name         type   default  required  enum
-============ ====== ======== ========  =================================
-type         str    None     False     bool, dict, float, int,
-                                       list, set, str, date, , datetime
-default      None   None     False     None
-required     bool   False    False     None
-enum         set    None     False     None
-min          float  None     False     None
-max          float  None     False     None
-regex        str    None     False     None
-member_type  str    None     False     bool, dict, float, int,
-                                       list, set, str, date, , datetime
-member_min   float  None     False     None
-member_max   float  None     False     None
-============ ====== ======== ========  =================================
+    ============ ====== ======== ========  =================================
+    name         type   default  required  enum
+    ============ ====== ======== ========  =================================
+    type         str    None     False     bool, dict, float, int,
+                                           list, set, str, date, , datetime
+    default      None   None     False     None
+    required     bool   False    False     None
+    enum         set    None     False     None
+    min          float  None     False     None
+    max          float  None     False     None
+    regex        str    None     False     None
+    member_type  str    None     False     bool, dict, float, int,
+                                           list, set, str, date, , datetime
+    member_min   float  None     False     None
+    member_max   float  None     False     None
+    ============ ====== ======== ========  =================================
 
 *type*
     The *type* settings restricts a property to a known type. If no type is
