@@ -1,4 +1,4 @@
-"""Testing suite for object_types module."""
+"""Testing suite for ontic_types module."""
 from datetime import date, datetime, time
 
 from test_utils import base_test_case
@@ -46,7 +46,7 @@ class CreateOnticTypeTestCase(base_test_case.BaseTestCase):
 
 
 class PerfectObjectTestCase(base_test_case.BaseTestCase):
-    """Test object_type.perfect_object method."""
+    """Test ontic_type.perfect_object method."""
 
     def test_bad_perfect_usage(self):
         """Ensure handling of bad arguments to perfect)_object method."""
@@ -87,19 +87,19 @@ class PerfectObjectTestCase(base_test_case.BaseTestCase):
 
 
 class ValidateObjectTestCase(base_test_case.BaseTestCase):
-    """Test object_types.validate_object method basics."""
+    """Test ontic_types.validate_object method basics."""
 
     def test_bad_validate_object(self):
         """ValueError testing of validate_object."""
         self.assertRaisesRegexp(
             ValueError,
             'Validation can only support validation of objects derived from '
-            'ontic.object_type.OnticType.',
+            'ontic.ontic_type.OnticType.',
             ontic_type.validate_object, None)
         self.assertRaisesRegexp(
             ValueError,
             'Validation can only support validation of objects derived from '
-            'ontic.object_type.OnticType.',
+            'ontic.ontic_type.OnticType.',
             ontic_type.validate_object, 'Not a OnticType')
 
     def test_validation_exception_handling(self):
@@ -706,7 +706,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
 
 
 class ValidateValueTestCase(base_test_case.BaseTestCase):
-    """Test object_types.validate_value method."""
+    """Test ontic_types.validate_value method."""
 
     def test_bad_validate_value(self):
         """ValueError testing of validate_value."""

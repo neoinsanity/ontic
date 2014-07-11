@@ -8,10 +8,10 @@
 Usage
 ======
 
-Create Object Types
+Create Ontic Types
 --------------------
 
-The *object_type* module provides the ::class::`OnticType` and a set of
+The *ontic_type* module provides the ::class::`OnticType` and a set of
 functions to handle the creation and validation of *OnticType* instances.
 
 Construction of **Ontic** data types as a class definition::
@@ -34,7 +34,7 @@ Construction of **Ontic** data types as a class definition::
     >>> my_object['some_property'] = 7
     >>> validate_object(my_object)
 
-Dynamic Object Type Definition
+Dynamic Ontic Type Definition
 -------------------------------
 
 It is also possible to create :class:`OnticType` derived types dynamically
@@ -148,14 +148,14 @@ def validate_object(the_object, raise_validation_exception=True):
         if the *raise_validation_exception* is set to True.
     :rtype: list<str>, None
     :raises ValueError: if *the_object* is not a
-        :class:`~ontic.object_type.OnticType`.
+        :class:`~ontic.ontic_type.OnticType`.
     :raises:
         * A property of *the_object* does not meet schema requirements.
     """
     if not isinstance(the_object, OnticType):
         raise ValueError(
             'Validation can only support validation of objects derived from '
-            'ontic.object_type.OnticType.')
+            'ontic.ontic_type.OnticType.')
 
     value_errors = []
 
