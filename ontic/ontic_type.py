@@ -147,10 +147,10 @@ def validate_object(the_object, raise_validation_exception=True):
         returned. If validation fails, then a list of the errors is returned
         if the *raise_validation_exception* is set to True.
     :rtype: list<str>, None
-    :raises ValueError: if *the_object* is not a
+    :raises ValueError: If *the_object* is None or not of type
         :class:`~ontic.ontic_type.OnticType`.
-    :raises:
-        * A property of *the_object* does not meet schema requirements.
+    :raises ValidationException: A property of *the_object* does not meet
+        schema requirements.
     """
     if not isinstance(the_object, OnticType):
         raise ValueError(

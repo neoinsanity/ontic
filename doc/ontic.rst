@@ -186,7 +186,7 @@ instance. Such as::
       'gender': {'type': 'str', 'enum': {'M','F', 'NA'}, 'default':'NA'},
     })
 
-The *Person* class can not be used to create instances::
+The *Person* class can now be used to create instances::
 
   person = Person(name='Sal', age=32, gender='M')
   # or
@@ -195,10 +195,139 @@ The *Person* class can not be used to create instances::
   person = Person()
   person.name = 'Sal'
   person.age = 32
-  person.gender = 'M'
+  person['gender'] = 'M'
 
 Dynamic Type Definitions
 -------------------------
 
+It is also possible to define a type dynamically, with the use of the
+*ontic.ontic_type.create_ontic_type* function. Such as::
+
+  from ontic.ontic_type import create_ontic_type
+  Person = create_ontic_type(
+    'Person',
+    {
+      'name': {'type':'str', 'required':True, 'min':1},
+      'age': {'type':'int', 'min':0},
+      'gender': {'type':'str', 'enum':{'M','F','NA'}, 'default':'NA'},
+    }
+  )
+  person = Person()
+
+The *create_ontic_type* function also accepts a *SchemaType* as a schema
+definition parameter.  As in::
+
+  from ontic.ontic_type import create_ontic_type
+  from ontic.schema_type import SchemaType
+  schema = SchemaType({
+    'name': {'type':'str', 'required':True, 'min':1},
+    'age': {'type':'int', 'min':0},
+    'gender': {'type':'str', 'enum':{'M','F','NA'}, 'default':'NA'},
+  })
+  Person = create_ontic_type('Person', schema)
+  person = Person(name='Santos', height=)
+
+Checkout the API documentation for *SchemaType* for advanced schema handling
+features.
+
 Working with Ontic Objects
 ===========================
+
+Perfect
+--------
+
+Perfecting am *OnticType* instance, is to strip out any additional values that
+may have been assigned to the object, and to ensure the existence of all
+properties defined in the schema.
+
+Perfecting an *OnticType* object is done with the
+*ontic.ontic_type.perfect_object* function. Let's assume::
+
+  class Person(OnticType):
+    ONTIC_SCHEMA = SchemaType({
+      'name': {'type': 'str', 'required': True, 'min': 1},
+      'age': {'type': 'int', 'min': 0},
+      'gender': {'type': 'str', 'enum': {'M','F', 'NA'}, 'default':'NA'},
+    })
+
+Then the following demonstrates the use of the *perfect_object* function::
+
+  >>> person = Person(name='Santos',height=67)
+  >>> person
+  {'name': 'Santos', 'height': 67}
+  >>> perfect_object(person)
+  >>> person
+  {'name': 'Santos', 'age': None, 'gender': 'NA'}
+
+After being perfected the *person* object had the height property stripped.
+The age and gender properties were added. The age property was set to None as
+no default setting was provided. The gender property was defined with a
+default setting, which was applied.
+
+Validate
+---------
+
+**Ontic** provides two methods for executing validation against a given
+*OnticType* object, backed by a schema definition. There are the
+*ontic.ontic_type.validate_object* and *ontic.ontic_type.validate_value*
+functions. Both function will throw a
+*ontic.validation_exception.ValidateException*, if an validation exception is
+found.
+
+For the validation examples, assume::
+
+  class Person(OnticType):
+    ONTIC_SCHEMA = SchemaType({
+      'name': {'type': 'str', 'required': True, 'min': 1},
+      'age': {'type': 'int', 'min': 0},
+      'gender': {'type': 'str', 'enum': {'M','F', 'NA'}, 'default':'NA'},
+    })
+
+To validate an *OnticType* instance::
+
+  >>> person = Person(age=-1,gender='W')
+  >>> from ontic.ontic_type import validate_object
+  >>> validate_object(person)
+  Traceback (most recent call last):
+    File "<stdin>", line 1, in <module>
+    File "ontic/ontic_type.py", line 174, in validate_object
+      raise ValidationException(value_errors)
+  ontic.validation_exception.ValidationException: The value "W" for "gender"
+  not in enumeration ['NA', 'M', 'F'].
+  The value for "name" is required.
+
+The *ValidationException* that is raised will attempt to exhaustively
+determine all validation failures. The *ValidationException.message* will list
+the validation failures as a new-line delimited list. There is also a list of
+strings available from the *ValidationException.validation_errors* for
+structured access to the validation failures. To demonstrate::
+
+  >>> try:
+  ...     validate_object(person)
+  ... except ValidationException as ve:
+  ...     ve.message
+  ...     ve.validation_errors
+  'The value "W" for "gender" not in enumeration [\'NA\', \'M\', \'F\']. \nThe value for "name" is required.'
+  ['The value "W" for "gender" not in enumeration [\'NA\', \'M\', \'F\'].', 'The value for "name" is required.']
+
+The *validate_value* function operates over a single property by passing a
+key name for the property. Example::
+
+  >>> person = Person(age=-1,gender='W')
+  >>> from ontic.ontic_type import validate_value
+  >>> validate_value('gender', person)
+  Traceback (most recent call last):
+    File "<stdin>", line 1, in <module>
+    File "ontic/ontic_type.py", line 174, in validate_object
+      raise ValidationException(value_errors)
+  ontic.validation_exception.ValidationException: The value "W" for "gender"
+  not in enumeration ['NA', 'M', 'F'].
+
+Both the *validate_object* and *validate_value* functions provide the
+*raise_validation_exception* parameter. If the *raise_validation_exception*
+parameter is set to False, then the functions will return a list of value
+failures. Demonstrated by::
+
+  >>> validate_object(person, raise_validation_exception=False)
+  ['The value "W" for "gender" not in enumeration [\'NA\', \'M\', \'F\'].',
+  'The value for "name" is required.']
