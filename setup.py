@@ -1,7 +1,7 @@
 """The setuptools setup file."""
 from setuptools import setup
 
-with open('README.md') as file:
+with open('README.txt') as file:
     long_description = file.read()
 
 setup(
@@ -9,7 +9,7 @@ setup(
     version='0.0.2',
     author='Raul Gonzalez',
     author_email='mindbender@gmail.com',
-    url='http://neoinsanity.github.io/ook/',
+    url='https://github.com/neoinsanity/ontic',
     license='Apache License 2.0',
     description='Qualities and Quantities are the stuff of Objects.',
     long_description=long_description,
