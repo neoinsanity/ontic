@@ -6,7 +6,7 @@ with open('README.md') as file:
 
 setup(
     name='ontic',
-    version='0.0.1',
+    version='0.0.2',
     author='Raul Gonzalez',
     author_email='mindbender@gmail.com',
     url='http://neoinsanity.github.io/ook/',
