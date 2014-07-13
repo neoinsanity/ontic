@@ -8,23 +8,25 @@ objects. **Ontic** provides a pure data object representations that support
 supports schema definition to aid in the validation and management of **Ontic**
 object instances.
 
-By way of a quick preview::
+By way of a quick preview:
 
-  >>> from ontic.ontic_type import OnticType, create_ontic_type, validate_object
-  >>> from ontic.schema_type import SchemaType
-  >>> # Define the schema
-  >>> schema = SchemaType(
-  ...   prop1={'type':'str','required':True},
-  ...   prop2={'type':'int','min':1}) 
-  >>> # Define an ontic type
-  >>> AType = create_ontic_type('AType', schema)
-  >>> # Use AType to create a data instance
-  >>> obj = AType()
-  >>> # Show off object and dict style property access
-  >>> obj.prop1 = 'Some Value'
-  >>> obj['prop2'] = 3
-  >>> # And the validation
-  >>> validate_object(obj)
+```
+  from ontic.ontic_type import OnticType, create_ontic_type, validate_object
+  from ontic.schema_type import SchemaType
+  # Define the schema
+  schema = SchemaType(
+  prop1={'type':'str','required':True},
+  prop2={'type':'int','min':1}) 
+  # Define an ontic type
+  AType = create_ontic_type('AType', schema)
+  # Use AType to create a data instance
+  obj = AType()
+  # Show off object and dict style property access
+  obj.prop1 = 'Some Value'
+  obj['prop2'] = 3
+  # And the validation
+  validate_object(obj)
+```
 
 Documentation
 ==============
