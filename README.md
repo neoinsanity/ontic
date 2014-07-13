@@ -8,7 +8,7 @@ objects. **Ontic** provides a pure data object representations that support
 supports schema definition to aid in the validation and management of **Ontic**
 object instances.
 
-By way of a quick preview::
+By way of a quick preview:
 
   from ontic.ontic_type import OnticType, create_ontic_type, validate_object
   from ontic.schema_type import SchemaType
