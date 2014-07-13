@@ -10,6 +10,7 @@ object instances.
 
 By way of a quick preview:
 
+```
   > from ontic.ontic_type import OnticType, create_ontic_type, validate_object
   > from ontic.schema_type import SchemaType
   > # Define the schema
@@ -26,6 +27,7 @@ By way of a quick preview:
   obj['prop2'] = 3
   # And the validation
   validate_object(obj)
+```
 
 Documentation
 ==============
