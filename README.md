@@ -7,7 +7,7 @@ Documentation
 For the latest documentation, visist http://neoinsanity.github.io/ontic/
 
 Stable Ontic and Installation
-----------------------------
+------------------------------
 
 The latest stable release of Ontic can be found on the master branch at
 https://github.com/neoinsanity/ontic/tree/master. For the latest release, use 
