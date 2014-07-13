@@ -10,8 +10,8 @@ object instances.
 
 By way of a quick preview:
 
-  from ontic.ontic_type import OnticType, create_ontic_type, validate_object
-  from ontic.schema_type import SchemaType
+  > from ontic.ontic_type import OnticType, create_ontic_type, validate_object
+  > from ontic.schema_type import SchemaType
   # Define the schema
   schema = SchemaType(
     prop1={'type':'str','required':True},
