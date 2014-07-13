@@ -2,9 +2,9 @@
 
 from test_utils import base_test_case
 
-from ook import meta_type
-from ook.meta_type import CoreType, MetaType, PropertySchema
-from ook.validation_exception import ValidationException
+from ontic import meta_type
+from ontic.meta_type import CoreType, MetaType, PropertySchema
+from ontic.validation_exception import ValidationException
 
 
 class CoreTypeTest(base_test_case.BaseTestCase):

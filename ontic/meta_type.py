@@ -32,7 +32,7 @@ this section will focus on the use of :class:`PropertySchema`
 Creating Property Schema
 -------------------------
 
-For general purposes, consider utilizing :class:`ook.schema_type.SchemaType`,
+For general purposes, consider utilizing :class:`ontic.schema_type.SchemaType`,
 for defining complete models. However, if you need validators for individual
 properties, then direct use of :class:`PropertySchema` is a solution.
 
@@ -99,25 +99,24 @@ multiple validation errors.
 
 .. _property-schema-settings-table:
 
-Property Schema Settings
--------------------------
+.. table:: Property Schema Settings
 
-============ ====== ======== ========  =================================
-name         type   default  required  enum
-============ ====== ======== ========  =================================
-type         str    None     False     bool, dict, float, int,
-                                       list, set, str, date, , datetime
-default      None   None     False     None
-required     bool   False    False     None
-enum         set    None     False     None
-min          float  None     False     None
-max          float  None     False     None
-regex        str    None     False     None
-member_type  str    None     False     bool, dict, float, int,
-                                       list, set, str, date, , datetime
-member_min   float  None     False     None
-member_max   float  None     False     None
-============ ====== ======== ========  =================================
+    ============ ====== ======== ========  =================================
+    name         type   default  required  enum
+    ============ ====== ======== ========  =================================
+    type         str    None     False     bool, dict, float, int,
+                                           list, set, str, date, , datetime
+    default      None   None     False     None
+    required     bool   False    False     None
+    enum         set    None     False     None
+    min          float  None     False     None
+    max          float  None     False     None
+    regex        str    None     False     None
+    member_type  str    None     False     bool, dict, float, int,
+                                           list, set, str, date, , datetime
+    member_min   float  None     False     None
+    member_max   float  None     False     None
+    ============ ====== ======== ========  =================================
 
 *type*
     The *type* settings restricts a property to a known type. If no type is
@@ -208,10 +207,10 @@ TYPE_MAP = {
 
 
 class CoreType(dict):
-    """The root type of *Ook* types.
+    """The root type of *Ontic* types.
 
-    **CoreType** ensures that *Ook* object properties can be accessed by either
-    dict key or object attribute. For example::
+    **CoreType** ensures that *Ontic* object properties can be accessed by
+    either dict key or object attribute. For example::
 
     >>> some_object = CoreType({'key1': 'value1'})
     >>> assert some_object.key1 == 'value1'
@@ -251,7 +250,7 @@ class CoreType(dict):
 
 
 class MetaType(CoreType):
-    """Interface for type definition of **Ook** schema defined classes.
+    """Interface for type definition of **Ontic** schema defined classes.
 
     Dict Style Initialization
         MetaType() -> new empty MetaType
@@ -270,18 +269,18 @@ class MetaType(CoreType):
 
             MetaType(one=1, two=2)
     """
-    # : The Ook schema pointer.
-    OOK_SCHEMA = None
+    # : The Ontic schema pointer.
+    ONTIC_SCHEMA = None
 
     @classmethod
     def get_schema(cls):
         """Returns the schema object for the a given type definition.
 
         :return: The schema metadata definition for a :class:`PropertySchema`
-            or a :class:`ook.object_type.ObjectType` derived child class.
-        :rtype: :class:`CoreType`, :class:`ook.schema_type.SchemaType`
+            or a :class:`ontic.ontic_type.OnticType` derived child class.
+        :rtype: :class:`CoreType`, :class:`ontic.schema_type.SchemaType`
         """
-        return cls.OOK_SCHEMA
+        return cls.ONTIC_SCHEMA
 
 
 class PropertySchema(MetaType):
@@ -326,7 +325,7 @@ class PropertySchema(MetaType):
         >>> assert val_errors == None
     """
     # : The schema definition for the **PropertySchema** type.
-    OOK_SCHEMA = CoreType({
+    ONTIC_SCHEMA = CoreType({
         'type': MetaType({
             'type': 'str',
             'default': None,
@@ -520,7 +519,7 @@ def validate_property_schema(candidate_property_schema,
         if the *raise_validation_exception* is set to True.
     :rtype: list<str>, None
     :raises ValueError: *the_candidate_schema_property* is not an
-        :class:`~ook.object_type.ObjectType`.
+        :class:`~ontic.ontic_type.OnticType`.
     :raises ValidationException: A property of *candidate_property_schema*
         does not meet schema requirements.
     """
@@ -613,7 +612,7 @@ def validate_value(name, property_schema, value):
 
 
 def validate_non_none_value(key, property_schema, value, value_errors):
-    """Validates an **Ook** object value that is not None.
+    """Validates an **Ontic** object value that is not None.
 
     This method validates singular and collection values. This method
     does not perform *Required* validation, as it is assumed that the

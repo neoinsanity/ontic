@@ -2,8 +2,8 @@
 
 from test_utils import base_test_case
 
-from ook.meta_type import PropertySchema
-from ook.schema_type import SchemaType
+from ontic.meta_type import PropertySchema
+from ontic.schema_type import SchemaType
 
 
 class SchemaPropertyTest(base_test_case.BaseTestCase):

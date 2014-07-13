@@ -2,7 +2,7 @@
 ValidationException Module
 ===========================
 
-.. automodule:: ook.validation_exception
+.. automodule:: ontic.validation_exception
 
 Exceptions
 ===========

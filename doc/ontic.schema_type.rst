@@ -2,7 +2,7 @@
 SchemaType Module
 ====================
 
-.. automodule:: ook.schema_type
+.. automodule:: ontic.schema_type
 
 Classes
 ========
