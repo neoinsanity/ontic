@@ -12,10 +12,11 @@ By way of a quick preview:
 
   > from ontic.ontic_type import OnticType, create_ontic_type, validate_object
   > from ontic.schema_type import SchemaType
-  # Define the schema
-  schema = SchemaType(
-    prop1={'type':'str','required':True},
-    prop2={'type':'int','min':1}) 
+  > # Define the schema
+  > schema = SchemaType(
+
+  >  prop1={'type':'str','required':True},
+  >  prop2={'type':'int','min':1}) 
   # Define an ontic type
   AType = create_ontic_type('AType', schema)
   # Use AType to create a data instance
