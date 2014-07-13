@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Getting Started with OoK &mdash; Ook 0.0.1 Documentation</title>
+    <title>ValidationException Module &mdash; Ontic 0.0.2 Documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.0.1',
+        VERSION:     '0.0.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,7 +24,8 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/sidebar.js"></script>
-    <link rel="top" title="Ook 0.0.1 Documentation" href="index.html" /> 
+    <link rel="top" title="Ontic 0.0.2 Documentation" href="index.html" />
+    <link rel="prev" title="SchemaType Module" href="ontic.schema_type.html" /> 
   </head>
   <body>
     <div class="related">
@@ -36,7 +37,10 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="index.html">Ook 0.0.1 Documentation</a> &raquo;</li> 
+        <li class="right" >
+          <a href="ontic.schema_type.html" title="SchemaType Module"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Ontic 0.0.2 Documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -45,13 +49,32 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="getting-started-with-ook">
-<h1>Getting Started with OoK<a class="headerlink" href="#getting-started-with-ook" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="creation-of-ook-types">
-<h2>Creation of Ook Types<a class="headerlink" href="#creation-of-ook-types" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="creation-of-ook-objects">
-<h2>Creation of Ook Objects<a class="headerlink" href="#creation-of-ook-objects" title="Permalink to this headline">¶</a></h2>
+  <div class="section" id="module-ontic.validation_exception">
+<span id="validationexception-module"></span><h1>ValidationException Module<a class="headerlink" href="#module-ontic.validation_exception" title="Permalink to this headline">¶</a></h1>
+<p>An exception to signal a validation failure.</p>
+<div class="section" id="exceptions">
+<h2>Exceptions<a class="headerlink" href="#exceptions" title="Permalink to this headline">¶</a></h2>
+<dl class="exception">
+<dt id="ontic.validation_exception.ValidationException">
+<em class="property">exception </em><tt class="descclassname">ontic.validation_exception.</tt><tt class="descname">ValidationException</tt><big>(</big><em>validation_errors=</em><span class="optional">[</span><span class="optional">]</span><big>)</big><a class="headerlink" href="#ontic.validation_exception.ValidationException" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="attribute">
+<dt id="ontic.validation_exception.ValidationException.validation_errors">
+<tt class="descname">validation_errors</tt><a class="headerlink" href="#ontic.validation_exception.ValidationException.validation_errors" title="Permalink to this definition">¶</a></dt>
+<dd><p>List of validation errors that triggered the <em>ValidationException</em>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">A list of the validation errors encountered.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">list&lt;str&gt;</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 </div>
 
@@ -63,16 +86,18 @@
         <div class="sphinxsidebarwrapper">
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Getting Started with OoK</a><ul>
-<li><a class="reference internal" href="#creation-of-ook-types">Creation of Ook Types</a></li>
-<li><a class="reference internal" href="#creation-of-ook-objects">Creation of Ook Objects</a></li>
+<li><a class="reference internal" href="#">ValidationException Module</a><ul>
+<li><a class="reference internal" href="#exceptions">Exceptions</a></li>
 </ul>
 </li>
 </ul>
 
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="ontic.schema_type.html"
+                        title="previous chapter">SchemaType Module</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
-    <li><a href="_sources/ook.txt"
+    <li><a href="_sources/ontic.validation_exception.txt"
            rel="nofollow">Show Source</a></li>
   </ul>
 <div id="searchbox" style="display: none">
@@ -101,11 +126,14 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
-        <li><a href="index.html">Ook 0.0.1 Documentation</a> &raquo;</li> 
+        <li class="right" >
+          <a href="ontic.schema_type.html" title="SchemaType Module"
+             >previous</a> |</li>
+        <li><a href="index.html">Ontic 0.0.2 Documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2014, Neo Dasein.
+        &copy; Copyright 2014, Raul Gonzalez.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.
     </div>
   </body>

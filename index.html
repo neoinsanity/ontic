@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Object of Knowledge (Ook) &mdash; Ook 0.0.1 Documentation</title>
+    <title>Ontic - of or relating to entities and the facts about them &mdash; Ontic 0.0.2 Documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.0.1',
+        VERSION:     '0.0.2',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,8 +24,8 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/sidebar.js"></script>
-    <link rel="top" title="Ook 0.0.1 Documentation" href="#" />
-    <link rel="next" title="object_type Classes" href="ook.object_type.html" /> 
+    <link rel="top" title="Ontic 0.0.2 Documentation" href="#" />
+    <link rel="next" title="Getting Started with Ontic" href="ontic.html" /> 
   </head>
   <body>
     <div class="related">
@@ -38,9 +38,9 @@
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="ook.object_type.html" title="object_type Classes"
+          <a href="ontic.html" title="Getting Started with Ontic"
              accesskey="N">next</a> |</li>
-        <li><a href="#">Ook 0.0.1 Documentation</a> &raquo;</li> 
+        <li><a href="#">Ontic 0.0.2 Documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -49,17 +49,18 @@
         <div class="bodywrapper">
           <div class="body">
             
-  <div class="section" id="object-of-knowledge-ook">
-<h1>Object of Knowledge (Ook)<a class="headerlink" href="#object-of-knowledge-ook" title="Permalink to this headline">¶</a></h1>
-<p>The goal of <strong>Ook</strong> is to provide a pure data object that is flexible to use in a python
-environment. The motivation is to make it simple to utilize in a development environment that
-interfaces with external services and third-party tools, but not require an extensive library to
-convert objects.</p>
-<p>To that end <strong>Ook</strong> objects can be accessed through attribute access or via dictionary key access
-. The theory is that most third party libraries, from JSON to NoSql, take some form of the dict as
-input. Attribute access is easier to type when writing code, hence the attribute access. By way of
+  <div class="section" id="ontic-of-or-relating-to-entities-and-the-facts-about-them">
+<h1>Ontic - of or relating to entities and the facts about them<a class="headerlink" href="#ontic-of-or-relating-to-entities-and-the-facts-about-them" title="Permalink to this headline">¶</a></h1>
+<p>The goal of <strong>Ontic</strong> is to provide a pure data object that is flexible to use in
+a python project. The motivation is to make it simple to utilize in a
+development environment that interfaces with external services and
+third-party tools, but not require an extensive library to convert objects.</p>
+<p>To that end <strong>Ontic</strong> objects can be accessed through attribute access or via
+dictionary key access. The theory is that most third party libraries, from JSON
+to NoSql packages, take some form of the dict as input. Attribute access is
+easier to type when writing code, hence the attribute access. By way of
 example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">an_object</span> <span class="o">=</span> <span class="n">ook</span><span class="o">.</span><span class="n">object_type</span><span class="o">.</span><span class="n">BaseType</span><span class="p">()</span>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">an_object</span> <span class="o">=</span> <span class="n">ontic</span><span class="o">.</span><span class="n">ontic_type</span><span class="o">.</span><span class="n">OnticType</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">an_object</span><span class="p">[</span><span class="s">&#39;property1&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">an_object</span><span class="o">.</span><span class="n">property1</span> <span class="o">==</span> <span class="mi">1</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">an_object</span><span class="o">.</span><span class="n">property2</span> <span class="o">=</span> <span class="mi">2</span>
@@ -68,74 +69,168 @@ example:</p>
 <span class="go">  &#39;{&quot;property1&quot;: 1, &quot;property2&quot;: 2}&#39;</span>
 </pre></div>
 </div>
-<p>As <strong>Ook</strong> objects are designed to be utilized as pure data objects,
-they implement the python <em>dict</em> interface. So anywhere you can use pass a dict object,
-you can pass an <strong>Ook</strong> object. <strong>Ook</strong> objects can even be initialize with a dictionary,
-as exampled below:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">an_object</span> <span class="o">=</span> <span class="n">ook</span><span class="o">.</span><span class="n">object_type</span><span class="o">.</span><span class="n">BaseType</span><span class="p">({</span><span class="s">&#39;the_property&#39;</span><span class="p">:</span><span class="s">&#39;the_value&#39;</span><span class="p">})</span>
+<p>As <strong>Ontic</strong> objects are designed to be utilized as pure data objects, they
+implement the python <em>dict</em> interface. So anywhere you can use or pass a dict
+object, you can pass an <strong>Ontic</strong> object. <strong>Ontic</strong> objects can even be
+initialized like a dictionary, as exampled below:</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">an_object</span> <span class="o">=</span> <span class="n">ontic</span><span class="o">.</span><span class="n">ontic_type</span><span class="o">.</span><span class="n">OnticType</span><span class="p">({</span><span class="s">&#39;the_property&#39;</span><span class="p">:</span><span class="s">&#39;the_value&#39;</span><span class="p">})</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">an_object</span><span class="o">.</span><span class="n">the_property</span> <span class="o">=</span> <span class="s">&#39;the_value&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">an_object</span><span class="p">[</span><span class="s">&#39;the_property&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;the_value&#39;</span>
 </pre></div>
 </div>
-<p>In addition <strong>Ook</strong> provides schema and validation features to aid in working with data
-representations. Schemas and corresponding types can be generated at runtime,
-or types can be defined as classes that derive from the <strong>Ook</strong> <em>BaseType</em>. Here&#8217;s some quick
-examples:</p>
-<div class="highlight-python"><pre>Class definition of an Ook type with schema.
-&gt;&gt;&gt; class MyType(ook.object_type.BaseType):
-...   _OOK_SCHEMA = {'the_property':{'required':True}}
+<p>In addition <strong>Ontic</strong> provides schema and validation features to aid in working
+with data representations. Schemas and corresponding types can be generated
+at runtime, or types can be defined as classes that derive from the <strong>Ontic</strong>
+<em>OnticType</em>. Here&#8217;s some quick examples:</p>
+<div class="highlight-python"><pre>Class definition of an Ontic type with schema.
+&gt;&gt;&gt; from ontic.ontic_type import OnticType
+&gt;&gt;&gt; from ontic_schema_type import SchemaType
+&gt;&gt;&gt; class MyType(OnticType):
+...   ONTIC_SCHEMA = SchemaType({'the_property':{'required':True}})
 &gt;&gt;&gt; my_object = MyType()
-&gt;&gt;&gt; ook.object_tools.validate_object(my_object)
+&gt;&gt;&gt; ontic.ontic_type.validate_object(my_object)
   Traceback (most recent call last):
     File "&lt;stdin&gt;", line 1, in &lt;module&gt;
-    File "ook/object_tools.py", line 137, in validate_object
-      raise ValueError(str.join(' \n-- ', value_errors))
-  ValueError: The value for "the_property" is required.
+    File "ontic/ontic_type.py", line 137, in validate_object
+      raise ValidationException(str.join(' \n-- ', value_errors))
+  ValidationException: The value for "the_property" is required.
 &gt;&gt;&gt; my_object.the_property = 99
-&gt;&gt;&gt; ook.object_tools.validate_object(my_object)
-
-and dynamic definition of Ook type with schema.
-
-&gt;&gt;&gt; my_type = ook.object_tools.create_ook_type(
-...   'MyType', {'the_property':{'required':True}})
-&gt;&gt;&gt; my_object = my_type()
-&gt;&gt;&gt; ook.object_tools.validate_object(my_object)
-  Traceback (most recent call last):
-    File "&lt;stdin&gt;", line 1, in &lt;module&gt;
-    File "ook/object_tools.py", line 137, in validate_object
-      raise ValueError(str.join(' \n-- ', value_errors))
-  ValueError: The value for "the_property" is required.
-&gt;&gt;&gt; my_object['the_property'] = 'Some value'
-&gt;&gt;&gt; ook.object_tools.validate_object(my_object)</pre>
+&gt;&gt;&gt; ontic.ontic_type.validate_object(my_object)</pre>
 </div>
-<p><strong>Very Important:</strong> The limitation to this approach is that <strong>Ook</strong> objects should not be monkey
-patched with any public methods.</p>
+<p>and dynamic definition of Ontic type with schema.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">my_type</span> <span class="o">=</span> <span class="n">ontic</span><span class="o">.</span><span class="n">ontic_type</span><span class="o">.</span><span class="n">create_ontic_type</span><span class="p">(</span>
+<span class="gp">... </span>  <span class="s">&#39;MyType&#39;</span><span class="p">,</span> <span class="p">{</span><span class="s">&#39;the_property&#39;</span><span class="p">:{</span><span class="s">&#39;required&#39;</span><span class="p">:</span><span class="bp">True</span><span class="p">}})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_object</span> <span class="o">=</span> <span class="n">my_type</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ontic</span><span class="o">.</span><span class="n">ontic_type</span><span class="o">.</span><span class="n">validate_object</span><span class="p">(</span><span class="n">my_object</span><span class="p">)</span>
+<span class="go">  Traceback (most recent call last):</span>
+<span class="go">    File &quot;&lt;stdin&gt;&quot;, line 1, in &lt;module&gt;</span>
+<span class="go">    File &quot;ontic/ontic_type.py&quot;, line 137, in validate_object</span>
+<span class="go">      raise ValueError(str.join(&#39; \n-- &#39;, value_errors))</span>
+<span class="go">  ValidationException: The value for &quot;the_property&quot; is required.</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_object</span><span class="p">[</span><span class="s">&#39;the_property&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;Some value&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ontic</span><span class="o">.</span><span class="n">ontic_type</span><span class="o">.</span><span class="n">validate_object</span><span class="p">(</span><span class="n">my_object</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For full coverage of schema definitions and usage details,
+see <a class="reference internal" href="ontic.html#getting-started-with-ontic"><em>Getting Started with Ontic</em></a>.</p>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p class="last">The limitation to this approach is that <strong>Ontic</strong> objects should not be
+monkey patched with any public methods.</p>
+</div>
 <p><em>Share and Enjoy</em>.</p>
+<div class="section" id="usage-documentation">
+<h2>Usage Documentation<a class="headerlink" href="#usage-documentation" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="ontic.html">Getting Started with Ontic</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ontic.html#creating-a-simple-ontictype-object">Creating a Simple OnticType Object</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ontic.html#dict-style-initialization">Dict Style Initialization</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ontic.html#creation-of-ontic-types">Creation of Ontic Types</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ontic.html#creation-of-schema-definitions">Creation of Schema Definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ontic.html#class-style-type-definitions">Class-style Type Definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ontic.html#dynamic-type-definitions">Dynamic Type Definitions</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ontic.html#working-with-ontic-objects">Working with Ontic Objects</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ontic.html#perfect">Perfect</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ontic.html#validate">Validate</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
 <div class="section" id="api-specification">
 <h2>API Specification<a class="headerlink" href="#api-specification" title="Permalink to this headline">¶</a></h2>
 <div class="toctree-wrapper compound">
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="ook.object_type.html">object_type Classes</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="ook.object_type.html#usage">Usage</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ook.object_type.html#classes">Classes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ontic.meta_type.html">CoreType, MetaType, and PropertySchema Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ontic.meta_type.html#usage">Usage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ontic.meta_type.html#creating-property-schema">Creating Property Schema</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ontic.meta_type.html#utilizing-property-schema">Utilizing Property Schema</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="ook.object_tools.html">object_tools API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="ook.object_tools.html#usage">Usage</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ook.object_tools.html#method-definitions">Method Definitions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ontic.meta_type.html#classes">Classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ontic.meta_type.html#coretype">CoreType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ontic.meta_type.html#metatype">MetaType</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ontic.meta_type.html#propertyschema">PropertySchema</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ontic.meta_type.html#functions">Functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ontic.meta_type.html#enum-validation">enum_validation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ontic.meta_type.html#execute-collection-validators">execute_collection_validators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ontic.meta_type.html#max-validation">max_validation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ontic.meta_type.html#min-validation">min_validation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ontic.meta_type.html#non-none-singular-validation">non_none_singular_validation</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ontic.meta_type.html#perfect-property-schema">perfect_property_schema</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ontic.meta_type.html#validate-collection-members">validate_collection_members</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ontic.meta_type.html#validate-member-enum">validate_member_enum</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ontic.meta_type.html#validate-member-max">validate_member_max</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ontic.meta_type.html#validate-member-min">validate_member_min</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ontic.meta_type.html#validate-member-regex">validate_member_regex</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ontic.meta_type.html#validate-member-type">validate_member_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ontic.meta_type.html#validate-non-none-value">validate_non_none_value</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ontic.meta_type.html#validate-property-schema">validate_property_schema</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ontic.meta_type.html#validate-value">validate_value</a></li>
 </ul>
 </li>
 </ul>
-</div>
-</div>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ontic.ontic_type.html">Ontic Type Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ontic.ontic_type.html#usage">Usage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ontic.ontic_type.html#create-ontic-types">Create Ontic Types</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ontic.ontic_type.html#dynamic-ontic-type-definition">Dynamic Ontic Type Definition</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ontic.ontic_type.html#classes">Classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ontic.ontic_type.html#ontictype">OnticType</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ontic.ontic_type.html#functions">Functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ontic.ontic_type.html#create-ontic-type">create_ontic_type</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ontic.ontic_type.html#perfect-object">perfect_object</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ontic.ontic_type.html#validate-object">validate_object</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ontic.ontic_type.html#validate-value">validate_value</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ontic.schema_type.html">SchemaType Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ontic.schema_type.html#usage">Usage</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ontic.schema_type.html#creating-schema">Creating Schema</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ontic.schema_type.html#dynamic-schema">Dynamic Schema</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ontic.schema_type.html#classes">Classes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ontic.schema_type.html#schematype">SchemaType</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="ontic.schema_type.html#functions">Functions</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="ontic.schema_type.html#perfect-schema">perfect_schema</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ontic.schema_type.html#validate-schema">validate_schema</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="ontic.validation_exception.html">ValidationException Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ontic.validation_exception.html#exceptions">Exceptions</a></li>
+</ul>
+</li>
+</ul>
 </div>
 <div class="section" id="indices-and-tables">
-<h1>Indices and Tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<h3>Indices and Tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h3>
 <ul class="simple">
 <li><a class="reference internal" href="genindex.html"><em>Index</em></a></li>
 <li><a class="reference internal" href="py-modindex.html"><em>Module Index</em></a></li>
 <li><a class="reference internal" href="search.html"><em>Search Page</em></a></li>
 </ul>
+</div>
+</div>
 </div>
 
 
@@ -146,18 +241,21 @@ patched with any public methods.</p>
         <div class="sphinxsidebarwrapper">
   <h3><a href="#">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Object of Knowledge (Ook)</a><ul>
+<li><a class="reference internal" href="#">Ontic - of or relating to entities and the facts about them</a><ul>
+<li><a class="reference internal" href="#usage-documentation">Usage Documentation</a><ul>
+</ul>
+</li>
 <li><a class="reference internal" href="#api-specification">API Specification</a><ul>
-</ul>
-</li>
-</ul>
-</li>
 <li><a class="reference internal" href="#indices-and-tables">Indices and Tables</a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 
   <h4>Next topic</h4>
-  <p class="topless"><a href="ook.object_type.html"
-                        title="next chapter">object_type Classes</a></p>
+  <p class="topless"><a href="ontic.html"
+                        title="next chapter">Getting Started with Ontic</a></p>
   <h3>This Page</h3>
   <ul class="this-page-menu">
     <li><a href="_sources/index.txt"
@@ -190,13 +288,13 @@ patched with any public methods.</p>
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> |</li>
         <li class="right" >
-          <a href="ook.object_type.html" title="object_type Classes"
+          <a href="ontic.html" title="Getting Started with Ontic"
              >next</a> |</li>
-        <li><a href="#">Ook 0.0.1 Documentation</a> &raquo;</li> 
+        <li><a href="#">Ontic 0.0.2 Documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2014, Neo Dasein.
+        &copy; Copyright 2014, Raul Gonzalez.
       Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.
     </div>
   </body>
