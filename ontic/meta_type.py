@@ -559,7 +559,7 @@ def perfect_property_schema(candidate_property_schema):
         clean and restricted.
     :type candidate_property_schema: :class:`PropertySchema`
     :rtype: None
-    :raise: ValueError: If the candidate_property_schema is None, or not
+    :raises ValueError: If the candidate_property_schema is None, or not
         of type *PropertySchema*.
     """
     if candidate_property_schema is None:
