@@ -49,7 +49,7 @@ with the use of the :meth:`create_ontic_type` function.
 
 """
 import meta_type
-from meta_type import MetaType
+from meta_type import COLLECTION_TYPES, MetaType, TYPE_MAP
 from schema_type import SchemaType
 from validation_exception import ValidationException
 
@@ -128,10 +128,16 @@ def perfect_object(the_object):
 
     for property_name, property_schema in schema.iteritems():
         if property_name not in the_object:
-            the_object[property_name] = property_schema.default
-            continue
-        if not the_object[property_name]:
-            the_object[property_name] = property_schema.default
+            if TYPE_MAP.get(property_schema.type) in COLLECTION_TYPES:
+                if property_schema is not None:
+                    the_object[property_name] = copy(property_schema.default)
+                else:
+                    the_object[property_name] = None
+            else:
+                the_object[property_name] = property_schema.default
+        else:
+            if the_object[property_name] is None:
+                the_object[property_name] = property_schema.default
 
 
 def validate_object(the_object, raise_validation_exception=True):
