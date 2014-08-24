@@ -113,6 +113,9 @@ def perfect_object(the_object):
     object, those properties will be added and set to the default value or
     None, if no default has been set.
 
+    For the collection types (dict, list, set), the default values are deep
+    copied.
+
     :param the_object: Ab object instance that is to be perfected.
     :type the_object: :class:`ontic.ontic_type.OnticType`
     :rtype: None
