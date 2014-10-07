@@ -107,14 +107,21 @@ class PerfectObjectTestCase(base_test_case.BaseTestCase):
         ontic_object = my_type()
         ontic_type.perfect_object(ontic_object)
 
-        schema_def['dict_prop'].default
-        ontic_object.dict_prop
-        self.assertDictEqual(schema_def['dict_prop'].default,
+        # Test that the collection values are equal
+        self.assertDictEqual(schema_def.dict_prop.default,
                              ontic_object.dict_prop)
-        self.assertListEqual(schema_def['list_prop'].default,
+        self.assertListEqual(schema_def.list_prop.default,
                              ontic_object.list_prop)
-        self.assertSetEqual(schema_def['set_prop'].default,
+        self.assertSetEqual(schema_def.set_prop.default,
                             ontic_object.set_prop)
+
+        # Ensure that the collections are not the same objects
+        self.assertIsNot(schema_def.dict_prop.default,
+                         ontic_object.dict_prop)
+        self.assertIsNot(schema_def.list_prop.default,
+                         ontic_object.list_prop)
+        self.assertIsNot(schema_def.set_prop.default,
+                         ontic_object.set_prop)
 
 
 class ValidateObjectTestCase(base_test_case.BaseTestCase):
