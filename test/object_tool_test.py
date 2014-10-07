@@ -4,7 +4,6 @@ from datetime import date, datetime, time
 from test_utils import base_test_case
 
 from ontic import ontic_type
-from ontic.meta_type import PropertySchema
 from ontic.schema_type import SchemaType
 from ontic.validation_exception import ValidationException
 
@@ -122,6 +121,86 @@ class PerfectObjectTestCase(base_test_case.BaseTestCase):
                          ontic_object.list_prop)
         self.assertIsNot(schema_def.set_prop.default,
                          ontic_object.set_prop)
+
+    def test_perfect_collection_default_copy(self):
+        """Ensure that collection default settings are handled correctly."""
+        # Configure default collection.
+        default_dict = {'key': 'value'}
+        default_list = ['item']
+        inner_tuple = (1, 2)
+        outer_tuple = (inner_tuple, 3, 4)
+        default_set = {'entity', outer_tuple}
+
+        # Configure default collections to test deep copy behavior.
+        ontic_object = ontic_type.OnticType()
+        ontic_object.dict = default_dict
+        default_deep_dict = {'name': default_dict}
+        default_deep_list = [default_dict]
+        default_deep_set = {(inner_tuple, outer_tuple)}
+
+        schema_def = SchemaType({
+            'dict_no_default': {
+                'type': 'dict',
+            },
+            'list_no_default': {
+                'type': 'list',
+            },
+            'set_no_default': {
+                'type': 'set',
+            },
+            'dict_with_default': {
+                'type': 'dict',
+                'default': default_dict,
+            },
+            'list_with_default': {
+                'type': 'list',
+                'default': default_list,
+            },
+            'set_with_default': {
+                'type': 'set',
+                'default': default_set,
+            },
+            'dict_deep_default': {
+                'type': 'dict',
+                'default': default_deep_dict,
+            },
+            'list_deep_default': {
+                'type': 'list',
+                'default': default_deep_list,
+            },
+            'set_deep_default': {
+                'type': 'set',
+                'default': default_deep_set,
+            },
+        })
+
+        # Execute test subject.
+        my_type = ontic_type.create_ontic_type('CollectionDefaults', schema_def)
+        my_object = my_type()
+        ontic_type.perfect_object(my_object)
+        ontic_type.validate_object(my_object)
+
+        # Assert the no default state.
+        self.assertIsNone(my_object.dict_no_default)
+        self.assertIsNone(my_object.list_no_default)
+        self.assertIsNone(my_object.set_no_default)
+
+        # Assert equality and copy of defaults.
+        self.assertDictEqual(default_dict, my_object.dict_with_default)
+        self.assertIsNot(default_dict, my_object.dict_with_default)
+        self.assertListEqual(default_list, my_object.list_with_default)
+        self.assertIsNot(default_list, my_object.list_with_default)
+        self.assertSetEqual(default_set, my_object.set_with_default)
+        self.assertIsNot(default_set, my_object.set_with_default)
+
+        # Assert equality and copy of deep defaults.
+        self.assertDictEqual(default_dict, my_object.dict_deep_default['name'])
+        self.assertIsNot(default_deep_dict['name'],
+                         my_object.dict_deep_default['name'])
+        self.assertDictEqual(default_dict, my_object.list_deep_default[0])
+        self.assertIsNot(default_deep_list[0], my_object.list_deep_default[0])
+        self.assertSetEqual(default_deep_set, my_object.set_deep_default)
+        self.assertIsNot(default_deep_set, my_object.set_deep_default)
 
 
 class ValidateObjectTestCase(base_test_case.BaseTestCase):

@@ -1,4 +1,5 @@
-"""The fundamental *Ontic* base data types for creation of derived child classes.
+"""The fundamental *Ontic* base data types for creation of derived child
+classes.
 
 .. image:: images/ontic_type.jpg
 
@@ -48,7 +49,7 @@ with the use of the :meth:`create_ontic_type` function.
     3
 
 """
-from copy import copy
+from copy import deepcopy
 
 import meta_type
 from meta_type import COLLECTION_TYPES, MetaType, TYPE_MAP
@@ -113,6 +114,9 @@ def perfect_object(the_object):
     object, those properties will be added and set to the default value or
     None, if no default has been set.
 
+    For the collection types (dict, list, set), the default values are deep
+    copied.
+
     :param the_object: Ab object instance that is to be perfected.
     :type the_object: :class:`ontic.ontic_type.OnticType`
     :rtype: None
@@ -135,7 +139,7 @@ def perfect_object(the_object):
         if (the_object[property_name] is None
             and property_schema.default is not None):
             if TYPE_MAP.get(property_schema.type) in COLLECTION_TYPES:
-                the_object[property_name] = copy(property_schema.default)
+                the_object[property_name] = deepcopy(property_schema.default)
             else:
                 the_object[property_name] = property_schema.default
 
