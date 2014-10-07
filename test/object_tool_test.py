@@ -4,6 +4,7 @@ from datetime import date, datetime, time
 from test_utils import base_test_case
 
 from ontic import ontic_type
+from ontic.meta_type import PropertySchema
 from ontic.schema_type import SchemaType
 from ontic.validation_exception import ValidationException
 
@@ -85,6 +86,36 @@ class PerfectObjectTestCase(base_test_case.BaseTestCase):
         ontic_type.perfect_object(ontic_object)
         self.assertDictEqual(expected_dict, ontic_object)
 
+    def test_perfect_collection_types(self):
+        """Ensure that collection defaults are handled correctly."""
+        schema_def = SchemaType({
+            'dict_prop': {
+                'type': 'dict',
+                'default': {'a': 1, 'b': 2, 'c': 3}
+            },
+            'list_prop': {
+                'type': 'list',
+                'default': [1, 2, 3]
+            },
+            'set_prop': {
+                'type': 'set',
+                'default': {1, 2, 3}
+            }
+        })
+        my_type = ontic_type.create_ontic_type('PerfectCollection', schema_def)
+
+        ontic_object = my_type()
+        ontic_type.perfect_object(ontic_object)
+
+        schema_def['dict_prop'].default
+        ontic_object.dict_prop
+        self.assertDictEqual(schema_def['dict_prop'].default,
+                             ontic_object.dict_prop)
+        self.assertListEqual(schema_def['list_prop'].default,
+                             ontic_object.list_prop)
+        self.assertSetEqual(schema_def['set_prop'].default,
+                            ontic_object.set_prop)
+
 
 class ValidateObjectTestCase(base_test_case.BaseTestCase):
     """Test ontic_types.validate_object method basics."""
@@ -125,7 +156,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
             self.assertListEqual(expected_errors, ve.validation_errors)
 
         errors = ontic_type.validate_object(ontic_object,
-                                         raise_validation_exception=False)
+                                            raise_validation_exception=False)
         self.assertListEqual(expected_errors, errors)
 
     def test_type_setting(self):
