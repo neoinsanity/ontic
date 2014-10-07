@@ -105,7 +105,7 @@ multiple validation errors.
     name         type   default  required  enum
     ============ ====== ======== ========  =================================
     type         str    None     False     bool, dict, float, int,
-                                           list, set, str, date, , datetime
+                                           list, set, str, date, time, datetime
     default      None   None     False     None
     required     bool   False    False     None
     enum         set    None     False     None
@@ -113,7 +113,7 @@ multiple validation errors.
     max          float  None     False     None
     regex        str    None     False     None
     member_type  str    None     False     bool, dict, float, int,
-                                           list, set, str, date, , datetime
+                                           list, set, str, date, time, datetime
     member_min   float  None     False     None
     member_max   float  None     False     None
     ============ ====== ======== ========  =================================
