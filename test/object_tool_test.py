@@ -192,17 +192,17 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
 
         self.assertRaisesRegexp(
             ValidationException,
-            r"""The value for "some_attr" is not of type "int": WRONG""",
+            r"""The value for "some_attr" is not of type "<type 'int'>": WRONG""",
             ontic_type.validate_object, ontic_object)
 
         expected_errors = [
-            'The value for "some_attr" is not of type "int": WRONG']
+            """The value for "some_attr" is not of type "<type \'int\'>": WRONG"""]
 
         try:
             ontic_type.validate_object(ontic_object)
             self.fail('ValidationException should have been thrown.')
         except ValidationException as ve:
-            self.assertListEqual(expected_errors, ve.validation_errors)
+             self.assertListEqual(expected_errors, ve.validation_errors)
 
         errors = ontic_type.validate_object(ontic_object,
                                             raise_validation_exception=False)
@@ -250,7 +250,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         ontic_object.bool_property = 'Dog'
         self.assertRaisesRegexp(
             ValidationException,
-            'The value for "bool_property" is not of type "bool": Dog',
+            """The value for "bool_property" is not of type "<type 'bool'>": Dog""",
             ontic_type.validate_object, ontic_object)
         ontic_object.bool_property = True
 
@@ -258,7 +258,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         ontic_object.list_property = 'some_string'
         self.assertRaisesRegexp(
             ValidationException,
-            'The value for "list_property" is not of type "list": some_string',
+            """The value for "list_property" is not of type "<type 'list'>": some_string""",
             ontic_type.validate_object, ontic_object)
 
     def test_type_bad_setting(self):
@@ -268,10 +268,8 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         }
 
         self.assertRaisesRegexp(
-            ValidationException,
-            r"""The value "Unknown" for "type" not in enumeration \['set', """
-            r"""'int', 'float', 'list', 'datetime', 'dict', 'str', 'time', """
-            r"""'date', 'bool'\].""",
+            ValueError,
+            r"""Illegal type declaration: Unknown""",
             ontic_type.create_ontic_type, 'Dummy', schema)
 
     def test_required_setting(self):
@@ -329,8 +327,8 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
             "not in enumeration \[99, 'some_value'\].",
             ontic_type.validate_object, ontic_object)
 
-        # Collection testing
-        # ###################
+    def test_collection_enum_setting(self):
+        """Validate 'enum' schema setting on collections."""
         schema = {
             'enum_property': {'type': 'list', 'enum': {'dog', 'cat'}}
         }
@@ -342,7 +340,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         # Create object of type
         ontic_object = my_type()
 
-        # Validate an empty object
+        # Validate an empty object, as required not set.
         ontic_type.validate_object(ontic_object)
 
         # Validate a good setting
@@ -645,7 +643,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
     def test_collection_regex_setting(self):
         """Validate string collection with 'regex' setting."""
         schema = {
-            'set_property': {'type': 'set', 'member_type': 'str', 'regex': 'b+'}
+            'set_property': {'type': set, 'member_type': str, 'regex': 'b+'}
         }
 
         my_type = ontic_type.create_ontic_type('CollectionRegexCheck',
@@ -825,7 +823,7 @@ class ValidateValueTestCase(base_test_case.BaseTestCase):
 
         self.assertRaisesRegexp(
             ValueError,
-            '"property_name" is not a recognized property.',
+            '"illegal property name" is not a recognized property.',
             ontic_type.validate_value, 'illegal property name', ontic_object)
 
     def test_validate_value_exception_handling(self):
@@ -838,11 +836,13 @@ class ValidateValueTestCase(base_test_case.BaseTestCase):
 
         self.assertRaisesRegexp(
             ValidationException,
-            r"""The value for "some_attr" is not of type "int": WRONG""",
+            r"""The value for "some_attr" is not of type "<type 'int'>":"""
+            r""" WRONG""",
             ontic_type.validate_value, 'some_attr', ontic_object)
 
         expected_errors = [
-            'The value for "some_attr" is not of type "int": WRONG']
+            '''The value for "some_attr" is not of type "<type 'int'>": WRONG'''
+        ]
 
         try:
             ontic_type.validate_value('some_attr', ontic_object)

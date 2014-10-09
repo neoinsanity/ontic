@@ -171,9 +171,7 @@ def validate_object(the_object, raise_validation_exception=True):
 
     value_errors = []
 
-    for property_name, property_schema in the_object.get_schema().iteritems():
-        value = the_object.get(property_name, None)
-
+    for property_name in the_object.get_schema().keys():
         errors = validate_value(
             property_name,
             the_object,
@@ -234,7 +232,7 @@ def validate_value(property_name,
     property_schema = ontic_object.get_schema().get(property_name)
     if property_schema is None:
         raise ValueError(
-            '"property_name" is not a recognized property.')
+            '"%s" is not a recognized property.' % property_name)
 
     value = ontic_object.get(property_name, None)
 

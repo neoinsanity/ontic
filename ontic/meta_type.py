@@ -186,23 +186,46 @@ from validation_exception import ValidationException
 COLLECTION_TYPES = {dict, list, set}
 
 # : The set of types that can be compared with inequality operators.
-COMPARABLE_TYPES = {'int', 'float', 'date', 'time', 'datetime'}
+COMPARABLE_TYPES = {int, long, float, complex, date, time, datetime}
 
 # : The set of types that may be limited in size.
-BOUNDABLE_TYPES = {'str', 'list', 'dict', 'set'}
+BOUNDABLE_TYPES = {basestring, str, unicode, list, dict, set}
+
+# : The set of string types
+STRING_TYPES = {basestring, str, unicode}
 
 # : Used to convert the string declaration of attribute type to native type.
 TYPE_MAP = {
+    'basestring': basestring,
+    basestring: basestring,
     'bool': bool,
+    bool: bool,
+    'complex': complex,
+    complex: complex,
     'date': date,
+    date: date,
     'datetime': datetime,
+    datetime: datetime,
     'dict': dict,
+    dict: dict,
     'float': float,
+    float: float,
     'int': int,
+    int: int,
     'list': list,
+    list: list,
+    'long': long,
+    long: long,
+    'None': None,
+    None: None,
     'set': set,
-    'str': basestring,
+    set: set,
+    'str': str,
+    str: str,
     'time': time,
+    time: time,
+    'unicode': unicode,
+    unicode: unicode,
 }
 
 
@@ -327,20 +350,10 @@ class PropertySchema(MetaType):
     # : The schema definition for the **PropertySchema** type.
     ONTIC_SCHEMA = CoreType({
         'type': MetaType({
-            'type': 'str',
+            'type': None,
             'default': None,
             'required': False,
-            'enum': {
-                'bool',
-                'dict',
-                'float',
-                'int',
-                'list',
-                'set',
-                'str',
-                'date',
-                'time',
-                'datetime'},
+            'enum': set(TYPE_MAP.keys()),
             'min': None,
             'max': None,
             'regex': None,
@@ -361,7 +374,7 @@ class PropertySchema(MetaType):
             'member_max': None,
         }),
         'required': MetaType({
-            'type': 'bool',
+            'type': bool,
             'default': False,
             'required': False,
             'enum': None,
@@ -373,7 +386,7 @@ class PropertySchema(MetaType):
             'member_max': None,
         }),
         'enum': MetaType({
-            'type': 'set',
+            'type': set,
             'default': None,
             'required': False,
             'enum': None,
@@ -409,7 +422,7 @@ class PropertySchema(MetaType):
             'member_max': None,
         }),
         'regex': MetaType({
-            'type': 'str',
+            'type': basestring,
             'default': None,
             'required': False,
             'enum': None,
@@ -421,21 +434,10 @@ class PropertySchema(MetaType):
             'member_max': None,
         }),
         'member_type': MetaType({
-            'type': 'str',
+            'type': basestring,
             'default': None,
             'required': False,
-            'enum': {
-                'bool',
-                'dict',
-                'float',
-                'int',
-                'list',
-                'set',
-                'str',
-                'date',
-                'time',
-                'datetime',
-            },
+            'enum': set(TYPE_MAP.keys()),
             'min': None,
             'max': None,
             'regex': None,
@@ -570,10 +572,30 @@ def perfect_property_schema(candidate_property_schema):
 
     schema_property_schema = candidate_property_schema.get_schema()
 
+    # remove un-necessary properties.
     extra_properties = set(candidate_property_schema.keys()) - set(
         schema_property_schema.keys())
     for property_name in extra_properties:
         del candidate_property_schema[property_name]
+
+    if 'type' in candidate_property_schema:
+        # coerce type declarations as string to base types.
+        candidate_type = TYPE_MAP.get(
+            candidate_property_schema.type, None)
+        if not candidate_type:
+            raise ValueError('Illegal type declaration: %s' %
+                             candidate_property_schema.type)
+        else:
+            candidate_property_schema.type = candidate_type
+    else:
+        candidate_property_schema.type = None
+
+    if 'member_type' in candidate_property_schema:
+        # coerce member_type declarations as string to base types.
+        candidate_property_schema.member_type = TYPE_MAP[
+            candidate_property_schema.member_type]
+    else:
+        candidate_property_schema.member_type = None
 
     for property_name, property_schema in (
             schema_property_schema.iteritems()):
@@ -583,6 +605,18 @@ def perfect_property_schema(candidate_property_schema):
             continue
         if not candidate_property_schema[property_name]:
             candidate_property_schema[property_name] = property_schema.default
+
+    # coerce the min and max to float.
+    if candidate_property_schema.max is not None:
+        candidate_property_schema.max = float(candidate_property_schema.max)
+    if candidate_property_schema.min is not None:
+        candidate_property_schema.min = float(candidate_property_schema.min)
+    if candidate_property_schema.member_max is not None:
+        candidate_property_schema.member_max = float(
+            candidate_property_schema.member_max)
+    if candidate_property_schema.member_min is not None:
+        candidate_property_schema.member_min = float(
+            candidate_property_schema.member_min)
 
 
 def validate_value(name, property_schema, value):
@@ -630,10 +664,7 @@ def validate_non_none_value(key, property_schema, value, value_errors):
     :type value_errors: list<str>
     :rtype: None
     """
-    # Divide between single and collection types for validation processing.
-    schema_value_type = TYPE_MAP.get(property_schema.type)
-
-    if not schema_value_type:
+    if not property_schema.type:
         # if no schema_type, then just check that
         # the value is in an enum if necessary.
         if not enum_validation(property_schema, value):
@@ -643,14 +674,15 @@ def validate_non_none_value(key, property_schema, value, value_errors):
             return  # No further processing can occur
     else:
         # type checking
-        if not isinstance(value, schema_value_type):
+        if not isinstance(value, property_schema.type):
             value_errors.append(
                 'The value for "%s" is not of type "%s": %s' %
                 (key, property_schema.type, str(value)))
-            return  # If not of the expected type, than can't further
+            # If not of the expected type, than can't further
             # validate without errors.
+            return
 
-        if schema_value_type in COLLECTION_TYPES:
+        if property_schema.type in COLLECTION_TYPES:
             validate_collection_members(
                 key, property_schema, value, value_errors)
         else:
@@ -683,14 +715,14 @@ def validate_collection_members(key, property_schema, value, value_errors):
         value_errors.append('The value of "%s" for "%s" fails max of %s.' %
                             (value, key, property_schema.max))
 
-    if property_schema.type in {'list', 'set'}:
+    if property_schema.type in {list, set}:
         validators = list()
 
         if property_schema.enum:
             validators.append(validate_member_enum)
         if property_schema.member_type:
             validators.append(validate_member_type)
-        if property_schema.regex and property_schema.member_type == 'str':
+        if property_schema.regex and property_schema.member_type == str:
             validators.append(validate_member_regex)
         if property_schema.member_min:
             validators.append(validate_member_min)
@@ -816,7 +848,7 @@ def validate_member_min(key, member_value, property_schema, value_errors):
     :type value_errors: list<str>
     :rtype: None
     """
-    if property_schema.member_type == 'str':
+    if property_schema.member_type in STRING_TYPES:
         if len(member_value) < property_schema.member_min:
             value_errors.append(
                 'The value of "%s" for "%s" fails min length of %s.' %
@@ -845,7 +877,7 @@ def validate_member_max(key, member_value, property_schema, value_errors):
     :type value_errors: list<str>
     :rtype: None
     """
-    if property_schema.member_type == 'str':
+    if property_schema.member_type in STRING_TYPES:
         if len(member_value) > property_schema.member_max:
             value_errors.append(
                 'The value of "%s" for "%s" fails max length of %s.' %

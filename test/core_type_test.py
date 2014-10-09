@@ -76,14 +76,14 @@ class PropertySchemaTest(base_test_case.BaseTestCase):
         expected_schema = {
             'default': None,
             'enum': None,
-            'max': 7,
+            'max': 7.0,
             'member_max': None,
             'member_min': None,
             'member_type': None,
-            'min': 3,
+            'min': 3.0,
             'regex': None,
             'required': True,
-            'type': 'int'
+            'type': int,
         }
 
         property_schema = PropertySchema({
@@ -137,17 +137,30 @@ class ValidateSchemaProperty(base_test_case.BaseTestCase):
         invalid_property_schema = PropertySchema()
         invalid_property_schema.type = 'UNKNOWN'
 
+        self.maxDiff = None
         self.assertRaisesRegexp(
             ValidationException,
-            r"""The value "UNKNOWN" for "type" not in enumeration \['set', """
-            r"""'int', 'float', 'list', 'datetime', 'dict', 'str', 'time', """
-            r"""'date', 'bool'\].""",
+            r"""The value "UNKNOWN" for "type" not in enumeration \["""
+            r"""<type 'dict'>, 'set', <type 'long'>, 'int', 'float', """
+            r"""'datetime', <type 'basestring'>, <type 'bool'>, 'unicode', """
+            r"""'basestring', <type 'int'>, <type 'list'>, """
+            r"""<type 'datetime.time'>, <type 'str'>, 'long', """
+            r"""<type 'unicode'>, 'complex', 'bool', 'dict', 'None', """
+            r"""<type 'datetime.date'>, <type 'set'>, <type 'complex'>, """
+            r"""None, 'date', <type 'datetime.datetime'>, 'list', """
+            r"""<type 'float'>, 'str', 'time'\].""",
             meta_type.validate_property_schema, invalid_property_schema)
 
         expected_errors_list = [
-            'The value "UNKNOWN" for "type" not in enumeration '
-            '[\'set\', \'int\', \'float\', \'list\', \'datetime\', '
-            '\'dict\', \'str\', \'time\', \'date\', \'bool\'].']
+            'The value "UNKNOWN" for "type" not in enumeration ['
+            '<type \'dict\'>, \'set\', <type \'long\'>, \'int\', \'float\', '
+            '\'datetime\', <type \'basestring\'>, <type \'bool\'>, \'unicode\', '
+            '\'basestring\', <type \'int\'>, <type \'list\'>, '
+            '<type \'datetime.time\'>, <type \'str\'>, \'long\', '
+            '<type \'unicode\'>, \'complex\', \'bool\', \'dict\', \'None\', '
+            '<type \'datetime.date\'>, <type \'set\'>, <type \'complex\'>, '
+            'None, \'date\', <type \'datetime.datetime\'>, \'list\', '
+            '<type \'float\'>, \'str\', \'time\'].']
 
         try:
             meta_type.validate_property_schema(invalid_property_schema)

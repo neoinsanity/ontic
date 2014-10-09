@@ -45,7 +45,8 @@ class ValidateSchemaTestCase(base_test_case.BaseTestCase):
 
         self.assertRaisesRegexp(
             ValidationException,
-            r"""The value for "required" is not of type "bool": UNDEFINED""",
+            r"""The value for "required" is not """"
+            r"""of type "<type 'bool'>": UNDEFINED""",
             schema_type.validate_schema, schema_instance)
 
         expected_errors_list = [
