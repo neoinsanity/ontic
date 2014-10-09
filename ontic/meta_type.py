@@ -578,6 +578,10 @@ def perfect_property_schema(candidate_property_schema):
         del candidate_property_schema[property_name]
 
     if 'type' in candidate_property_schema:
+        # ensure that the type declaration is valid
+        if candidate_property_schema.type not in TYPE_MAP:
+            raise ValueError('Illegal type declaration: %s' %
+                             candidate_property_schema.type)
         # coerce type declarations as string to base types.
         candidate_property_schema.type = TYPE_MAP.get(
             candidate_property_schema.type, None)
