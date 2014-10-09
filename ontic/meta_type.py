@@ -43,11 +43,11 @@ the means of instantiating an instance.
 The most straight forward way to create an instance of a
 :class:`SchemaProperty`:
 
->>> prop_schema = PropertySchema(type='str', required=True, min=3)
+>>> prop_schema = PropertySchema(type='str', required=True, min=3.0)
 >>> prop_schema
-{'regex': None, 'enum': None, 'min': 3, 'default': None, 'max': None, \
-'required': True, 'member_type': None, 'member_min': None, 'type': 'str', \
-'member_max': None}
+{'regex': None, 'enum': None, 'min': 3.0, 'default': None, 'max': None, \
+'required': True, 'member_type': None, 'member_min': None, \
+'type': <type 'str'>, 'member_max': None}
 
 Demonstrated above is the creation of a property schema of type string. In
 addition the property schema forces the value of the property to required and
@@ -89,13 +89,12 @@ multiple validation errors.
 
 >>> other_schema = PropertySchema({
 ...     'type': 'str',
-...     'max': 3,
+...     'max': 3.0,
 ...     'enum': {'dog', 'rat', 'cat'}
 ... })
 >>> validate_value('other_prop', other_schema, 'frog')
-['The value "frog" for "other_prop" not in enumeration \
-[\\\'rat\\\', \\\'dog\\\', \\\'cat\\\'].', 'The value of "frog" for \
-"other_prop" fails max of 3.']
+['The value "frog" for "other_prop" not in enumeration [\\'rat\\', \\'dog\\', \
+\\'cat\\'].', 'The value of "frog" for "other_prop" fails max of 3.0.']
 
 .. _property-schema-settings-table:
 
@@ -336,14 +335,14 @@ class PropertySchema(MetaType):
         >>> bar_schema = PropertySchema()
         >>> bar_schema.type = 'int'
         >>> bar_schema.required = False
-        >>> bar_schema.min = 3
+        >>> bar_schema.min = 3.0
         >>> val_errors = validate_property_schema(bar_schema)
         >>> assert val_errors == None
 
         >>> nutty_schema = PropertySchema()
         >>> nutty_schema['type'] = 'str'
         >>> nutty_schema['required'] = True
-        >>> nutty_schema['min'] = 5
+        >>> nutty_schema['min'] = 5.0
         >>> val_errors = validate_property_schema(nutty_schema)
         >>> assert val_errors == None
     """
@@ -580,13 +579,8 @@ def perfect_property_schema(candidate_property_schema):
 
     if 'type' in candidate_property_schema:
         # coerce type declarations as string to base types.
-        candidate_type = TYPE_MAP.get(
+        candidate_property_schema.type = TYPE_MAP.get(
             candidate_property_schema.type, None)
-        if not candidate_type:
-            raise ValueError('Illegal type declaration: %s' %
-                             candidate_property_schema.type)
-        else:
-            candidate_property_schema.type = candidate_type
     else:
         candidate_property_schema.type = None
 
@@ -802,9 +796,7 @@ def validate_member_type(key, member_value, property_schema, value_errors):
     :type value_errors: list<str>
     :rtype: None
     """
-    schema_value_type = TYPE_MAP.get(
-        property_schema.member_type)
-    if not isinstance(member_value, schema_value_type):
+    if not isinstance(member_value, property_schema.member_type):
         value_errors.append(
             'The value "%s" for "%s" is not of type "%s".' %
             (str(member_value), key, property_schema.member_type))
@@ -982,7 +974,7 @@ def non_none_singular_validation(key, property_schema, value, value_errors):
 
     # regex validation
     if property_schema.regex:
-        if property_schema.type == 'str' and value is not '':
+        if property_schema.type in STRING_TYPES and value is not '':
             if not re.match(property_schema.regex, value):
                 value_errors.append(
                     'Value "%s" for %s does not meet regex: %s' %

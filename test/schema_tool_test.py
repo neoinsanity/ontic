@@ -45,12 +45,12 @@ class ValidateSchemaTestCase(base_test_case.BaseTestCase):
 
         self.assertRaisesRegexp(
             ValidationException,
-            r"""The value for "required" is not """"
+            r"""The value for "required" is not """
             r"""of type "<type 'bool'>": UNDEFINED""",
             schema_type.validate_schema, schema_instance)
 
         expected_errors_list = [
-            'The value for "required" is not of type "bool": UNDEFINED']
+            """The value for "required" is not of type "<type 'bool'>": UNDEFINED"""]
 
         try:
             schema_type.validate_schema(schema_instance)
@@ -123,7 +123,7 @@ class PerfectSchemaPropertyTestCase(base_test_case.BaseTestCase):
                 'required': True,
                 'member_min': None,
                 'member_type': None,
-                'type': 'int'
+                'type': int
             },
             candidate_schema_property)
 
@@ -141,7 +141,7 @@ class PerfectSchemaPropertyTestCase(base_test_case.BaseTestCase):
                 'required': True,
                 'member_min': None,
                 'member_type': None,
-                'type': 'int'
+                'type': int
             }, candidate_schema_property)
 
     def test_bad_perfect_schema_property(self):
@@ -189,13 +189,13 @@ class PerfectSchemaTestCase(base_test_case.BaseTestCase):
                     'regex': None,
                     'member_max': None,
                     'enum': None,
-                    'min': 5,
+                    'min': 5.0,
                     'default': None,
                     'max': None,
                     'required': False,
                     'member_min': None,
                     'member_type': None,
-                    'type': 'str'
+                    'type': str
                 }},
             candidate_schema)
 
@@ -225,10 +225,10 @@ class PerfectSchemaTestCase(base_test_case.BaseTestCase):
                     'member_min': None,
                     'member_type': None,
                     'max': None,
-                    'min': 5,
+                    'min': 5.0,
                     'regex': None,
                     'required': False,
-                    'type': 'str'
+                    'type': str
                 }
             }, candidate_schema)
         self.assertIsInstance(candidate_schema.prop1, meta_type.PropertySchema)
