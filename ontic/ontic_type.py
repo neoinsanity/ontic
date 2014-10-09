@@ -50,6 +50,7 @@ with the use of the :meth:`create_ontic_type` function.
 
 """
 from copy import deepcopy
+
 import meta_type
 from meta_type import COLLECTION_TYPES, MetaType, TYPE_MAP
 from schema_type import SchemaType
@@ -133,16 +134,13 @@ def perfect_object(the_object):
 
     for property_name, property_schema in schema.iteritems():
         if property_name not in the_object:
+            the_object[property_name] = None
+
+        if (the_object[property_name] is None
+            and property_schema.default is not None):
             if TYPE_MAP.get(property_schema.type) in COLLECTION_TYPES:
-                if property_schema.default is not None:
-                    the_object[property_name] = deepcopy(
-                        property_schema.default)
-                else:
-                    the_object[property_name] = None
+                the_object[property_name] = deepcopy(property_schema.default)
             else:
-                the_object[property_name] = property_schema.default
-        else:
-            if the_object[property_name] is None:
                 the_object[property_name] = property_schema.default
 
 

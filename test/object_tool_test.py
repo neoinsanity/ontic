@@ -85,6 +85,43 @@ class PerfectObjectTestCase(base_test_case.BaseTestCase):
         ontic_type.perfect_object(ontic_object)
         self.assertDictEqual(expected_dict, ontic_object)
 
+    def test_perfect_collection_types(self):
+        """Ensure that collection defaults are handled correctly."""
+        schema_def = SchemaType({
+            'dict_prop': {
+                'type': 'dict',
+                'default': {'a': 1, 'b': 2, 'c': 3}
+            },
+            'list_prop': {
+                'type': 'list',
+                'default': [1, 2, 3]
+            },
+            'set_prop': {
+                'type': 'set',
+                'default': {1, 2, 3}
+            }
+        })
+        my_type = ontic_type.create_ontic_type('PerfectCollection', schema_def)
+
+        ontic_object = my_type()
+        ontic_type.perfect_object(ontic_object)
+
+        # Test that the collection values are equal
+        self.assertDictEqual(schema_def.dict_prop.default,
+                             ontic_object.dict_prop)
+        self.assertListEqual(schema_def.list_prop.default,
+                             ontic_object.list_prop)
+        self.assertSetEqual(schema_def.set_prop.default,
+                            ontic_object.set_prop)
+
+        # Ensure that the collections are not the same objects
+        self.assertIsNot(schema_def.dict_prop.default,
+                         ontic_object.dict_prop)
+        self.assertIsNot(schema_def.list_prop.default,
+                         ontic_object.list_prop)
+        self.assertIsNot(schema_def.set_prop.default,
+                         ontic_object.set_prop)
+
     def test_perfect_collection_default_copy(self):
         """Ensure that collection default settings are handled correctly."""
         # Configure default collection.
