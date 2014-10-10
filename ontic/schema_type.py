@@ -77,7 +77,7 @@ class SchemaType(CoreType):
     """
 
     def __init__(self, *args, **kwargs):
-        """Initializes in accordance with dict specification.
+        r"""Initializes in accordance with dict specification.
 
         Dict Style Initialization
             *SchemaType* supports dict style initialization.
@@ -156,16 +156,11 @@ def validate_schema(candidate_schema, raise_validation_exception=True):
 
     value_errors = []
     for candidate_property_schema in candidate_schema.values():
-        errors = meta_type.validate_property_schema(
-            candidate_property_schema,
-            raise_validation_exception=False)
-        if errors:
-            value_errors.extend(errors)
+        value_errors.extend(
+            meta_type.validate_property_schema(
+                candidate_property_schema, False))
 
-    if value_errors:
-        if raise_validation_exception:
-            raise ValidationException(value_errors)
-        else:
-            return value_errors
-    else:
-        return None
+    if value_errors and raise_validation_exception:
+        raise ValidationException(value_errors)
+
+    return value_errors

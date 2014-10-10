@@ -179,7 +179,7 @@ multiple validation errors.
 from datetime import date, datetime, time
 import re
 
-from validation_exception import ValidationException
+from ontic.validation_exception import ValidationException
 
 # : The set of supported collection types.
 COLLECTION_TYPES = {dict, list, set}
@@ -244,7 +244,7 @@ class CoreType(dict):
     """
 
     def __init__(self, *args, **kwargs):
-        """**CoreType** initialized as a `dict` type.
+        r"""**CoreType** initialized as a `dict` type.
 
         Initializes the accessor behavior to allow for property access as
         dict key or object attribute.
@@ -272,7 +272,7 @@ class CoreType(dict):
 
 
 class MetaType(CoreType):
-    """Interface for type definition of **Ontic** schema defined classes.
+    r"""Interface for type definition of **Ontic** schema defined classes.
 
     Dict Style Initialization
         MetaType() -> new empty MetaType
@@ -337,14 +337,14 @@ class PropertySchema(MetaType):
         >>> bar_schema.required = False
         >>> bar_schema.min = 3.0
         >>> val_errors = validate_property_schema(bar_schema)
-        >>> assert val_errors == None
+        >>> assert val_errors == []
 
         >>> nutty_schema = PropertySchema()
         >>> nutty_schema['type'] = 'str'
         >>> nutty_schema['required'] = True
         >>> nutty_schema['min'] = 5.0
         >>> val_errors = validate_property_schema(nutty_schema)
-        >>> assert val_errors == None
+        >>> assert val_errors == []
     """
     # : The schema definition for the **PropertySchema** type.
     ONTIC_SCHEMA = CoreType({
@@ -471,7 +471,7 @@ class PropertySchema(MetaType):
     })
 
     def __init__(self, *args, **kwargs):
-        """Initializes in accordance with dict specification.
+        r"""Initializes in accordance with dict specification.
 
         PropertySchema initialization can be done with a Dict object or with
         None. A PropertySchema defined with None is legal and valid. It is
@@ -539,13 +539,10 @@ def validate_property_schema(candidate_property_schema,
         value_errors.extend(
             validate_value(schema_name, schema_setting, setting_value))
 
-    if value_errors:
-        if raise_validation_exception:
-            raise ValidationException(value_errors)
-        else:
-            return value_errors
-    else:
-        return None
+    if value_errors and raise_validation_exception:
+        raise ValidationException(value_errors)
+
+    return value_errors
 
 
 def perfect_property_schema(candidate_property_schema):
