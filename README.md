@@ -1,5 +1,5 @@
 ============
-Ontic 0.0.2
+Ontic 0.0.3
 ============
 
 Welcome to **Ontic**, a package designed with making it easy to handle data 
