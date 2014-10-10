@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>CoreType, MetaType, and PropertySchema Module &mdash; Ontic 0.0.2 Documentation</title>
+    <title>CoreType, MetaType, and PropertySchema Module &mdash; Ontic 0.0.3 Documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.0.2',
+        VERSION:     '0.0.3',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,7 +24,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/sidebar.js"></script>
-    <link rel="top" title="Ontic 0.0.2 Documentation" href="index.html" />
+    <link rel="top" title="Ontic 0.0.3 Documentation" href="index.html" />
     <link rel="next" title="Ontic Type Module" href="ontic.ontic_type.html" />
     <link rel="prev" title="Getting Started with Ontic" href="ontic.html" /> 
   </head>
@@ -44,7 +44,7 @@
         <li class="right" >
           <a href="ontic.html" title="Getting Started with Ontic"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">Ontic 0.0.2 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">Ontic 0.0.3 Documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -64,30 +64,31 @@
 <li><a class="reference internal" href="#usage" id="id2">Usage</a><ul>
 <li><a class="reference internal" href="#creating-property-schema" id="id3">Creating Property Schema</a></li>
 <li><a class="reference internal" href="#utilizing-property-schema" id="id4">Utilizing Property Schema</a></li>
+<li><a class="reference internal" href="#available-property-schema-settings" id="id5">Available Property Schema Settings</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#classes" id="id5">Classes</a><ul>
-<li><a class="reference internal" href="#coretype" id="id6">CoreType</a></li>
-<li><a class="reference internal" href="#metatype" id="id7">MetaType</a></li>
-<li><a class="reference internal" href="#propertyschema" id="id8">PropertySchema</a></li>
+<li><a class="reference internal" href="#classes" id="id6">Classes</a><ul>
+<li><a class="reference internal" href="#coretype" id="id7">CoreType</a></li>
+<li><a class="reference internal" href="#metatype" id="id8">MetaType</a></li>
+<li><a class="reference internal" href="#propertyschema" id="id9">PropertySchema</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#functions" id="id9">Functions</a><ul>
-<li><a class="reference internal" href="#enum-validation" id="id10">enum_validation</a></li>
-<li><a class="reference internal" href="#execute-collection-validators" id="id11">execute_collection_validators</a></li>
-<li><a class="reference internal" href="#max-validation" id="id12">max_validation</a></li>
-<li><a class="reference internal" href="#min-validation" id="id13">min_validation</a></li>
-<li><a class="reference internal" href="#non-none-singular-validation" id="id14">non_none_singular_validation</a></li>
-<li><a class="reference internal" href="#perfect-property-schema" id="id15">perfect_property_schema</a></li>
-<li><a class="reference internal" href="#validate-collection-members" id="id16">validate_collection_members</a></li>
-<li><a class="reference internal" href="#validate-member-enum" id="id17">validate_member_enum</a></li>
-<li><a class="reference internal" href="#validate-member-max" id="id18">validate_member_max</a></li>
-<li><a class="reference internal" href="#validate-member-min" id="id19">validate_member_min</a></li>
-<li><a class="reference internal" href="#validate-member-regex" id="id20">validate_member_regex</a></li>
-<li><a class="reference internal" href="#validate-member-type" id="id21">validate_member_type</a></li>
-<li><a class="reference internal" href="#validate-non-none-value" id="id22">validate_non_none_value</a></li>
-<li><a class="reference internal" href="#validate-property-schema" id="id23">validate_property_schema</a></li>
-<li><a class="reference internal" href="#validate-value" id="id24">validate_value</a></li>
+<li><a class="reference internal" href="#functions" id="id10">Functions</a><ul>
+<li><a class="reference internal" href="#enum-validation" id="id11">enum_validation</a></li>
+<li><a class="reference internal" href="#execute-collection-validators" id="id12">execute_collection_validators</a></li>
+<li><a class="reference internal" href="#max-validation" id="id13">max_validation</a></li>
+<li><a class="reference internal" href="#min-validation" id="id14">min_validation</a></li>
+<li><a class="reference internal" href="#non-none-singular-validation" id="id15">non_none_singular_validation</a></li>
+<li><a class="reference internal" href="#perfect-property-schema" id="id16">perfect_property_schema</a></li>
+<li><a class="reference internal" href="#validate-collection-members" id="id17">validate_collection_members</a></li>
+<li><a class="reference internal" href="#validate-member-enum" id="id18">validate_member_enum</a></li>
+<li><a class="reference internal" href="#validate-member-max" id="id19">validate_member_max</a></li>
+<li><a class="reference internal" href="#validate-member-min" id="id20">validate_member_min</a></li>
+<li><a class="reference internal" href="#validate-member-regex" id="id21">validate_member_regex</a></li>
+<li><a class="reference internal" href="#validate-member-type" id="id22">validate_member_type</a></li>
+<li><a class="reference internal" href="#validate-non-none-value" id="id23">validate_non_none_value</a></li>
+<li><a class="reference internal" href="#validate-property-schema" id="id24">validate_property_schema</a></li>
+<li><a class="reference internal" href="#validate-value" id="id25">validate_value</a></li>
 </ul>
 </li>
 </ul>
@@ -100,16 +101,16 @@
 definition and instantiation of object instances.  The root class is
 <a class="reference internal" href="#ontic.meta_type.CoreType" title="ontic.meta_type.CoreType"><tt class="xref py py-class docutils literal"><span class="pre">CoreType</span></tt></a>, which is derived from the Python <tt class="xref py py-class docutils literal"><span class="pre">dict</span></tt>. The
 primary feature of the <a class="reference internal" href="#ontic.meta_type.CoreType" title="ontic.meta_type.CoreType"><tt class="xref py py-class docutils literal"><span class="pre">CoreType</span></tt></a> is provide the means to access
-properties of an object as a <em>dict</em> elements or as object attributes.</p>
+properties of an object as a <em>dict</em> key or as object attribute.</p>
 <p>Derived from <a class="reference internal" href="#ontic.meta_type.CoreType" title="ontic.meta_type.CoreType"><tt class="xref py py-class docutils literal"><span class="pre">CoreType</span></tt></a> is <a class="reference internal" href="#ontic.meta_type.MetaType" title="ontic.meta_type.MetaType"><tt class="xref py py-class docutils literal"><span class="pre">MetaType</span></tt></a>, which provides the
 interface for retrieving a schema from an object schema definition via the
 <a class="reference internal" href="#ontic.meta_type.MetaType.get_schema" title="ontic.meta_type.MetaType.get_schema"><tt class="xref py py-meth docutils literal"><span class="pre">MetaType.get_schema()</span></tt></a>.</p>
 <p>The <a class="reference internal" href="#ontic.meta_type.PropertySchema" title="ontic.meta_type.PropertySchema"><tt class="xref py py-class docutils literal"><span class="pre">PropertySchema</span></tt></a> is utilized to define a schema for a single
 property. This includes setting data type, required, and other such common
-schema definition conventions. See <a class="reference internal" href="#property-schema-settings-table"><em>Property Schema Settings</em></a> for
+schema definition conventions. See <a class="reference internal" href="#property-schema-settings-table"><em>Available Property Schema Settings</em></a> for
 details on the <a class="reference internal" href="#ontic.meta_type.PropertySchema" title="ontic.meta_type.PropertySchema"><tt class="xref py py-class docutils literal"><span class="pre">PropertySchema</span></tt></a> settings available.</p>
-<p>It would is a rare case that requires the use of <a class="reference internal" href="#ontic.meta_type.CoreType" title="ontic.meta_type.CoreType"><tt class="xref py py-class docutils literal"><span class="pre">CoreType</span></tt></a> or
-<a class="reference internal" href="#ontic.meta_type.MetaType" title="ontic.meta_type.MetaType"><tt class="xref py py-class docutils literal"><span class="pre">MetaType</span></tt></a>. For most the majority of cases, the use of
+<p>It would be a rare case that requires the use of <a class="reference internal" href="#ontic.meta_type.CoreType" title="ontic.meta_type.CoreType"><tt class="xref py py-class docutils literal"><span class="pre">CoreType</span></tt></a> or
+<a class="reference internal" href="#ontic.meta_type.MetaType" title="ontic.meta_type.MetaType"><tt class="xref py py-class docutils literal"><span class="pre">MetaType</span></tt></a>. For the majority of cases, the use of
 <a class="reference internal" href="#ontic.meta_type.PropertySchema" title="ontic.meta_type.PropertySchema"><tt class="xref py py-class docutils literal"><span class="pre">PropertySchema</span></tt></a> is sufficient. With that in mind, the remainder of
 this section will focus on the use of <a class="reference internal" href="#ontic.meta_type.PropertySchema" title="ontic.meta_type.PropertySchema"><tt class="xref py py-class docutils literal"><span class="pre">PropertySchema</span></tt></a></p>
 <div class="section" id="creating-property-schema">
@@ -117,24 +118,24 @@ this section will focus on the use of <a class="reference internal" href="#ontic
 <p>For general purposes, consider utilizing <a class="reference internal" href="ontic.schema_type.html#ontic.schema_type.SchemaType" title="ontic.schema_type.SchemaType"><tt class="xref py py-class docutils literal"><span class="pre">ontic.schema_type.SchemaType</span></tt></a>,
 for defining complete models. However, if you need validators for individual
 properties, then direct use of <a class="reference internal" href="#ontic.meta_type.PropertySchema" title="ontic.meta_type.PropertySchema"><tt class="xref py py-class docutils literal"><span class="pre">PropertySchema</span></tt></a> is a solution.</p>
-<p>There are a number of ways to create a <tt class="xref py py-class docutils literal"><span class="pre">SchemaProperty</span></tt>. Take a look
-at <tt class="xref py py-class docutils literal"><span class="pre">SchemaProperty</span></tt> class documentation for a complete exposition on
+<p>There are a number of ways to create a <a class="reference internal" href="#ontic.meta_type.PropertySchema" title="ontic.meta_type.PropertySchema"><tt class="xref py py-class docutils literal"><span class="pre">PropertySchema</span></tt></a>. Take a look
+at <a class="reference internal" href="#ontic.meta_type.PropertySchema" title="ontic.meta_type.PropertySchema"><tt class="xref py py-class docutils literal"><span class="pre">PropertySchema</span></tt></a> class documentation for a complete exposition on
 the means of instantiating an instance.</p>
 <p>The most straight forward way to create an instance of a
-<tt class="xref py py-class docutils literal"><span class="pre">SchemaProperty</span></tt>:</p>
+<a class="reference internal" href="#ontic.meta_type.PropertySchema" title="ontic.meta_type.PropertySchema"><tt class="xref py py-class docutils literal"><span class="pre">PropertySchema</span></tt></a>:</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">prop_schema</span> <span class="o">=</span> <span class="n">PropertySchema</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s">&#39;str&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">prop_schema</span>
-<span class="go">{&#39;regex&#39;: None, &#39;enum&#39;: None, &#39;min&#39;: 3, &#39;default&#39;: None, &#39;max&#39;: None, &#39;required&#39;: True, &#39;member_type&#39;: None, &#39;member_min&#39;: None, &#39;type&#39;: &#39;str&#39;, &#39;member_max&#39;: None}</span>
+<span class="go">{&#39;regex&#39;: None, &#39;enum&#39;: None, &#39;min&#39;: 3, &#39;default&#39;: None, &#39;max&#39;: None, &#39;required&#39;: True, &#39;member_type&#39;: None, &#39;member_min&#39;: None, &#39;type&#39;: &lt;type &#39;str&#39;&gt;, &#39;member_max&#39;: None}</span>
 </pre></div>
 </div>
 <p>Demonstrated above is the creation of a property schema of type string. In
 addition the property schema forces the value of the property to required and
-of minimum length of 4.</p>
+of minimum length of 3.</p>
 <p>Along with the schema settings explicitly set in the constructor, there are a
 number of other property schema settings that may be utilized. These
 additional settings can be viewed in the output of the <em>prop_schema</em> object.
 For the details on the property schema settings, see
-<a class="reference internal" href="#property-schema-settings-table"><em>Property Schema Settings</em></a>.</p>
+<a class="reference internal" href="#property-schema-settings-table"><em>Available Property Schema Settings</em></a>.</p>
 <p>A <a class="reference internal" href="#ontic.meta_type.PropertySchema" title="ontic.meta_type.PropertySchema"><tt class="xref py py-class docutils literal"><span class="pre">PropertySchema</span></tt></a> can be created or modified dynamically. If done so,
 then the final schema instance should be validated with the use of the method
 <a class="reference internal" href="#ontic.meta_type.validate_property_schema" title="ontic.meta_type.validate_property_schema"><tt class="xref py py-meth docutils literal"><span class="pre">validate_property_schema()</span></tt></a>.</p>
@@ -142,7 +143,7 @@ then the final schema instance should be validated with the use of the method
 <div class="section" id="utilizing-property-schema">
 <h3><a class="toc-backref" href="#id4">Utilizing Property Schema</a><a class="headerlink" href="#utilizing-property-schema" title="Permalink to this headline">¶</a></h3>
 <p>Validation of a value utilizing the <em>prop_schema</em> created, is done with the
-<tt class="xref py py-meth docutils literal"><span class="pre">validate_value'</span> <span class="pre">method.()</span></tt></p>
+<a class="reference internal" href="#ontic.meta_type.validate_value" title="ontic.meta_type.validate_value"><tt class="xref py py-meth docutils literal"><span class="pre">validate_value()</span></tt></a> method.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">prop_schema</span> <span class="o">=</span> <span class="n">PropertySchema</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="s">&#39;str&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="bp">True</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">some_value</span> <span class="o">=</span> <span class="s">&#39;The cat is on the roof.&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">validate_value</span><span class="p">(</span>
@@ -158,7 +159,7 @@ friendly error messages. For example:</p>
 </pre></div>
 </div>
 <p>The following example demonstrates how a <a class="reference internal" href="#ontic.meta_type.PropertySchema" title="ontic.meta_type.PropertySchema"><tt class="xref py py-class docutils literal"><span class="pre">PropertySchema</span></tt></a> being
-instantiated with a dictionary. Subsequently the a bad value is passed with
+instantiated with a dictionary. Subsequently a bad value is passed with
 multiple validation errors.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">other_schema</span> <span class="o">=</span> <span class="n">PropertySchema</span><span class="p">({</span>
 <span class="gp">... </span>    <span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;str&#39;</span><span class="p">,</span>
@@ -169,98 +170,145 @@ multiple validation errors.</p>
 <span class="go">[&#39;The value &quot;frog&quot; for &quot;other_prop&quot; not in enumeration [\&#39;rat\&#39;, \&#39;dog\&#39;, \&#39;cat\&#39;].&#39;, &#39;The value of &quot;frog&quot; for &quot;other_prop&quot; fails max of 3.&#39;]</span>
 </pre></div>
 </div>
-<table border="1" class="docutils" id="property-schema-settings-table">
+</div>
+<div class="section" id="available-property-schema-settings">
+<span id="property-schema-settings-table"></span><h3><a class="toc-backref" href="#id5">Available Property Schema Settings</a><a class="headerlink" href="#available-property-schema-settings" title="Permalink to this headline">¶</a></h3>
+<p>The following table gives a listing of the property schema settings that can
+be used to define properties. Details on the schema settings are provided
+after the table.</p>
+<table border="1" class="docutils">
 <caption>Property Schema Settings</caption>
 <colgroup>
-<col width="18%" />
-<col width="9%" />
-<col width="12%" />
-<col width="12%" />
-<col width="49%" />
+<col width="17%" />
+<col width="13%" />
+<col width="11%" />
+<col width="11%" />
+<col width="47%" />
 </colgroup>
 <thead valign="bottom">
-<tr class="row-odd"><th class="head">name</th>
-<th class="head">type</th>
-<th class="head">default</th>
-<th class="head">required</th>
-<th class="head">enum</th>
+<tr class="row-odd"><th class="head">Name</th>
+<th class="head">Type</th>
+<th class="head">Default</th>
+<th class="head">Required</th>
+<th class="head">Enumeration</th>
 </tr>
 </thead>
 <tbody valign="top">
 <tr class="row-even"><td>type</td>
-<td>str</td>
+<td>str
+type</td>
 <td>None</td>
 <td>False</td>
-<td>bool, dict, float, int,
-list, set, str, date, , datetime</td>
+<td>basestring, bool, complex, date,
+datetime, dict, float, int, list,
+long, None, set, str, time,
+unicode</td>
 </tr>
 <tr class="row-odd"><td>default</td>
 <td>None</td>
 <td>None</td>
 <td>False</td>
-<td>None</td>
+<td>&nbsp;</td>
 </tr>
 <tr class="row-even"><td>required</td>
 <td>bool</td>
 <td>False</td>
 <td>False</td>
-<td>None</td>
+<td>&nbsp;</td>
 </tr>
 <tr class="row-odd"><td>enum</td>
 <td>set</td>
 <td>None</td>
 <td>False</td>
-<td>None</td>
+<td>&nbsp;</td>
 </tr>
 <tr class="row-even"><td>min</td>
-<td>float</td>
+<td>complex
+date
+datetime
+float
+int
+long
+time</td>
 <td>None</td>
 <td>False</td>
-<td>None</td>
+<td>&nbsp;</td>
 </tr>
 <tr class="row-odd"><td>max</td>
-<td>float</td>
+<td>complex
+date
+datetime
+float
+int
+long
+time</td>
 <td>None</td>
 <td>False</td>
-<td>None</td>
+<td>&nbsp;</td>
 </tr>
 <tr class="row-even"><td>regex</td>
 <td>str</td>
 <td>None</td>
 <td>False</td>
-<td>None</td>
+<td>&nbsp;</td>
 </tr>
 <tr class="row-odd"><td>member_type</td>
-<td>str</td>
+<td>str
+type</td>
 <td>None</td>
 <td>False</td>
-<td>bool, dict, float, int,
-list, set, str, date, , datetime</td>
+<td>basestring, bool, complex, date,
+datetime, dict, float, int, list,
+long, None, set, str, time,
+unicode</td>
 </tr>
 <tr class="row-even"><td>member_min</td>
-<td>float</td>
+<td>complex
+date
+datetime
+float
+int
+long
+time</td>
 <td>None</td>
 <td>False</td>
-<td>None</td>
+<td>&nbsp;</td>
 </tr>
 <tr class="row-odd"><td>member_max</td>
-<td>float</td>
+<td>complex
+date
+datetime
+float
+int
+long
+time</td>
 <td>None</td>
 <td>False</td>
-<td>None</td>
+<td>&nbsp;</td>
 </tr>
 </tbody>
 </table>
 <dl class="docutils">
 <dt><em>type</em></dt>
-<dd>The <em>type</em> settings restricts a property to a known type. If no type is
-defined, then any value type maybe assigned to the property.</dd>
+<dd><p class="first">The <em>type</em> settings restricts a property to a known type. If no type is
+defined, then any value type may be assigned to the property.</p>
+<p class="last">The type definition can be by type or by string name. Both <tt class="docutils literal"><span class="pre">{type=int}</span></tt>
+and <tt class="docutils literal"><span class="pre">{type='int'}</span></tt> are valid examples of type declaration.</p>
+</dd>
 <dt><em>default</em></dt>
-<dd>If the value is of a property is <tt class="docutils literal"><span class="pre">None</span></tt>, then the default value is
-applied to the property during validation. Note: the default value is
-only applied to an instance during instance creation, or when a call to
-<tt class="xref py py-meth docutils literal"><span class="pre">perfect_schema_property()</span></tt>. The default is not applied during
-validation.</dd>
+<dd><p class="first">If no default is applied, then the default value will be <tt class="docutils literal"><span class="pre">None</span></tt>. If a
+default value is supplied, it will only be applied under two conditions.
+A default value is applied during instantiation of an object of type
+<a class="reference internal" href="#ontic.meta_type.PropertySchema" title="ontic.meta_type.PropertySchema"><tt class="xref py py-class docutils literal"><span class="pre">PropertySchema</span></tt></a>, <a class="reference internal" href="ontic.schema_type.html#ontic.schema_type.SchemaType" title="ontic.schema_type.SchemaType"><tt class="xref py py-class docutils literal"><span class="pre">SchemaType</span></tt></a>,
+or <a class="reference internal" href="ontic.ontic_type.html#ontic.ontic_type.OnticType" title="ontic.ontic_type.OnticType"><tt class="xref py py-class docutils literal"><span class="pre">OnticType</span></tt></a>. The other case is when an
+instance of on of the given types is perfected via the methods
+<a class="reference internal" href="#ontic.meta_type.perfect_property_schema" title="ontic.meta_type.perfect_property_schema"><tt class="xref py py-func docutils literal"><span class="pre">perfect_property_schema()</span></tt></a>, <a class="reference internal" href="ontic.schema_type.html#ontic.schema_type.perfect_schema" title="ontic.schema_type.perfect_schema"><tt class="xref py py-func docutils literal"><span class="pre">perfect_schema()</span></tt></a>,
+or <a class="reference internal" href="ontic.ontic_type.html#ontic.ontic_type.perfect_object" title="ontic.ontic_type.perfect_object"><tt class="xref py py-func docutils literal"><span class="pre">perfect_object()</span></tt></a>.</p>
+<p>The default is not applied during validation.</p>
+<p class="last">For the collection types (dict, list, and set), the default value is deep
+copied. This is done to ensure that there is no sharing of collection
+instances or values.</p>
+</dd>
 <dt><em>required</em></dt>
 <dd>A <em>PropertySchema</em> with a required setting of <em>True</em>, will fail
 validation if the property value is <em>None</em>.</dd>
@@ -272,16 +320,16 @@ in the <em>enum</em> set may be of any type, even mixed type.</dd>
 <dt><em>min</em></dt>
 <dd>The <em>min</em> setting has differing behavior, based on the <em>type</em> setting. If
 no <em>type</em> setting is provided, then <em>min</em> test will not occur. For the
-boundable types (str, list, dict, set) the <em>min</em> setting will test that
+boundable types (strings and collections) the <em>min</em> setting will test that
 the value length is not less than the minimum. For the comparable types
-(int, float, data, time, datatime) the <em>min</em> setting will test that the
+(numeric and chronological) the <em>min</em> setting will test that the
 value is not less than the minimum.</dd>
 <dt><em>max</em></dt>
 <dd>The <em>max setting has differing behavior, based on the *type</em> setting. If
 no <em>type</em> setting is provided, the <em>max</em> test will not occur. For the
-boundable types (str, list, dict, set) the <em>max</em> setting will test that
+boundable types (strings and collections) the <em>max</em> setting will test that
 the value length is not more than the maximum. For the comparable types
-(int, float, date, time, datetime) the <em>max</em> setting will test that the
+(numeric and chronological) the <em>max</em> setting will test that the
 value is not more than the maximum.</dd>
 <dt><em>regex</em></dt>
 <dd>The <em>regex</em> setting is only tested if the <em>type</em> or <em>member_type</em> setting
@@ -289,32 +337,36 @@ is &#8216;str&#8217; and the <em>regex</em> setting is not None. When active, th
 setting will be used to test the given string value.  If the property
 value is &#8216;None&#8217;, then no regex testing will be done.</dd>
 <dt><em>member_type</em></dt>
-<dd>The <em>member_type</em> setting is used to restrict the value type for property
+<dd><p class="first">The <em>member_type</em> setting is used to restrict the value type for property
 <em>type</em> &#8216;list&#8217; or &#8216;set&#8217;. It does so ensuring that each member of the
-collection is of the type designated by <em>member_type</em>.</dd>
+collection is of the type designated by <em>member_type</em>.</p>
+<p class="last">The type definition can be by type or by string name. Both
+<tt class="docutils literal"><span class="pre">{member_type=int}</span></tt> and <tt class="docutils literal"><span class="pre">{member_type='int'}</span></tt> are valid examples of
+type declaration.</p>
+</dd>
 <dt><em>member_min</em></dt>
 <dd>The <em>member_min</em> setting has differing behavior, based on the
 <em>member_type</em> setting. If no <em>member_type</em> setting is provided, then
 <em>member_min</em> test will not occur. For the boundable types
-(str, list, dict, set), the <em>member_min</em> setting will test that the
+(strings and collections), the <em>member_min</em> setting will test that the
 value length is not less than the minimum. For the comparable types
-(int, float, date, time, datetime) the <em>member_minimum</em> setting will test
+(numeric and chronological) the <em>member_minimum</em> setting will test
 that the value is not less than the minimum.</dd>
 <dt><em>member_max</em></dt>
 <dd>The <em>member_max</em> setting has differing behavior, based on the
 <em>member_max</em> setting. If no <em>member_type</em> setting is provided,
 then <em>member_max</em> test will not occur. For the boundable types
-(str, list, dict, set), the <em>member_max</em> setting will test that the
+(strings and collections), the <em>member_max</em> setting will test that the
 value length is not more than the maximum. For the comparable types
-(int, float, date, time, datetime) the <em>member_max</em> setting will test
+(numeric and chronological) the <em>member_max</em> setting will test
 that the value is not more than the maximum.</dd>
 </dl>
 </div>
 </div>
 <div class="section" id="classes">
-<h2><a class="toc-backref" href="#id5">Classes</a><a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id6">Classes</a><a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="coretype">
-<h3><a class="toc-backref" href="#id6">CoreType</a><a class="headerlink" href="#coretype" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id7">CoreType</a><a class="headerlink" href="#coretype" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="ontic.meta_type.CoreType">
 <em class="property">class </em><tt class="descclassname">ontic.meta_type.</tt><tt class="descname">CoreType</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ontic.meta_type.CoreType" title="Permalink to this definition">¶</a></dt>
@@ -361,7 +413,7 @@ name=value pairs in the keyword argument list.  For example:</p>
 </div>
 <hr class="docutils" />
 <div class="section" id="metatype">
-<h3><a class="toc-backref" href="#id7">MetaType</a><a class="headerlink" href="#metatype" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id8">MetaType</a><a class="headerlink" href="#metatype" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="ontic.meta_type.MetaType">
 <em class="property">class </em><tt class="descclassname">ontic.meta_type.</tt><tt class="descname">MetaType</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ontic.meta_type.MetaType" title="Permalink to this definition">¶</a></dt>
@@ -408,18 +460,18 @@ or a <a class="reference internal" href="ontic.ontic_type.html#ontic.ontic_type.
 </div>
 <hr class="docutils" />
 <div class="section" id="propertyschema">
-<h3><a class="toc-backref" href="#id8">PropertySchema</a><a class="headerlink" href="#propertyschema" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id9">PropertySchema</a><a class="headerlink" href="#propertyschema" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="ontic.meta_type.PropertySchema">
 <em class="property">class </em><tt class="descclassname">ontic.meta_type.</tt><tt class="descname">PropertySchema</tt><big>(</big><em>*args</em>, <em>**kwargs</em><big>)</big><a class="headerlink" href="#ontic.meta_type.PropertySchema" title="Permalink to this definition">¶</a></dt>
 <dd><p>The object type for representing Property schema definitions.</p>
 <p>The PropertySchema class is used to define individual properties of an
 object. For the complete set of property schema settings to define a
-property, see <a class="reference internal" href="#property-schema-settings-table"><em>Property Schema Settings</em></a></p>
+property, see <a class="reference internal" href="#property-schema-settings-table"><em>Available Property Schema Settings</em></a></p>
 <p>Examples:</p>
-<div class="highlight-python"><pre>There are a number of ways to create a PropertySchema for us in
+<div class="highlight-python"><pre>There are a number of ways to create a PropertySchema for use in
 validation of a property. The most straight forward is to define
-create a property schema with a dictionary.
+a property schema with a dictionary.
 
 &gt;&gt;&gt; foo_schema = PropertySchema({
 ...     'type': 'str',
@@ -427,8 +479,7 @@ create a property schema with a dictionary.
 ...     'default': 'Undefined',
 ... })
 
-PropertySchema also support the full range of dict style of
-instantiation.
+PropertySchema also support the full range of dict style instantiation.
 
 &gt;&gt;&gt; boo_schema = PropertySchema([('type','str'),('required',True)])
 &gt;&gt;&gt; moo_schema = PropertySchema(type='str', default='Cow')
@@ -440,14 +491,14 @@ PropertySchema can also be assembled pragmatically.
 &gt;&gt;&gt; bar_schema.required = False
 &gt;&gt;&gt; bar_schema.min = 3
 &gt;&gt;&gt; val_errors = validate_property_schema(bar_schema)
-&gt;&gt;&gt; assert val_errors == None
+&gt;&gt;&gt; assert val_errors == []
 
 &gt;&gt;&gt; nutty_schema = PropertySchema()
 &gt;&gt;&gt; nutty_schema['type'] = 'str'
 &gt;&gt;&gt; nutty_schema['required'] = True
 &gt;&gt;&gt; nutty_schema['min'] = 5
 &gt;&gt;&gt; val_errors = validate_property_schema(nutty_schema)
-&gt;&gt;&gt; assert val_errors == None</pre>
+&gt;&gt;&gt; assert val_errors == []</pre>
 </div>
 <dl class="method">
 <dt id="ontic.meta_type.PropertySchema.__init__">
@@ -484,9 +535,9 @@ the name=value pairs in the keyword argument list.  For example:</p>
 </div>
 </div>
 <div class="section" id="functions">
-<h2><a class="toc-backref" href="#id9">Functions</a><a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<h2><a class="toc-backref" href="#id10">Functions</a><a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
 <div class="section" id="enum-validation">
-<h3><a class="toc-backref" href="#id10">enum_validation</a><a class="headerlink" href="#enum-validation" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id11">enum_validation</a><a class="headerlink" href="#enum-validation" title="Permalink to this headline">¶</a></h3>
 <dl class="function">
 <dt id="ontic.meta_type.enum_validation">
 <tt class="descclassname">ontic.meta_type.</tt><tt class="descname">enum_validation</tt><big>(</big><em>property_schema</em>, <em>value</em><big>)</big><a class="headerlink" href="#ontic.meta_type.enum_validation" title="Permalink to this definition">¶</a></dt>
@@ -514,7 +565,7 @@ the name=value pairs in the keyword argument list.  For example:</p>
 </div>
 <hr class="docutils" />
 <div class="section" id="execute-collection-validators">
-<h3><a class="toc-backref" href="#id11">execute_collection_validators</a><a class="headerlink" href="#execute-collection-validators" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id12">execute_collection_validators</a><a class="headerlink" href="#execute-collection-validators" title="Permalink to this headline">¶</a></h3>
 <dl class="function">
 <dt id="ontic.meta_type.execute_collection_validators">
 <tt class="descclassname">ontic.meta_type.</tt><tt class="descname">execute_collection_validators</tt><big>(</big><em>key</em>, <em>member_value</em>, <em>property_schema</em>, <em>validators</em>, <em>value_errors</em><big>)</big><a class="headerlink" href="#ontic.meta_type.execute_collection_validators" title="Permalink to this definition">¶</a></dt>
@@ -544,7 +595,7 @@ the value_errors list.</li>
 </div>
 <hr class="docutils" />
 <div class="section" id="max-validation">
-<h3><a class="toc-backref" href="#id12">max_validation</a><a class="headerlink" href="#max-validation" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id13">max_validation</a><a class="headerlink" href="#max-validation" title="Permalink to this headline">¶</a></h3>
 <dl class="function">
 <dt id="ontic.meta_type.max_validation">
 <tt class="descclassname">ontic.meta_type.</tt><tt class="descname">max_validation</tt><big>(</big><em>property_schema</em>, <em>value</em><big>)</big><a class="headerlink" href="#ontic.meta_type.max_validation" title="Permalink to this definition">¶</a></dt>
@@ -572,7 +623,7 @@ the value_errors list.</li>
 </div>
 <hr class="docutils" />
 <div class="section" id="min-validation">
-<h3><a class="toc-backref" href="#id13">min_validation</a><a class="headerlink" href="#min-validation" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id14">min_validation</a><a class="headerlink" href="#min-validation" title="Permalink to this headline">¶</a></h3>
 <dl class="function">
 <dt id="ontic.meta_type.min_validation">
 <tt class="descclassname">ontic.meta_type.</tt><tt class="descname">min_validation</tt><big>(</big><em>property_schema</em>, <em>value</em><big>)</big><a class="headerlink" href="#ontic.meta_type.min_validation" title="Permalink to this definition">¶</a></dt>
@@ -600,7 +651,7 @@ the value_errors list.</li>
 </div>
 <hr class="docutils" />
 <div class="section" id="non-none-singular-validation">
-<h3><a class="toc-backref" href="#id14">non_none_singular_validation</a><a class="headerlink" href="#non-none-singular-validation" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id15">non_none_singular_validation</a><a class="headerlink" href="#non-none-singular-validation" title="Permalink to this headline">¶</a></h3>
 <dl class="function">
 <dt id="ontic.meta_type.non_none_singular_validation">
 <tt class="descclassname">ontic.meta_type.</tt><tt class="descname">non_none_singular_validation</tt><big>(</big><em>key</em>, <em>property_schema</em>, <em>value</em>, <em>value_errors</em><big>)</big><a class="headerlink" href="#ontic.meta_type.non_none_singular_validation" title="Permalink to this definition">¶</a></dt>
@@ -630,7 +681,7 @@ value errors will be added to if the given value fails validation.</li>
 </div>
 <hr class="docutils" />
 <div class="section" id="perfect-property-schema">
-<h3><a class="toc-backref" href="#id15">perfect_property_schema</a><a class="headerlink" href="#perfect-property-schema" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id16">perfect_property_schema</a><a class="headerlink" href="#perfect-property-schema" title="Permalink to this headline">¶</a></h3>
 <dl class="function">
 <dt id="ontic.meta_type.perfect_property_schema">
 <tt class="descclassname">ontic.meta_type.</tt><tt class="descname">perfect_property_schema</tt><big>(</big><em>candidate_property_schema</em><big>)</big><a class="headerlink" href="#ontic.meta_type.perfect_property_schema" title="Permalink to this definition">¶</a></dt>
@@ -648,7 +699,8 @@ clean and restricted.</td>
 </tr>
 <tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">None</td>
 </tr>
-<tr class="field-odd field"><th class="field-name">Raise:</th><td class="field-body">ValueError: If the candidate_property_schema is None, or not
+<tr class="field-odd field"><th class="field-name" colspan="2">Raises ValueError:</th></tr>
+<tr class="field-odd field"><td>&nbsp;</td><td class="field-body">If the candidate_property_schema is None, or not
 of type <em>PropertySchema</em>.</td>
 </tr>
 </tbody>
@@ -658,7 +710,7 @@ of type <em>PropertySchema</em>.</td>
 </div>
 <hr class="docutils" />
 <div class="section" id="validate-collection-members">
-<h3><a class="toc-backref" href="#id16">validate_collection_members</a><a class="headerlink" href="#validate-collection-members" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id17">validate_collection_members</a><a class="headerlink" href="#validate-collection-members" title="Permalink to this headline">¶</a></h3>
 <dl class="function">
 <dt id="ontic.meta_type.validate_collection_members">
 <tt class="descclassname">ontic.meta_type.</tt><tt class="descname">validate_collection_members</tt><big>(</big><em>key</em>, <em>property_schema</em>, <em>value</em>, <em>value_errors</em><big>)</big><a class="headerlink" href="#ontic.meta_type.validate_collection_members" title="Permalink to this definition">¶</a></dt>
@@ -688,7 +740,7 @@ listed in value_errors list.</li>
 </div>
 <hr class="docutils" />
 <div class="section" id="validate-member-enum">
-<h3><a class="toc-backref" href="#id17">validate_member_enum</a><a class="headerlink" href="#validate-member-enum" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id18">validate_member_enum</a><a class="headerlink" href="#validate-member-enum" title="Permalink to this headline">¶</a></h3>
 <dl class="function">
 <dt id="ontic.meta_type.validate_member_enum">
 <tt class="descclassname">ontic.meta_type.</tt><tt class="descname">validate_member_enum</tt><big>(</big><em>key</em>, <em>member_value</em>, <em>property_schema</em>, <em>value_errors</em><big>)</big><a class="headerlink" href="#ontic.meta_type.validate_member_enum" title="Permalink to this definition">¶</a></dt>
@@ -718,7 +770,7 @@ value_errors list.</li>
 </div>
 <hr class="docutils" />
 <div class="section" id="validate-member-max">
-<h3><a class="toc-backref" href="#id18">validate_member_max</a><a class="headerlink" href="#validate-member-max" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id19">validate_member_max</a><a class="headerlink" href="#validate-member-max" title="Permalink to this headline">¶</a></h3>
 <dl class="function">
 <dt id="ontic.meta_type.validate_member_max">
 <tt class="descclassname">ontic.meta_type.</tt><tt class="descname">validate_member_max</tt><big>(</big><em>key</em>, <em>member_value</em>, <em>property_schema</em>, <em>value_errors</em><big>)</big><a class="headerlink" href="#ontic.meta_type.validate_member_max" title="Permalink to this definition">¶</a></dt>
@@ -748,7 +800,7 @@ value_errors list.</li>
 </div>
 <hr class="docutils" />
 <div class="section" id="validate-member-min">
-<h3><a class="toc-backref" href="#id19">validate_member_min</a><a class="headerlink" href="#validate-member-min" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id20">validate_member_min</a><a class="headerlink" href="#validate-member-min" title="Permalink to this headline">¶</a></h3>
 <dl class="function">
 <dt id="ontic.meta_type.validate_member_min">
 <tt class="descclassname">ontic.meta_type.</tt><tt class="descname">validate_member_min</tt><big>(</big><em>key</em>, <em>member_value</em>, <em>property_schema</em>, <em>value_errors</em><big>)</big><a class="headerlink" href="#ontic.meta_type.validate_member_min" title="Permalink to this definition">¶</a></dt>
@@ -778,7 +830,7 @@ value_errors list.</li>
 </div>
 <hr class="docutils" />
 <div class="section" id="validate-member-regex">
-<h3><a class="toc-backref" href="#id20">validate_member_regex</a><a class="headerlink" href="#validate-member-regex" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id21">validate_member_regex</a><a class="headerlink" href="#validate-member-regex" title="Permalink to this headline">¶</a></h3>
 <dl class="function">
 <dt id="ontic.meta_type.validate_member_regex">
 <tt class="descclassname">ontic.meta_type.</tt><tt class="descname">validate_member_regex</tt><big>(</big><em>key</em>, <em>member_value</em>, <em>property_schema</em>, <em>value_errors</em><big>)</big><a class="headerlink" href="#ontic.meta_type.validate_member_regex" title="Permalink to this definition">¶</a></dt>
@@ -808,7 +860,7 @@ value_errors list.</li>
 </div>
 <hr class="docutils" />
 <div class="section" id="validate-member-type">
-<h3><a class="toc-backref" href="#id21">validate_member_type</a><a class="headerlink" href="#validate-member-type" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id22">validate_member_type</a><a class="headerlink" href="#validate-member-type" title="Permalink to this headline">¶</a></h3>
 <dl class="function">
 <dt id="ontic.meta_type.validate_member_type">
 <tt class="descclassname">ontic.meta_type.</tt><tt class="descname">validate_member_type</tt><big>(</big><em>key</em>, <em>member_value</em>, <em>property_schema</em>, <em>value_errors</em><big>)</big><a class="headerlink" href="#ontic.meta_type.validate_member_type" title="Permalink to this definition">¶</a></dt>
@@ -838,7 +890,7 @@ value_errors list.</li>
 </div>
 <hr class="docutils" />
 <div class="section" id="validate-non-none-value">
-<h3><a class="toc-backref" href="#id22">validate_non_none_value</a><a class="headerlink" href="#validate-non-none-value" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id23">validate_non_none_value</a><a class="headerlink" href="#validate-non-none-value" title="Permalink to this headline">¶</a></h3>
 <dl class="function">
 <dt id="ontic.meta_type.validate_non_none_value">
 <tt class="descclassname">ontic.meta_type.</tt><tt class="descname">validate_non_none_value</tt><big>(</big><em>key</em>, <em>property_schema</em>, <em>value</em>, <em>value_errors</em><big>)</big><a class="headerlink" href="#ontic.meta_type.validate_non_none_value" title="Permalink to this definition">¶</a></dt>
@@ -870,7 +922,7 @@ the value_errors list.</li>
 </div>
 <hr class="docutils" />
 <div class="section" id="validate-property-schema">
-<h3><a class="toc-backref" href="#id23">validate_property_schema</a><a class="headerlink" href="#validate-property-schema" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id24">validate_property_schema</a><a class="headerlink" href="#validate-property-schema" title="Permalink to this headline">¶</a></h3>
 <dl class="function">
 <dt id="ontic.meta_type.validate_property_schema">
 <tt class="descclassname">ontic.meta_type.</tt><tt class="descname">validate_property_schema</tt><big>(</big><em>candidate_property_schema</em>, <em>raise_validation_exception=True</em><big>)</big><a class="headerlink" href="#ontic.meta_type.validate_property_schema" title="Permalink to this definition">¶</a></dt>
@@ -910,7 +962,7 @@ does not meet schema requirements.</li>
 </div>
 <hr class="docutils" />
 <div class="section" id="validate-value">
-<h3><a class="toc-backref" href="#id24">validate_value</a><a class="headerlink" href="#validate-value" title="Permalink to this headline">¶</a></h3>
+<h3><a class="toc-backref" href="#id25">validate_value</a><a class="headerlink" href="#validate-value" title="Permalink to this headline">¶</a></h3>
 <dl class="function">
 <dt id="ontic.meta_type.validate_value">
 <tt class="descclassname">ontic.meta_type.</tt><tt class="descname">validate_value</tt><big>(</big><em>name</em>, <em>property_schema</em>, <em>value</em><big>)</big><a class="headerlink" href="#ontic.meta_type.validate_value" title="Permalink to this definition">¶</a></dt>
@@ -954,6 +1006,7 @@ during schema validation.</p>
 <li><a class="reference internal" href="#usage">Usage</a><ul>
 <li><a class="reference internal" href="#creating-property-schema">Creating Property Schema</a></li>
 <li><a class="reference internal" href="#utilizing-property-schema">Utilizing Property Schema</a></li>
+<li><a class="reference internal" href="#available-property-schema-settings">Available Property Schema Settings</a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#classes">Classes</a><ul>
@@ -1027,7 +1080,7 @@ during schema validation.</p>
         <li class="right" >
           <a href="ontic.html" title="Getting Started with Ontic"
              >previous</a> |</li>
-        <li><a href="index.html">Ontic 0.0.2 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">Ontic 0.0.3 Documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Getting Started with Ontic &mdash; Ontic 0.0.2 Documentation</title>
+    <title>Getting Started with Ontic &mdash; Ontic 0.0.3 Documentation</title>
     
     <link rel="stylesheet" href="_static/default.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -14,7 +14,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    './',
-        VERSION:     '0.0.2',
+        VERSION:     '0.0.3',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -24,7 +24,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/sidebar.js"></script>
-    <link rel="top" title="Ontic 0.0.2 Documentation" href="index.html" />
+    <link rel="top" title="Ontic 0.0.3 Documentation" href="index.html" />
     <link rel="next" title="CoreType, MetaType, and PropertySchema Module" href="ontic.meta_type.html" />
     <link rel="prev" title="Ontic - of or relating to entities and the facts about them" href="index.html" /> 
   </head>
@@ -44,7 +44,7 @@
         <li class="right" >
           <a href="index.html" title="Ontic - of or relating to entities and the facts about them"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">Ontic 0.0.2 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">Ontic 0.0.3 Documentation</a> &raquo;</li> 
       </ul>
     </div>  
 
@@ -90,6 +90,7 @@ The example for the simplest <strong>Ontic</strong> object is:</p>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_object</span><span class="p">[</span><span class="s">&#39;some_property&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;Some value&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_object</span><span class="o">.</span><span class="n">other_property</span> <span class="o">=</span> <span class="mi">3</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_object</span>
+<span class="go">{&#39;other_property&#39;: 3, &#39;some_property&#39;: &#39;Some value&#39;}</span>
 </pre></div>
 </div>
 <p>The ability to use <em>OnticType</em> objects as dict, makes it easy to utilize with
@@ -142,82 +143,74 @@ instances that have a <em>SchemaType</em> definition.</p>
 <table border="1" class="docutils">
 <caption>Property Schema Settings</caption>
 <colgroup>
-<col width="18%" />
-<col width="9%" />
-<col width="12%" />
-<col width="12%" />
-<col width="49%" />
+<col width="19%" />
+<col width="24%" />
+<col width="57%" />
 </colgroup>
 <thead valign="bottom">
-<tr class="row-odd"><th class="head">name</th>
-<th class="head">type</th>
-<th class="head">default</th>
-<th class="head">required</th>
-<th class="head">enum</th>
+<tr class="row-odd"><th class="head">Name</th>
+<th class="head">Type</th>
+<th class="head">Enumeration</th>
 </tr>
 </thead>
 <tbody valign="top">
 <tr class="row-even"><td>type</td>
-<td>str</td>
-<td>None</td>
-<td>False</td>
-<td>bool, dict, float, int,
-list, set, str, date, , datetime</td>
+<td>str
+type</td>
+<td>basestring, bool, complex, date,
+datetime, dict, float, int, list,
+long, None, set, str, time, unicode</td>
 </tr>
 <tr class="row-odd"><td>default</td>
 <td>None</td>
-<td>None</td>
-<td>False</td>
-<td>None</td>
+<td>&nbsp;</td>
 </tr>
 <tr class="row-even"><td>required</td>
 <td>bool</td>
-<td>False</td>
-<td>False</td>
-<td>None</td>
+<td>&nbsp;</td>
 </tr>
 <tr class="row-odd"><td>enum</td>
 <td>set</td>
-<td>None</td>
-<td>False</td>
-<td>None</td>
+<td>&nbsp;</td>
 </tr>
 <tr class="row-even"><td>min</td>
-<td>float</td>
-<td>None</td>
-<td>False</td>
-<td>None</td>
+<td>complex, date,
+datetime,
+float, int,
+long, time</td>
+<td>&nbsp;</td>
 </tr>
 <tr class="row-odd"><td>max</td>
-<td>float</td>
-<td>None</td>
-<td>False</td>
-<td>None</td>
+<td>complex, date,
+datetime,
+float, int,
+long, time</td>
+<td>&nbsp;</td>
 </tr>
 <tr class="row-even"><td>regex</td>
 <td>str</td>
-<td>None</td>
-<td>False</td>
-<td>None</td>
+<td>&nbsp;</td>
 </tr>
 <tr class="row-odd"><td>member_type</td>
-<td>str</td>
-<td>None</td>
-<td>False</td>
-<td>bool, dict, float, int,
-list, set, str, date, , datetime</td>
+<td>str
+type</td>
+<td>basestring, bool, complex, date,
+datetime, dict, float, int, list,
+long, None, set, str, time, unicode</td>
 </tr>
 <tr class="row-even"><td>member_min</td>
-<td>float</td>
-<td>None</td>
-<td>False</td>
-<td>None</td>
+<td>complex, date,
+datetime,
+float, int,
+long, time</td>
+<td>&nbsp;</td>
 </tr>
 <tr class="row-odd"><td>member_max</td>
-<td>float</td>
-<td>None</td>
-<td>False</td>
-<td>None</td>
+<td>complex, date,
+datetime,
+float, int,
+long, time</td>
+<td>&nbsp;</td>
 </tr>
 </tbody>
 </table>
@@ -237,66 +230,8 @@ addition the property <em>p</em> has a default value of &#8220;NotAssigned&#8221
 <span class="gp">... </span><span class="p">})</span>
 </pre></div>
 </div>
-<p>Below is a more extensive description of the behavior of each of the schema
-type settings.</p>
-<dl class="docutils">
-<dt><em>type</em></dt>
-<dd>The <em>type</em> settings restricts a property to a known type. If no type is
-defined, then any value type maybe assigned to the property.</dd>
-<dt><em>default</em></dt>
-<dd>If the value is of a property is <tt class="docutils literal"><span class="pre">None</span></tt>, then the default value is
-applied to the property during validation. Note: the default value is
-only applied to an instance during instance creation, or when a call to
-<tt class="xref py py-meth docutils literal"><span class="pre">perfect_schema_property()</span></tt>. The default is not applied during
-validation.</dd>
-<dt><em>required</em></dt>
-<dd>A <em>PropertySchema</em> with a required setting of <em>True</em>, will fail
-validation if the property value is <em>None</em>.</dd>
-<dt><em>enum</em></dt>
-<dd>An <em>enum</em> setting is a set of values that the property value must adhere
-to. If the <em>type</em> setting is provided, then the choices provided by
-<em>enum</em> must be of that type. If no <em>type</em> is provided, then the choices
-in the <em>enum</em> set may be of any type, even mixed type.</dd>
-<dt><em>min</em></dt>
-<dd>The <em>min</em> setting has differing behavior, based on the <em>type</em> setting. If
-no <em>type</em> setting is provided, then <em>min</em> test will not occur. For the
-boundable types (str, list, dict, set) the <em>min</em> setting will test that
-the value length is not less than the minimum. For the comparable types
-(int, float, data, time, datatime) the <em>min</em> setting will test that the
-value is not less than the minimum.</dd>
-<dt><em>max</em></dt>
-<dd>The <em>max setting has differing behavior, based on the *type</em> setting. If
-no <em>type</em> setting is provided, the <em>max</em> test will not occur. For the
-boundable types (str, list, dict, set) the <em>max</em> setting will test that
-the value length is not more than the maximum. For the comparable types
-(int, float, date, time, datetime) the <em>max</em> setting will test that the
-value is not more than the maximum.</dd>
-<dt><em>regex</em></dt>
-<dd>The <em>regex</em> setting is only tested if the <em>type</em> or <em>member_type</em> setting
-is &#8216;str&#8217; and the <em>regex</em> setting is not None. When active, the <em>regex</em>
-setting will be used to test the given string value.  If the property
-value is &#8216;None&#8217;, then no regex testing will be done.</dd>
-<dt><em>member_type</em></dt>
-<dd>The <em>member_type</em> setting is used to restrict the value type for property
-<em>type</em> &#8216;list&#8217; or &#8216;set&#8217;. It does so ensuring that each member of the
-collection is of the type designated by <em>member_type</em>.</dd>
-<dt><em>member_min</em></dt>
-<dd>The <em>member_min</em> setting has differing behavior, based on the
-<em>member_type</em> setting. If no <em>member_type</em> setting is provided, then
-<em>member_min</em> test will not occur. For the boundable types
-(str, list, dict, set), the <em>member_min</em> setting will test that the
-value length is not less than the minimum. For the comparable types
-(int, float, date, time, datetime) the <em>member_minimum</em> setting will test
-that the value is not less than the minimum.</dd>
-<dt><em>member_max</em></dt>
-<dd>The <em>member_max</em> setting has differing behavior, based on the
-<em>member_max</em> setting. If no <em>member_type</em> setting is provided,
-then <em>member_max</em> test will not occur. For the boundable types
-(str, list, dict, set), the <em>member_max</em> setting will test that the
-value length is not more than the maximum. For the comparable types
-(int, float, date, time, datetime) the <em>member_max</em> setting will test
-that the value is not more than the maximum.</dd>
-</dl>
+<p>For a more extensive description of schema settings see
+<a class="reference internal" href="ontic.meta_type.html#property-schema-settings-table"><em>Available Property Schema Settings</em></a></p>
 </div>
 <div class="section" id="class-style-type-definitions">
 <h3><a class="toc-backref" href="#id7">Class-style Type Definitions</a><a class="headerlink" href="#class-style-type-definitions" title="Permalink to this headline">¶</a></h3>
@@ -385,6 +320,9 @@ properties defined in the schema.</p>
 The age and gender properties were added. The age property was set to None as
 no default setting was provided. The gender property was defined with a
 default setting, which was applied.</p>
+<p>For the collection type (dict, list, set), the <em>perfect_object</em> method will
+deepcopy the default value. This is to ensure that not all perfected objects
+will share a pointer to the same collection instance.</p>
 </div>
 <div class="section" id="validate">
 <h3><a class="toc-backref" href="#id11">Validate</a><a class="headerlink" href="#validate" title="Permalink to this headline">¶</a></h3>
@@ -527,7 +465,7 @@ failures. Demonstrated by:</p>
         <li class="right" >
           <a href="index.html" title="Ontic - of or relating to entities and the facts about them"
              >previous</a> |</li>
-        <li><a href="index.html">Ontic 0.0.2 Documentation</a> &raquo;</li> 
+        <li><a href="index.html">Ontic 0.0.3 Documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">

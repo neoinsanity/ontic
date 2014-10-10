@@ -21,6 +21,7 @@ The example for the simplest **Ontic** object is::
   >>> my_object['some_property'] = 'Some value'
   >>> my_object.other_property = 3
   >>> my_object
+  {'other_property': 3, 'some_property': 'Some value'}
 
 The ability to use *OnticType* objects as dict, makes it easy to utilize with
 most common interfaces. Here is an *OnticType* object with pymongo::
@@ -77,22 +78,36 @@ Here is the list of schema definition properties provided by **Ontic**.
 
 .. table:: Property Schema Settings
 
-  ============ ====== ======== ========  =================================
-  name         type   default  required  enum
-  ============ ====== ======== ========  =================================
-  type         str    None     False     bool, dict, float, int,
-                                         list, set, str, date, , datetime
-  default      None   None     False     None
-  required     bool   False    False     None
-  enum         set    None     False     None
-  min          float  None     False     None
-  max          float  None     False     None
-  regex        str    None     False     None
-  member_type  str    None     False     bool, dict, float, int,
-                                         list, set, str, date, , datetime
-  member_min   float  None     False     None
-  member_max   float  None     False     None
-  ============ ====== ======== ========  =================================
+    ============ =============== ====================================
+    Name         Type            Enumeration
+    ============ =============== ====================================
+    type         str             basestring, bool, complex, date,
+                 type            datetime, dict, float, int, list,
+                                 long, None, set, str, time, unicode
+    default      None
+    required     bool
+    enum         set
+    min          complex, date,
+                 datetime,
+                 float, int,
+                 long, time
+    max          complex, date,
+                 datetime,
+                 float, int,
+                 long, time
+    regex        str
+    member_type  str             basestring, bool, complex, date,
+                 type            datetime, dict, float, int, list,
+                                 long, None, set, str, time, unicode
+    member_min   complex, date,
+                 datetime,
+                 float, int,
+                 long, time
+    member_max   complex, date,
+                 datetime,
+                 float, int,
+                 long, time
+    ============ =============== ====================================
 
 The schema type settings are utilized to create a *SchemaType*::
 
@@ -111,66 +126,8 @@ A more complex example::
   ...   'gender': {'type': 'str', 'enum': {'M','F', 'NA'}, 'default':'NA'},
   ... })
 
-Below is a more extensive description of the behavior of each of the schema
-type settings.
-
-*type*
-    The *type* settings restricts a property to a known type. If no type is
-    defined, then any value type maybe assigned to the property.
-*default*
-    If the value is of a property is ``None``, then the default value is
-    applied to the property during validation. Note: the default value is
-    only applied to an instance during instance creation, or when a call to
-    :meth:`perfect_schema_property`. The default is not applied during
-    validation.
-*required*
-    A *PropertySchema* with a required setting of *True*, will fail
-    validation if the property value is *None*.
-*enum*
-    An *enum* setting is a set of values that the property value must adhere
-    to. If the *type* setting is provided, then the choices provided by
-    *enum* must be of that type. If no *type* is provided, then the choices
-    in the *enum* set may be of any type, even mixed type.
-*min*
-    The *min* setting has differing behavior, based on the *type* setting. If
-    no *type* setting is provided, then *min* test will not occur. For the
-    boundable types (str, list, dict, set) the *min* setting will test that
-    the value length is not less than the minimum. For the comparable types
-    (int, float, data, time, datatime) the *min* setting will test that the
-    value is not less than the minimum.
-*max*
-    The *max setting has differing behavior, based on the *type* setting. If
-    no *type* setting is provided, the *max* test will not occur. For the
-    boundable types (str, list, dict, set) the *max* setting will test that
-    the value length is not more than the maximum. For the comparable types
-    (int, float, date, time, datetime) the *max* setting will test that the
-    value is not more than the maximum.
-*regex*
-    The *regex* setting is only tested if the *type* or *member_type* setting
-    is 'str' and the *regex* setting is not None. When active, the *regex*
-    setting will be used to test the given string value.  If the property
-    value is 'None', then no regex testing will be done.
-*member_type*
-    The *member_type* setting is used to restrict the value type for property
-    *type* 'list' or 'set'. It does so ensuring that each member of the
-    collection is of the type designated by *member_type*.
-*member_min*
-    The *member_min* setting has differing behavior, based on the
-    *member_type* setting. If no *member_type* setting is provided, then
-    *member_min* test will not occur. For the boundable types
-    (str, list, dict, set), the *member_min* setting will test that the
-    value length is not less than the minimum. For the comparable types
-    (int, float, date, time, datetime) the *member_minimum* setting will test
-    that the value is not less than the minimum.
-*member_max*
-    The *member_max* setting has differing behavior, based on the
-    *member_max* setting. If no *member_type* setting is provided,
-    then *member_max* test will not occur. For the boundable types
-    (str, list, dict, set), the *member_max* setting will test that the
-    value length is not more than the maximum. For the comparable types
-    (int, float, date, time, datetime) the *member_max* setting will test
-    that the value is not more than the maximum.
-
+For a more extensive description of schema settings see
+:ref:`property-schema-settings-table`
 
 Class-style Type Definitions
 -----------------------------
@@ -263,6 +220,10 @@ After being perfected the *person* object had the height property stripped.
 The age and gender properties were added. The age property was set to None as
 no default setting was provided. The gender property was defined with a
 default setting, which was applied.
+
+For the collection type (dict, list, set), the *perfect_object* method will
+deepcopy the default value. This is to ensure that not all perfected objects
+will share a pointer to the same collection instance.
 
 Validate
 ---------
