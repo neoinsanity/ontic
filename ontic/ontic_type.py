@@ -34,6 +34,7 @@ Construction of **Ontic** data types as a class definition::
     >>> # or
     >>> my_object['some_property'] = 7
     >>> validate_object(my_object)
+    []
 
 Dynamic Ontic Type Definition
 -------------------------------
