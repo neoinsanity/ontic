@@ -533,7 +533,7 @@ def validate_property_schema(candidate_property_schema,
     value_errors = list()
 
     for schema_name, schema_setting in (
-        candidate_property_schema.get_schema().iteritems()):
+            candidate_property_schema.get_schema().iteritems()):
         setting_value = candidate_property_schema.get(schema_name, None)
 
         value_errors.extend(
@@ -593,7 +593,7 @@ def perfect_property_schema(candidate_property_schema):
         candidate_property_schema.member_type = None
 
     for property_name, property_schema in (
-        schema_property_schema.iteritems()):
+            schema_property_schema.iteritems()):
         if property_name not in candidate_property_schema:
             candidate_property_schema[
                 property_name] = property_schema.default
@@ -722,11 +722,11 @@ def validate_collection_members(key, property_schema, value, value_errors):
 
 
 def execute_collection_validators(
-    key,
-    member_value,
-    property_schema,
-    validators,
-    value_errors):
+        key,
+        member_value,
+        property_schema,
+        validators,
+        value_errors):
     """Method to execute a list of validators on a given collection.
 
     :param key: The name of the collection property to validate.

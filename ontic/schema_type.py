@@ -160,10 +160,7 @@ def validate_schema(candidate_schema, raise_validation_exception=True):
             meta_type.validate_property_schema(
                 candidate_property_schema, False))
 
-    if value_errors:
-        if raise_validation_exception:
-            raise ValidationException(value_errors)
-        else:
-            return value_errors
-    else:
-        return None
+    if value_errors and raise_validation_exception:
+        raise ValidationException(value_errors)
+
+    return value_errors

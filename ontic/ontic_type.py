@@ -136,8 +136,8 @@ def perfect_object(the_object):
         if property_name not in the_object:
             the_object[property_name] = None
 
-        if (the_object[property_name] is None and
-                property_schema.default is not None):
+        if the_object[property_name] is None \
+                and property_schema.default is not None:
             if TYPE_MAP.get(property_schema.type) in COLLECTION_TYPES:
                 the_object[property_name] = deepcopy(property_schema.default)
             else:
@@ -170,20 +170,12 @@ def validate_object(the_object, raise_validation_exception=True):
     value_errors = []
 
     for property_name in the_object.get_schema().keys():
-        errors = validate_value(
-            property_name,
-            the_object,
-            raise_validation_exception=False)
-        if errors:
-            value_errors.extend(errors)
+        value_errors.extend(validate_value(property_name, the_object, False))
 
-    if value_errors:
-        if raise_validation_exception:
-            raise ValidationException(value_errors)
-        else:
-            return value_errors
-    else:
-        return None
+    if value_errors and raise_validation_exception:
+        raise ValidationException(value_errors)
+
+    return value_errors
 
 
 def validate_value(property_name,
@@ -237,10 +229,7 @@ def validate_value(property_name,
     value_errors.extend(
         meta_type.validate_value(property_name, property_schema, value))
 
-    if value_errors:
-        if raise_validation_exception:
-            raise ValidationException(value_errors)
-        else:
-            return value_errors
-    else:
-        return None
+    if value_errors and raise_validation_exception:
+        raise ValidationException(value_errors)
+
+    return value_errors
