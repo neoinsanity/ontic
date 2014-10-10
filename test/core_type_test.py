@@ -83,7 +83,7 @@ class PropertySchemaTest(base_test_case.BaseTestCase):
             'min': 3,
             'regex': None,
             'required': True,
-            'type': 'int'
+            'type': int,
         }
 
         property_schema = PropertySchema({
@@ -107,13 +107,12 @@ class PropertySchemaTest(base_test_case.BaseTestCase):
 
     def test_property_schema_instantiation_failure(self):
         """Validate error reporting for bad PropertySchema definition."""
+
         bad_schema_test_case = {'type': 'UNDEFINED'}
 
         self.assertRaisesRegexp(
-            ValidationException,
-            r"""The value "UNDEFINED" for "type" not in enumeration """
-            r"""\['set', 'int', 'float', 'list', 'datetime', 'dict', 'str', """
-            r"""'time', 'date', 'bool'\].""",
+            ValueError,
+            r"""Illegal type declaration: UNDEFINED""",
             PropertySchema, bad_schema_test_case)
 
 
@@ -137,25 +136,15 @@ class ValidateSchemaProperty(base_test_case.BaseTestCase):
         invalid_property_schema = PropertySchema()
         invalid_property_schema.type = 'UNKNOWN'
 
+        self.maxDiff = None
         self.assertRaisesRegexp(
             ValidationException,
-            r"""The value "UNKNOWN" for "type" not in enumeration \['set', """
-            r"""'int', 'float', 'list', 'datetime', 'dict', 'str', 'time', """
-            r"""'date', 'bool'\].""",
+            r"""The value "UNKNOWN" for "type" not in enumeration \[.*\].""",
             meta_type.validate_property_schema, invalid_property_schema)
-
-        expected_errors_list = [
-            'The value "UNKNOWN" for "type" not in enumeration '
-            '[\'set\', \'int\', \'float\', \'list\', \'datetime\', '
-            '\'dict\', \'str\', \'time\', \'date\', \'bool\'].']
-
-        try:
-            meta_type.validate_property_schema(invalid_property_schema)
-            self.fail('A ValidationException should have been thrown')
-        except ValidationException as ve:
-            self.assertListEqual(expected_errors_list, ve.validation_errors)
 
         value_errors = meta_type.validate_property_schema(
             invalid_property_schema,
             raise_validation_exception=False)
-        self.assertListEqual(expected_errors_list, value_errors)
+        self.assertEqual(1, len(value_errors))
+        self.assertTrue(value_errors[0].startswith(
+            'The value "UNKNOWN" for "type" not in enumeration'))

@@ -1,4 +1,5 @@
-"""The fundamental *Ontic* base data types for creation of derived child classes.
+"""The fundamental *Ontic* base data types for creation of derived child
+classes.
 
 .. image:: images/ontic_type.jpg
 
@@ -11,7 +12,7 @@ Usage
 Create Ontic Types
 --------------------
 
-The *ontic_type* module provides the ::class::`OnticType` and a set of
+The *ontic_type* module provides the :class:`OnticType` and a set of
 functions to handle the creation and validation of *OnticType* instances.
 
 Construction of **Ontic** data types as a class definition::
@@ -33,6 +34,7 @@ Construction of **Ontic** data types as a class definition::
     >>> # or
     >>> my_object['some_property'] = 7
     >>> validate_object(my_object)
+    []
 
 Dynamic Ontic Type Definition
 -------------------------------
@@ -48,10 +50,12 @@ with the use of the :meth:`create_ontic_type` function.
     3
 
 """
-import meta_type
-from meta_type import MetaType
-from schema_type import SchemaType
-from validation_exception import ValidationException
+from copy import deepcopy
+
+from ontic import meta_type
+from ontic.meta_type import COLLECTION_TYPES, MetaType, TYPE_MAP
+from ontic.schema_type import SchemaType
+from ontic.validation_exception import ValidationException
 
 
 class OnticType(MetaType):
@@ -111,6 +115,9 @@ def perfect_object(the_object):
     object, those properties will be added and set to the default value or
     None, if no default has been set.
 
+    For the collection types (dict, list, set), the default values are deep
+    copied.
+
     :param the_object: Ab object instance that is to be perfected.
     :type the_object: :class:`ontic.ontic_type.OnticType`
     :rtype: None
@@ -128,10 +135,14 @@ def perfect_object(the_object):
 
     for property_name, property_schema in schema.iteritems():
         if property_name not in the_object:
-            the_object[property_name] = property_schema.default
-            continue
-        if not the_object[property_name]:
-            the_object[property_name] = property_schema.default
+            the_object[property_name] = None
+
+        if the_object[property_name] is None \
+                and property_schema.default is not None:
+            if TYPE_MAP.get(property_schema.type) in COLLECTION_TYPES:
+                the_object[property_name] = deepcopy(property_schema.default)
+            else:
+                the_object[property_name] = property_schema.default
 
 
 def validate_object(the_object, raise_validation_exception=True):
@@ -159,23 +170,13 @@ def validate_object(the_object, raise_validation_exception=True):
 
     value_errors = []
 
-    for property_name, property_schema in the_object.get_schema().iteritems():
-        value = the_object.get(property_name, None)
+    for property_name in the_object.get_schema().keys():
+        value_errors.extend(validate_value(property_name, the_object, False))
 
-        errors = validate_value(
-            property_name,
-            the_object,
-            raise_validation_exception=False)
-        if errors:
-            value_errors.extend(errors)
+    if value_errors and raise_validation_exception:
+        raise ValidationException(value_errors)
 
-    if value_errors:
-        if raise_validation_exception:
-            raise ValidationException(value_errors)
-        else:
-            return value_errors
-    else:
-        return None
+    return value_errors
 
 
 def validate_value(property_name,
@@ -222,17 +223,14 @@ def validate_value(property_name,
     property_schema = ontic_object.get_schema().get(property_name)
     if property_schema is None:
         raise ValueError(
-            '"property_name" is not a recognized property.')
+            '"%s" is not a recognized property.' % property_name)
 
     value = ontic_object.get(property_name, None)
 
     value_errors.extend(
         meta_type.validate_value(property_name, property_schema, value))
 
-    if value_errors:
-        if raise_validation_exception:
-            raise ValidationException(value_errors)
-        else:
-            return value_errors
-    else:
-        return None
+    if value_errors and raise_validation_exception:
+        raise ValidationException(value_errors)
+
+    return value_errors

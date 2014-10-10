@@ -85,6 +85,123 @@ class PerfectObjectTestCase(base_test_case.BaseTestCase):
         ontic_type.perfect_object(ontic_object)
         self.assertDictEqual(expected_dict, ontic_object)
 
+    def test_perfect_collection_types(self):
+        """Ensure that collection defaults are handled correctly."""
+        schema_def = SchemaType({
+            'dict_prop': {
+                'type': 'dict',
+                'default': {'a': 1, 'b': 2, 'c': 3}
+            },
+            'list_prop': {
+                'type': 'list',
+                'default': [1, 2, 3]
+            },
+            'set_prop': {
+                'type': 'set',
+                'default': {1, 2, 3}
+            }
+        })
+        my_type = ontic_type.create_ontic_type('PerfectCollection', schema_def)
+
+        ontic_object = my_type()
+        ontic_type.perfect_object(ontic_object)
+
+        # Test that the collection values are equal
+        self.assertDictEqual(schema_def.dict_prop.default,
+                             ontic_object.dict_prop)
+        self.assertListEqual(schema_def.list_prop.default,
+                             ontic_object.list_prop)
+        self.assertSetEqual(schema_def.set_prop.default,
+                            ontic_object.set_prop)
+
+        # Ensure that the collections are not the same objects
+        self.assertIsNot(schema_def.dict_prop.default,
+                         ontic_object.dict_prop)
+        self.assertIsNot(schema_def.list_prop.default,
+                         ontic_object.list_prop)
+        self.assertIsNot(schema_def.set_prop.default,
+                         ontic_object.set_prop)
+
+    def test_perfect_collection_default_copy(self):
+        """Ensure that collection default settings are handled correctly."""
+        # Configure default collection.
+        default_dict = {'key': 'value'}
+        default_list = ['item']
+        inner_tuple = (1, 2)
+        outer_tuple = (inner_tuple, 3, 4)
+        default_set = {'entity', outer_tuple}
+
+        # Configure default collections to test deep copy behavior.
+        ontic_object = ontic_type.OnticType()
+        ontic_object.dict = default_dict
+        default_deep_dict = {'name': default_dict}
+        default_deep_list = [default_dict]
+        default_deep_set = {(inner_tuple, outer_tuple)}
+
+        schema_def = SchemaType({
+            'dict_no_default': {
+                'type': 'dict',
+            },
+            'list_no_default': {
+                'type': 'list',
+            },
+            'set_no_default': {
+                'type': 'set',
+            },
+            'dict_with_default': {
+                'type': 'dict',
+                'default': default_dict,
+            },
+            'list_with_default': {
+                'type': 'list',
+                'default': default_list,
+            },
+            'set_with_default': {
+                'type': 'set',
+                'default': default_set,
+            },
+            'dict_deep_default': {
+                'type': 'dict',
+                'default': default_deep_dict,
+            },
+            'list_deep_default': {
+                'type': 'list',
+                'default': default_deep_list,
+            },
+            'set_deep_default': {
+                'type': 'set',
+                'default': default_deep_set,
+            },
+        })
+
+        # Execute test subject.
+        my_type = ontic_type.create_ontic_type('CollectionDefaults', schema_def)
+        my_object = my_type()
+        ontic_type.perfect_object(my_object)
+        ontic_type.validate_object(my_object)
+
+        # Assert the no default state.
+        self.assertIsNone(my_object.dict_no_default)
+        self.assertIsNone(my_object.list_no_default)
+        self.assertIsNone(my_object.set_no_default)
+
+        # Assert equality and copy of defaults.
+        self.assertDictEqual(default_dict, my_object.dict_with_default)
+        self.assertIsNot(default_dict, my_object.dict_with_default)
+        self.assertListEqual(default_list, my_object.list_with_default)
+        self.assertIsNot(default_list, my_object.list_with_default)
+        self.assertSetEqual(default_set, my_object.set_with_default)
+        self.assertIsNot(default_set, my_object.set_with_default)
+
+        # Assert equality and copy of deep defaults.
+        self.assertDictEqual(default_dict, my_object.dict_deep_default['name'])
+        self.assertIsNot(default_deep_dict['name'],
+                         my_object.dict_deep_default['name'])
+        self.assertDictEqual(default_dict, my_object.list_deep_default[0])
+        self.assertIsNot(default_deep_list[0], my_object.list_deep_default[0])
+        self.assertSetEqual(default_deep_set, my_object.set_deep_default)
+        self.assertIsNot(default_deep_set, my_object.set_deep_default)
+
 
 class ValidateObjectTestCase(base_test_case.BaseTestCase):
     """Test ontic_types.validate_object method basics."""
@@ -112,11 +229,11 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
 
         self.assertRaisesRegexp(
             ValidationException,
-            r"""The value for "some_attr" is not of type "int": WRONG""",
+            r"""The value for "some_attr" is not of type "<type 'int'>": WRONG""",
             ontic_type.validate_object, ontic_object)
 
         expected_errors = [
-            'The value for "some_attr" is not of type "int": WRONG']
+            """The value for "some_attr" is not of type "<type \'int\'>": WRONG"""]
 
         try:
             ontic_type.validate_object(ontic_object)
@@ -125,7 +242,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
             self.assertListEqual(expected_errors, ve.validation_errors)
 
         errors = ontic_type.validate_object(ontic_object,
-                                         raise_validation_exception=False)
+                                            raise_validation_exception=False)
         self.assertListEqual(expected_errors, errors)
 
     def test_type_setting(self):
@@ -170,7 +287,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         ontic_object.bool_property = 'Dog'
         self.assertRaisesRegexp(
             ValidationException,
-            'The value for "bool_property" is not of type "bool": Dog',
+            """The value for "bool_property" is not of type "<type 'bool'>": Dog""",
             ontic_type.validate_object, ontic_object)
         ontic_object.bool_property = True
 
@@ -178,7 +295,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         ontic_object.list_property = 'some_string'
         self.assertRaisesRegexp(
             ValidationException,
-            'The value for "list_property" is not of type "list": some_string',
+            """The value for "list_property" is not of type "<type 'list'>": some_string""",
             ontic_type.validate_object, ontic_object)
 
     def test_type_bad_setting(self):
@@ -188,10 +305,8 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         }
 
         self.assertRaisesRegexp(
-            ValidationException,
-            r"""The value "Unknown" for "type" not in enumeration \['set', """
-            r"""'int', 'float', 'list', 'datetime', 'dict', 'str', 'time', """
-            r"""'date', 'bool'\].""",
+            ValueError,
+            r"""Illegal type declaration: Unknown""",
             ontic_type.create_ontic_type, 'Dummy', schema)
 
     def test_required_setting(self):
@@ -249,8 +364,8 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
             "not in enumeration \[99, 'some_value'\].",
             ontic_type.validate_object, ontic_object)
 
-        # Collection testing
-        # ###################
+    def test_collection_enum_setting(self):
+        """Validate 'enum' schema setting on collections."""
         schema = {
             'enum_property': {'type': 'list', 'enum': {'dog', 'cat'}}
         }
@@ -262,7 +377,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         # Create object of type
         ontic_object = my_type()
 
-        # Validate an empty object
+        # Validate an empty object, as required not set.
         ontic_type.validate_object(ontic_object)
 
         # Validate a good setting
@@ -559,17 +674,18 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         ontic_object.list_property.append(99)
         self.assertRaisesRegexp(
             ValidationException,
-            r'''The value "99" for "list_property" is not of type "str".''',
+            r'''The value "99" for "list_property" is not of type '''
+            r'''"<type 'str'>".''',
             ontic_type.validate_object, ontic_object)
 
     def test_collection_regex_setting(self):
         """Validate string collection with 'regex' setting."""
         schema = {
-            'set_property': {'type': 'set', 'member_type': 'str', 'regex': 'b+'}
+            'set_property': {'type': set, 'member_type': str, 'regex': 'b+'}
         }
 
-        my_type = ontic_type.create_ontic_type('CollectionRegexCheck',
-                                               schema)
+        my_type = ontic_type.create_ontic_type(
+            'CollectionRegexCheck', schema)
         self.assertIsNotNone(ontic_type)
 
         ontic_object = my_type()
@@ -745,7 +861,7 @@ class ValidateValueTestCase(base_test_case.BaseTestCase):
 
         self.assertRaisesRegexp(
             ValueError,
-            '"property_name" is not a recognized property.',
+            '"illegal property name" is not a recognized property.',
             ontic_type.validate_value, 'illegal property name', ontic_object)
 
     def test_validate_value_exception_handling(self):
@@ -758,11 +874,13 @@ class ValidateValueTestCase(base_test_case.BaseTestCase):
 
         self.assertRaisesRegexp(
             ValidationException,
-            r"""The value for "some_attr" is not of type "int": WRONG""",
+            r"""The value for "some_attr" is not of type "<type 'int'>":"""
+            r""" WRONG""",
             ontic_type.validate_value, 'some_attr', ontic_object)
 
         expected_errors = [
-            'The value for "some_attr" is not of type "int": WRONG']
+            '''The value for "some_attr" is not of type "<type 'int'>": WRONG'''
+        ]
 
         try:
             ontic_type.validate_value('some_attr', ontic_object)

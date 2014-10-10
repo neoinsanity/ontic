@@ -13,7 +13,7 @@ The **meta_type** module contains three classes that are used in the
 definition and instantiation of object instances.  The root class is
 :class:`CoreType`, which is derived from the Python :class:`dict`. The
 primary feature of the :class:`CoreType` is provide the means to access
-properties of an object as a *dict* elements or as object attributes.
+properties of an object as a *dict* key or as object attribute.
 
 Derived from :class:`CoreType` is :class:`MetaType`, which provides the
 interface for retrieving a schema from an object schema definition via the
@@ -24,8 +24,8 @@ property. This includes setting data type, required, and other such common
 schema definition conventions. See :ref:`property-schema-settings-table` for
 details on the :class:`PropertySchema` settings available.
 
-It would is a rare case that requires the use of :class:`CoreType` or
-:class:`MetaType`. For most the majority of cases, the use of
+It would be a rare case that requires the use of :class:`CoreType` or
+:class:`MetaType`. For the majority of cases, the use of
 :class:`PropertySchema` is sufficient. With that in mind, the remainder of
 this section will focus on the use of :class:`PropertySchema`
 
@@ -36,22 +36,22 @@ For general purposes, consider utilizing :class:`ontic.schema_type.SchemaType`,
 for defining complete models. However, if you need validators for individual
 properties, then direct use of :class:`PropertySchema` is a solution.
 
-There are a number of ways to create a :class:`SchemaProperty`. Take a look
-at :class:`SchemaProperty` class documentation for a complete exposition on
+There are a number of ways to create a :class:`PropertySchema`. Take a look
+at :class:`PropertySchema` class documentation for a complete exposition on
 the means of instantiating an instance.
 
 The most straight forward way to create an instance of a
-:class:`SchemaProperty`:
+:class:`PropertySchema`:
 
 >>> prop_schema = PropertySchema(type='str', required=True, min=3)
 >>> prop_schema
 {'regex': None, 'enum': None, 'min': 3, 'default': None, 'max': None, \
-'required': True, 'member_type': None, 'member_min': None, 'type': 'str', \
-'member_max': None}
+'required': True, 'member_type': None, 'member_min': None, \
+'type': <type 'str'>, 'member_max': None}
 
 Demonstrated above is the creation of a property schema of type string. In
 addition the property schema forces the value of the property to required and
-of minimum length of 4.
+of minimum length of 3.
 
 Along with the schema settings explicitly set in the constructor, there are a
 number of other property schema settings that may be utilized. These
@@ -67,7 +67,7 @@ Utilizing Property Schema
 --------------------------
 
 Validation of a value utilizing the *prop_schema* created, is done with the
-:meth:`validate_value' method.`
+:meth:`validate_value` method.
 
 >>> prop_schema = PropertySchema(type='str', required=True)
 >>> some_value = 'The cat is on the roof.'
@@ -84,7 +84,7 @@ friendly error messages. For example:
 ['The value for "some_prop" is required.']
 
 The following example demonstrates how a :class:`PropertySchema` being
-instantiated with a dictionary. Subsequently the a bad value is passed with
+instantiated with a dictionary. Subsequently a bad value is passed with
 multiple validation errors.
 
 >>> other_schema = PropertySchema({
@@ -93,40 +93,86 @@ multiple validation errors.
 ...     'enum': {'dog', 'rat', 'cat'}
 ... })
 >>> validate_value('other_prop', other_schema, 'frog')
-['The value "frog" for "other_prop" not in enumeration \
-[\\\'rat\\\', \\\'dog\\\', \\\'cat\\\'].', 'The value of "frog" for \
-"other_prop" fails max of 3.']
+['The value "frog" for "other_prop" not in enumeration [\\'rat\\', \\'dog\\', \
+\\'cat\\'].', 'The value of "frog" for "other_prop" fails max of 3.']
 
 .. _property-schema-settings-table:
 
+Available Property Schema Settings
+-----------------------------------
+
+The following table gives a listing of the property schema settings that can
+be used to define properties. Details on the schema settings are provided
+after the table.
+
 .. table:: Property Schema Settings
 
-    ============ ====== ======== ========  =================================
-    name         type   default  required  enum
-    ============ ====== ======== ========  =================================
-    type         str    None     False     bool, dict, float, int,
-                                           list, set, str, date, , datetime
-    default      None   None     False     None
-    required     bool   False    False     None
-    enum         set    None     False     None
-    min          float  None     False     None
-    max          float  None     False     None
-    regex        str    None     False     None
-    member_type  str    None     False     bool, dict, float, int,
-                                           list, set, str, date, , datetime
-    member_min   float  None     False     None
-    member_max   float  None     False     None
-    ============ ====== ======== ========  =================================
+    ============ ========= ======== ========  =================================
+    Name         Type      Default  Required  Enumeration
+    ============ ========= ======== ========  =================================
+    type         str       None     False     basestring, bool, complex, date,
+                 type                         datetime, dict, float, int, list,
+                                              long, None, set, str, time,
+                                              unicode
+    default      None      None     False
+    required     bool      False    False
+    enum         set       None     False
+    min          complex   None     False
+                 date
+                 datetime
+                 float
+                 int
+                 long
+                 time
+    max          complex   None     False
+                 date
+                 datetime
+                 float
+                 int
+                 long
+                 time
+    regex        str       None     False
+    member_type  str       None     False     basestring, bool, complex, date,
+                 type                         datetime, dict, float, int, list,
+                                              long, None, set, str, time,
+                                              unicode
+    member_min   complex   None     False
+                 date
+                 datetime
+                 float
+                 int
+                 long
+                 time
+    member_max   complex   None     False
+                 date
+                 datetime
+                 float
+                 int
+                 long
+                 time
+    ============ ========= ======== ========  =================================
 
 *type*
     The *type* settings restricts a property to a known type. If no type is
-    defined, then any value type maybe assigned to the property.
+    defined, then any value type may be assigned to the property.
+
+    The type definition can be by type or by string name. Both ``{type=int}``
+    and ``{type='int'}`` are valid examples of type declaration.
 *default*
-    If the value is of a property is ``None``, then the default value is
-    applied to the property during validation. Note: the default value is
-    only applied to an instance during instance creation, or when a call to
-    :meth:`perfect_schema_property`. The default is not applied during
-    validation.
+    If no default is applied, then the default value will be ``None``. If a
+    default value is supplied, it will only be applied under two conditions.
+    A default value is applied during instantiation of an object of type
+    :class:`PropertySchema`, :class:`~ontic.schema_type.SchemaType`,
+    or :class:`~ontic.ontic_type.OnticType`. The other case is when an
+    instance of on of the given types is perfected via the methods
+    :func:`perfect_property_schema`, :func:`~ontic.schema_type.perfect_schema`,
+    or :func:`~ontic.ontic_type.perfect_object`.
+
+    The default is not applied during validation.
+
+    For the collection types (dict, list, and set), the default value is deep
+    copied. This is done to ensure that there is no sharing of collection
+    instances or values.
 *required*
     A *PropertySchema* with a required setting of *True*, will fail
     validation if the property value is *None*.
@@ -138,16 +184,16 @@ multiple validation errors.
 *min*
     The *min* setting has differing behavior, based on the *type* setting. If
     no *type* setting is provided, then *min* test will not occur. For the
-    boundable types (str, list, dict, set) the *min* setting will test that
+    boundable types (strings and collections) the *min* setting will test that
     the value length is not less than the minimum. For the comparable types
-    (int, float, data, time, datatime) the *min* setting will test that the
+    (numeric and chronological) the *min* setting will test that the
     value is not less than the minimum.
 *max*
     The *max setting has differing behavior, based on the *type* setting. If
     no *type* setting is provided, the *max* test will not occur. For the
-    boundable types (str, list, dict, set) the *max* setting will test that
+    boundable types (strings and collections) the *max* setting will test that
     the value length is not more than the maximum. For the comparable types
-    (int, float, date, time, datetime) the *max* setting will test that the
+    (numeric and chronological) the *max* setting will test that the
     value is not more than the maximum.
 *regex*
     The *regex* setting is only tested if the *type* or *member_type* setting
@@ -158,21 +204,25 @@ multiple validation errors.
     The *member_type* setting is used to restrict the value type for property
     *type* 'list' or 'set'. It does so ensuring that each member of the
     collection is of the type designated by *member_type*.
+
+    The type definition can be by type or by string name. Both
+    ``{member_type=int}`` and ``{member_type='int'}`` are valid examples of
+    type declaration.
 *member_min*
     The *member_min* setting has differing behavior, based on the
     *member_type* setting. If no *member_type* setting is provided, then
     *member_min* test will not occur. For the boundable types
-    (str, list, dict, set), the *member_min* setting will test that the
+    (strings and collections), the *member_min* setting will test that the
     value length is not less than the minimum. For the comparable types
-    (int, float, date, time, datetime) the *member_minimum* setting will test
+    (numeric and chronological) the *member_minimum* setting will test
     that the value is not less than the minimum.
 *member_max*
     The *member_max* setting has differing behavior, based on the
     *member_max* setting. If no *member_type* setting is provided,
     then *member_max* test will not occur. For the boundable types
-    (str, list, dict, set), the *member_max* setting will test that the
+    (strings and collections), the *member_max* setting will test that the
     value length is not more than the maximum. For the comparable types
-    (int, float, date, time, datetime) the *member_max* setting will test
+    (numeric and chronological) the *member_max* setting will test
     that the value is not more than the maximum.
 
 """
@@ -180,29 +230,52 @@ multiple validation errors.
 from datetime import date, datetime, time
 import re
 
-from validation_exception import ValidationException
+from ontic.validation_exception import ValidationException
 
 # : The set of supported collection types.
 COLLECTION_TYPES = {dict, list, set}
 
 # : The set of types that can be compared with inequality operators.
-COMPARABLE_TYPES = {'int', 'float', 'date', 'time', 'datetime'}
+COMPARABLE_TYPES = {complex, date, datetime, float, int, long, time}
 
 # : The set of types that may be limited in size.
-BOUNDABLE_TYPES = {'str', 'list', 'dict', 'set'}
+BOUNDABLE_TYPES = {basestring, str, unicode, list, dict, set}
+
+# : The set of string types
+STRING_TYPES = {basestring, str, unicode}
 
 # : Used to convert the string declaration of attribute type to native type.
 TYPE_MAP = {
+    'basestring': basestring,
+    basestring: basestring,
     'bool': bool,
+    bool: bool,
+    'complex': complex,
+    complex: complex,
     'date': date,
+    date: date,
     'datetime': datetime,
+    datetime: datetime,
     'dict': dict,
+    dict: dict,
     'float': float,
+    float: float,
     'int': int,
+    int: int,
     'list': list,
+    list: list,
+    'long': long,
+    long: long,
+    'None': None,
+    None: None,
     'set': set,
-    'str': basestring,
+    set: set,
+    'str': str,
+    str: str,
     'time': time,
+    time: time,
+    'unicode': unicode,
+    unicode: unicode,
 }
 
 
@@ -222,7 +295,7 @@ class CoreType(dict):
     """
 
     def __init__(self, *args, **kwargs):
-        """**CoreType** initialized as a `dict` type.
+        r"""**CoreType** initialized as a `dict` type.
 
         Initializes the accessor behavior to allow for property access as
         dict key or object attribute.
@@ -250,7 +323,7 @@ class CoreType(dict):
 
 
 class MetaType(CoreType):
-    """Interface for type definition of **Ontic** schema defined classes.
+    r"""Interface for type definition of **Ontic** schema defined classes.
 
     Dict Style Initialization
         MetaType() -> new empty MetaType
@@ -292,9 +365,9 @@ class PropertySchema(MetaType):
 
     Examples::
 
-        There are a number of ways to create a PropertySchema for us in
+        There are a number of ways to create a PropertySchema for use in
         validation of a property. The most straight forward is to define
-        create a property schema with a dictionary.
+        a property schema with a dictionary.
 
         >>> foo_schema = PropertySchema({
         ...     'type': 'str',
@@ -302,8 +375,7 @@ class PropertySchema(MetaType):
         ...     'default': 'Undefined',
         ... })
 
-        PropertySchema also support the full range of dict style of
-        instantiation.
+        PropertySchema also support the full range of dict style instantiation.
 
         >>> boo_schema = PropertySchema([('type','str'),('required',True)])
         >>> moo_schema = PropertySchema(type='str', default='Cow')
@@ -315,32 +387,22 @@ class PropertySchema(MetaType):
         >>> bar_schema.required = False
         >>> bar_schema.min = 3
         >>> val_errors = validate_property_schema(bar_schema)
-        >>> assert val_errors == None
+        >>> assert val_errors == []
 
         >>> nutty_schema = PropertySchema()
         >>> nutty_schema['type'] = 'str'
         >>> nutty_schema['required'] = True
         >>> nutty_schema['min'] = 5
         >>> val_errors = validate_property_schema(nutty_schema)
-        >>> assert val_errors == None
+        >>> assert val_errors == []
     """
-    # : The schema definition for the **PropertySchema** type.
+    # The schema definition for the **PropertySchema** type.
     ONTIC_SCHEMA = CoreType({
         'type': MetaType({
-            'type': 'str',
+            'type': (basestring, str, unicode, type),
             'default': None,
             'required': False,
-            'enum': {
-                'bool',
-                'dict',
-                'float',
-                'int',
-                'list',
-                'set',
-                'str',
-                'date',
-                'time',
-                'datetime'},
+            'enum': set(TYPE_MAP.keys()),
             'min': None,
             'max': None,
             'regex': None,
@@ -361,7 +423,7 @@ class PropertySchema(MetaType):
             'member_max': None,
         }),
         'required': MetaType({
-            'type': 'bool',
+            'type': bool,
             'default': False,
             'required': False,
             'enum': None,
@@ -373,7 +435,7 @@ class PropertySchema(MetaType):
             'member_max': None,
         }),
         'enum': MetaType({
-            'type': 'set',
+            'type': set,
             'default': None,
             'required': False,
             'enum': None,
@@ -385,7 +447,7 @@ class PropertySchema(MetaType):
             'member_max': None,
         }),
         'min': MetaType({
-            'type': float,
+            'type': tuple(COMPARABLE_TYPES),
             'default': None,
             'required': False,
             'enum': None,
@@ -397,7 +459,7 @@ class PropertySchema(MetaType):
             'member_max': None,
         }),
         'max': MetaType({
-            'type': float,
+            'type': tuple(COMPARABLE_TYPES),
             'default': None,
             'required': False,
             'enum': None,
@@ -409,7 +471,7 @@ class PropertySchema(MetaType):
             'member_max': None,
         }),
         'regex': MetaType({
-            'type': 'str',
+            'type': (basestring, str, unicode),
             'default': None,
             'required': False,
             'enum': None,
@@ -421,21 +483,10 @@ class PropertySchema(MetaType):
             'member_max': None,
         }),
         'member_type': MetaType({
-            'type': 'str',
+            'type': (basestring, str, unicode, type),
             'default': None,
             'required': False,
-            'enum': {
-                'bool',
-                'dict',
-                'float',
-                'int',
-                'list',
-                'set',
-                'str',
-                'date',
-                'time',
-                'datetime',
-            },
+            'enum': set(TYPE_MAP.keys()),
             'min': None,
             'max': None,
             'regex': None,
@@ -444,7 +495,7 @@ class PropertySchema(MetaType):
             'member_max': None,
         }),
         'member_min': MetaType({
-            'type': float,
+            'type': tuple(COMPARABLE_TYPES),
             'default': None,
             'required': False,
             'enum': None,
@@ -456,7 +507,7 @@ class PropertySchema(MetaType):
             'member_max': None,
         }),
         'member_max': MetaType({
-            'type': float,
+            'type': tuple(COMPARABLE_TYPES),
             'default': None,
             'required': False,
             'enum': None,
@@ -470,7 +521,7 @@ class PropertySchema(MetaType):
     })
 
     def __init__(self, *args, **kwargs):
-        """Initializes in accordance with dict specification.
+        r"""Initializes in accordance with dict specification.
 
         PropertySchema initialization can be done with a Dict object or with
         None. A PropertySchema defined with None is legal and valid. It is
@@ -538,13 +589,10 @@ def validate_property_schema(candidate_property_schema,
         value_errors.extend(
             validate_value(schema_name, schema_setting, setting_value))
 
-    if value_errors:
-        if raise_validation_exception:
-            raise ValidationException(value_errors)
-        else:
-            return value_errors
-    else:
-        return None
+    if value_errors and raise_validation_exception:
+        raise ValidationException(value_errors)
+
+    return value_errors
 
 
 def perfect_property_schema(candidate_property_schema):
@@ -559,7 +607,7 @@ def perfect_property_schema(candidate_property_schema):
         clean and restricted.
     :type candidate_property_schema: :class:`PropertySchema`
     :rtype: None
-    :raise: ValueError: If the candidate_property_schema is None, or not
+    :raises ValueError: If the candidate_property_schema is None, or not
         of type *PropertySchema*.
     """
     if candidate_property_schema is None:
@@ -570,10 +618,29 @@ def perfect_property_schema(candidate_property_schema):
 
     schema_property_schema = candidate_property_schema.get_schema()
 
+    # remove un-necessary properties.
     extra_properties = set(candidate_property_schema.keys()) - set(
         schema_property_schema.keys())
     for property_name in extra_properties:
         del candidate_property_schema[property_name]
+
+    if 'type' in candidate_property_schema:
+        # ensure that the type declaration is valid
+        if candidate_property_schema.type not in TYPE_MAP:
+            raise ValueError('Illegal type declaration: %s' %
+                             candidate_property_schema.type)
+        # coerce type declarations as string to base types.
+        candidate_property_schema.type = TYPE_MAP.get(
+            candidate_property_schema.type, None)
+    else:
+        candidate_property_schema.type = None
+
+    if 'member_type' in candidate_property_schema:
+        # coerce member_type declarations as string to base types.
+        candidate_property_schema.member_type = TYPE_MAP[
+            candidate_property_schema.member_type]
+    else:
+        candidate_property_schema.member_type = None
 
     for property_name, property_schema in (
             schema_property_schema.iteritems()):
@@ -630,10 +697,7 @@ def validate_non_none_value(key, property_schema, value, value_errors):
     :type value_errors: list<str>
     :rtype: None
     """
-    # Divide between single and collection types for validation processing.
-    schema_value_type = TYPE_MAP.get(property_schema.type)
-
-    if not schema_value_type:
+    if not property_schema.type:
         # if no schema_type, then just check that
         # the value is in an enum if necessary.
         if not enum_validation(property_schema, value):
@@ -643,14 +707,15 @@ def validate_non_none_value(key, property_schema, value, value_errors):
             return  # No further processing can occur
     else:
         # type checking
-        if not isinstance(value, schema_value_type):
+        if not isinstance(value, property_schema.type):
             value_errors.append(
                 'The value for "%s" is not of type "%s": %s' %
                 (key, property_schema.type, str(value)))
-            return  # If not of the expected type, than can't further
+            # If not of the expected type, than can't further
             # validate without errors.
+            return
 
-        if schema_value_type in COLLECTION_TYPES:
+        if property_schema.type in COLLECTION_TYPES:
             validate_collection_members(
                 key, property_schema, value, value_errors)
         else:
@@ -683,14 +748,14 @@ def validate_collection_members(key, property_schema, value, value_errors):
         value_errors.append('The value of "%s" for "%s" fails max of %s.' %
                             (value, key, property_schema.max))
 
-    if property_schema.type in {'list', 'set'}:
+    if property_schema.type in {list, set}:
         validators = list()
 
         if property_schema.enum:
             validators.append(validate_member_enum)
         if property_schema.member_type:
             validators.append(validate_member_type)
-        if property_schema.regex and property_schema.member_type == 'str':
+        if property_schema.regex and property_schema.member_type == str:
             validators.append(validate_member_regex)
         if property_schema.member_min:
             validators.append(validate_member_min)
@@ -770,9 +835,7 @@ def validate_member_type(key, member_value, property_schema, value_errors):
     :type value_errors: list<str>
     :rtype: None
     """
-    schema_value_type = TYPE_MAP.get(
-        property_schema.member_type)
-    if not isinstance(member_value, schema_value_type):
+    if not isinstance(member_value, property_schema.member_type):
         value_errors.append(
             'The value "%s" for "%s" is not of type "%s".' %
             (str(member_value), key, property_schema.member_type))
@@ -816,7 +879,7 @@ def validate_member_min(key, member_value, property_schema, value_errors):
     :type value_errors: list<str>
     :rtype: None
     """
-    if property_schema.member_type == 'str':
+    if property_schema.member_type in STRING_TYPES:
         if len(member_value) < property_schema.member_min:
             value_errors.append(
                 'The value of "%s" for "%s" fails min length of %s.' %
@@ -845,7 +908,7 @@ def validate_member_max(key, member_value, property_schema, value_errors):
     :type value_errors: list<str>
     :rtype: None
     """
-    if property_schema.member_type == 'str':
+    if property_schema.member_type in STRING_TYPES:
         if len(member_value) > property_schema.member_max:
             value_errors.append(
                 'The value of "%s" for "%s" fails max length of %s.' %
@@ -950,7 +1013,7 @@ def non_none_singular_validation(key, property_schema, value, value_errors):
 
     # regex validation
     if property_schema.regex:
-        if property_schema.type == 'str' and value is not '':
+        if property_schema.type in STRING_TYPES and value is not '':
             if not re.match(property_schema.regex, value):
                 value_errors.append(
                     'Value "%s" for %s does not meet regex: %s' %
