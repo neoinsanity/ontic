@@ -139,35 +139,12 @@ class ValidateSchemaProperty(base_test_case.BaseTestCase):
         self.maxDiff = None
         self.assertRaisesRegexp(
             ValidationException,
-            r"""The value "UNKNOWN" for "type" not in enumeration \["""
-            r"""<type 'dict'>, 'set', <type 'long'>, 'int', 'float', """
-            r"""'datetime', <type 'basestring'>, <type 'bool'>, 'unicode', """
-            r"""'basestring', <type 'int'>, <type 'list'>, """
-            r"""<type 'datetime.time'>, <type 'str'>, 'long', """
-            r"""<type 'unicode'>, 'complex', 'bool', 'dict', 'None', """
-            r"""<type 'datetime.date'>, <type 'set'>, <type 'complex'>, """
-            r"""None, 'date', <type 'datetime.datetime'>, 'list', """
-            r"""<type 'float'>, 'str', 'time'\].""",
+            r"""The value "UNKNOWN" for "type" not in enumeration \[.*\].""",
             meta_type.validate_property_schema, invalid_property_schema)
-
-        expected_errors_list = [
-            'The value "UNKNOWN" for "type" not in enumeration ['
-            '<type \'dict\'>, \'set\', <type \'long\'>, \'int\', \'float\', '
-            '\'datetime\', <type \'basestring\'>, <type \'bool\'>, \'unicode\', '
-            '\'basestring\', <type \'int\'>, <type \'list\'>, '
-            '<type \'datetime.time\'>, <type \'str\'>, \'long\', '
-            '<type \'unicode\'>, \'complex\', \'bool\', \'dict\', \'None\', '
-            '<type \'datetime.date\'>, <type \'set\'>, <type \'complex\'>, '
-            'None, \'date\', <type \'datetime.datetime\'>, \'list\', '
-            '<type \'float\'>, \'str\', \'time\'].']
-
-        try:
-            meta_type.validate_property_schema(invalid_property_schema)
-            self.fail('A ValidationException should have been thrown')
-        except ValidationException as ve:
-            self.assertListEqual(expected_errors_list, ve.validation_errors)
 
         value_errors = meta_type.validate_property_schema(
             invalid_property_schema,
             raise_validation_exception=False)
-        self.assertListEqual(expected_errors_list, value_errors)
+        self.assertEqual(1, len(value_errors))
+        self.assertTrue(value_errors[0].startswith(
+            'The value "UNKNOWN" for "type" not in enumeration'))
