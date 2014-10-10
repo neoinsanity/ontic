@@ -349,7 +349,7 @@ class PropertySchema(MetaType):
     # : The schema definition for the **PropertySchema** type.
     ONTIC_SCHEMA = CoreType({
         'type': MetaType({
-            'type': None,
+            'type': (basestring, str, unicode, type),
             'default': None,
             'required': False,
             'enum': set(TYPE_MAP.keys()),
@@ -397,7 +397,7 @@ class PropertySchema(MetaType):
             'member_max': None,
         }),
         'min': MetaType({
-            'type': float,
+            'type': (int, long, float, date, time, datetime),
             'default': None,
             'required': False,
             'enum': None,
@@ -409,7 +409,7 @@ class PropertySchema(MetaType):
             'member_max': None,
         }),
         'max': MetaType({
-            'type': float,
+            'type': (int, long, float, date, time, datetime),
             'default': None,
             'required': False,
             'enum': None,
@@ -421,7 +421,7 @@ class PropertySchema(MetaType):
             'member_max': None,
         }),
         'regex': MetaType({
-            'type': basestring,
+            'type': (basestring, str, unicode),
             'default': None,
             'required': False,
             'enum': None,
@@ -433,7 +433,7 @@ class PropertySchema(MetaType):
             'member_max': None,
         }),
         'member_type': MetaType({
-            'type': basestring,
+            'type': (basestring, str, unicode, type),
             'default': None,
             'required': False,
             'enum': set(TYPE_MAP.keys()),
@@ -445,7 +445,7 @@ class PropertySchema(MetaType):
             'member_max': None,
         }),
         'member_min': MetaType({
-            'type': float,
+            'type': (int, long, float, date, time, datetime),
             'default': None,
             'required': False,
             'enum': None,
@@ -457,7 +457,7 @@ class PropertySchema(MetaType):
             'member_max': None,
         }),
         'member_max': MetaType({
-            'type': float,
+            'type': (int, long, float, date, time, datetime),
             'default': None,
             'required': False,
             'enum': None,
@@ -603,18 +603,6 @@ def perfect_property_schema(candidate_property_schema):
             continue
         if not candidate_property_schema[property_name]:
             candidate_property_schema[property_name] = property_schema.default
-
-    # coerce the min and max to float.
-    if candidate_property_schema.max is not None:
-        candidate_property_schema.max = float(candidate_property_schema.max)
-    if candidate_property_schema.min is not None:
-        candidate_property_schema.min = float(candidate_property_schema.min)
-    if candidate_property_schema.member_max is not None:
-        candidate_property_schema.member_max = float(
-            candidate_property_schema.member_max)
-    if candidate_property_schema.member_min is not None:
-        candidate_property_schema.member_min = float(
-            candidate_property_schema.member_min)
 
 
 def validate_value(name, property_schema, value):

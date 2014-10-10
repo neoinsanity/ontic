@@ -76,11 +76,11 @@ class PropertySchemaTest(base_test_case.BaseTestCase):
         expected_schema = {
             'default': None,
             'enum': None,
-            'max': 7.0,
+            'max': 7,
             'member_max': None,
             'member_min': None,
             'member_type': None,
-            'min': 3.0,
+            'min': 3,
             'regex': None,
             'required': True,
             'type': int,
@@ -107,13 +107,12 @@ class PropertySchemaTest(base_test_case.BaseTestCase):
 
     def test_property_schema_instantiation_failure(self):
         """Validate error reporting for bad PropertySchema definition."""
+
         bad_schema_test_case = {'type': 'UNDEFINED'}
 
         self.assertRaisesRegexp(
-            ValidationException,
-            r"""The value "UNDEFINED" for "type" not in enumeration """
-            r"""\['set', 'int', 'float', 'list', 'datetime', 'dict', 'str', """
-            r"""'time', 'date', 'bool'\].""",
+            ValueError,
+            r"""Illegal type declaration: UNDEFINED""",
             PropertySchema, bad_schema_test_case)
 
 

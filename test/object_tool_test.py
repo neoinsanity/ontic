@@ -239,7 +239,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
             ontic_type.validate_object(ontic_object)
             self.fail('ValidationException should have been thrown.')
         except ValidationException as ve:
-             self.assertListEqual(expected_errors, ve.validation_errors)
+            self.assertListEqual(expected_errors, ve.validation_errors)
 
         errors = ontic_type.validate_object(ontic_object,
                                             raise_validation_exception=False)
@@ -674,7 +674,8 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         ontic_object.list_property.append(99)
         self.assertRaisesRegexp(
             ValidationException,
-            r'''The value "99" for "list_property" is not of type "str".''',
+            r'''The value "99" for "list_property" is not of type '''
+            r'''"<type 'str'>".''',
             ontic_type.validate_object, ontic_object)
 
     def test_collection_regex_setting(self):
@@ -683,8 +684,8 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
             'set_property': {'type': set, 'member_type': str, 'regex': 'b+'}
         }
 
-        my_type = ontic_type.create_ontic_type('CollectionRegexCheck',
-                                               schema)
+        my_type = ontic_type.create_ontic_type(
+            'CollectionRegexCheck', schema)
         self.assertIsNotNone(ontic_type)
 
         ontic_object = my_type()
