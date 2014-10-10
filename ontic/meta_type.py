@@ -337,14 +337,14 @@ class PropertySchema(MetaType):
         >>> bar_schema.required = False
         >>> bar_schema.min = 3.0
         >>> val_errors = validate_property_schema(bar_schema)
-        >>> assert val_errors == None
+        >>> assert val_errors == []
 
         >>> nutty_schema = PropertySchema()
         >>> nutty_schema['type'] = 'str'
         >>> nutty_schema['required'] = True
         >>> nutty_schema['min'] = 5.0
         >>> val_errors = validate_property_schema(nutty_schema)
-        >>> assert val_errors == None
+        >>> assert val_errors == []
     """
     # : The schema definition for the **PropertySchema** type.
     ONTIC_SCHEMA = CoreType({
@@ -533,19 +533,16 @@ def validate_property_schema(candidate_property_schema,
     value_errors = list()
 
     for schema_name, schema_setting in (
-            candidate_property_schema.get_schema().iteritems()):
+        candidate_property_schema.get_schema().iteritems()):
         setting_value = candidate_property_schema.get(schema_name, None)
 
         value_errors.extend(
             validate_value(schema_name, schema_setting, setting_value))
 
-    if value_errors:
-        if raise_validation_exception:
-            raise ValidationException(value_errors)
-        else:
-            return value_errors
-    else:
-        return None
+    if value_errors and raise_validation_exception:
+        raise ValidationException(value_errors)
+
+    return value_errors
 
 
 def perfect_property_schema(candidate_property_schema):
@@ -596,7 +593,7 @@ def perfect_property_schema(candidate_property_schema):
         candidate_property_schema.member_type = None
 
     for property_name, property_schema in (
-            schema_property_schema.iteritems()):
+        schema_property_schema.iteritems()):
         if property_name not in candidate_property_schema:
             candidate_property_schema[
                 property_name] = property_schema.default
@@ -725,11 +722,11 @@ def validate_collection_members(key, property_schema, value, value_errors):
 
 
 def execute_collection_validators(
-        key,
-        member_value,
-        property_schema,
-        validators,
-        value_errors):
+    key,
+    member_value,
+    property_schema,
+    validators,
+    value_errors):
     """Method to execute a list of validators on a given collection.
 
     :param key: The name of the collection property to validate.
