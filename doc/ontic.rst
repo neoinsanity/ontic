@@ -264,6 +264,10 @@ The age and gender properties were added. The age property was set to None as
 no default setting was provided. The gender property was defined with a
 default setting, which was applied.
 
+For the collection type (dict, list, set), the *perfect_object* method will
+deepcopy the default value. This is to ensure that not all perfected objects
+will share a pointer to the same collection instance.
+
 Validate
 ---------
 
