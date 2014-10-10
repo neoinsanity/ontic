@@ -12,7 +12,7 @@ Usage
 Create Ontic Types
 --------------------
 
-The *ontic_type* module provides the ::class::`OnticType` and a set of
+The *ontic_type* module provides the :class:`OnticType` and a set of
 functions to handle the creation and validation of *OnticType* instances.
 
 Construction of **Ontic** data types as a class definition::
