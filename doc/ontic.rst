@@ -21,6 +21,7 @@ The example for the simplest **Ontic** object is::
   >>> my_object['some_property'] = 'Some value'
   >>> my_object.other_property = 3
   >>> my_object
+  {'other_property': 3, 'some_property': 'Some value'}
 
 The ability to use *OnticType* objects as dict, makes it easy to utilize with
 most common interfaces. Here is an *OnticType* object with pymongo::
