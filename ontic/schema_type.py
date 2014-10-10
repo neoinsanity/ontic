@@ -77,7 +77,7 @@ class SchemaType(CoreType):
     """
 
     def __init__(self, *args, **kwargs):
-        """Initializes in accordance with dict specification.
+        r"""Initializes in accordance with dict specification.
 
         Dict Style Initialization
             *SchemaType* supports dict style initialization.

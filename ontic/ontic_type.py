@@ -51,10 +51,10 @@ with the use of the :meth:`create_ontic_type` function.
 """
 from copy import deepcopy
 
-import meta_type
-from meta_type import COLLECTION_TYPES, MetaType, TYPE_MAP
-from schema_type import SchemaType
-from validation_exception import ValidationException
+from ontic import meta_type
+from ontic.meta_type import COLLECTION_TYPES, MetaType, TYPE_MAP
+from ontic.schema_type import SchemaType
+from ontic.validation_exception import ValidationException
 
 
 class OnticType(MetaType):
@@ -136,8 +136,8 @@ def perfect_object(the_object):
         if property_name not in the_object:
             the_object[property_name] = None
 
-        if (the_object[property_name] is None
-            and property_schema.default is not None):
+        if (the_object[property_name] is None and
+                property_schema.default is not None):
             if TYPE_MAP.get(property_schema.type) in COLLECTION_TYPES:
                 the_object[property_name] = deepcopy(property_schema.default)
             else:

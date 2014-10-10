@@ -2,14 +2,16 @@
 
 
 class ValidationException(Exception):
-    def __init__(self, validation_errors=list()):
+    """Exception used to signal validation errors."""
+
+    def __init__(self, validation_errors=None):
         """
 
         :param validation_errors: A list of validation failures that are
             triggering the *ValidationException*.
         :type validation_errors: list<str>
         """
-        self._validation_errors = validation_errors
+        self._validation_errors = validation_errors if validation_errors else []
         message = str.join(' \n', validation_errors)
         super(ValidationException, self).__init__(message)
 

@@ -179,7 +179,7 @@ multiple validation errors.
 from datetime import date, datetime, time
 import re
 
-from validation_exception import ValidationException
+from ontic.validation_exception import ValidationException
 
 # : The set of supported collection types.
 COLLECTION_TYPES = {dict, list, set}
@@ -244,7 +244,7 @@ class CoreType(dict):
     """
 
     def __init__(self, *args, **kwargs):
-        """**CoreType** initialized as a `dict` type.
+        r"""**CoreType** initialized as a `dict` type.
 
         Initializes the accessor behavior to allow for property access as
         dict key or object attribute.
@@ -272,7 +272,7 @@ class CoreType(dict):
 
 
 class MetaType(CoreType):
-    """Interface for type definition of **Ontic** schema defined classes.
+    r"""Interface for type definition of **Ontic** schema defined classes.
 
     Dict Style Initialization
         MetaType() -> new empty MetaType
@@ -471,7 +471,7 @@ class PropertySchema(MetaType):
     })
 
     def __init__(self, *args, **kwargs):
-        """Initializes in accordance with dict specification.
+        r"""Initializes in accordance with dict specification.
 
         PropertySchema initialization can be done with a Dict object or with
         None. A PropertySchema defined with None is legal and valid. It is
