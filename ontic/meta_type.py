@@ -227,6 +227,7 @@ after the table.
 
 """
 
+from copy import copy, deepcopy
 from datetime import date, datetime, time
 import re
 
@@ -320,6 +321,13 @@ class CoreType(dict):
         super(CoreType, self).__init__(*args, **kwargs)
 
         self.__dict__ = self
+
+    def __copy__(self):
+        return type(self)(copy(dict(self)))
+
+    def __deepcopy__(self, memo):
+        the_copy = dict(self.__dict__)
+        return type(self)(deepcopy(the_copy, memo))
 
 
 class MetaType(CoreType):
