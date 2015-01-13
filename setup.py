@@ -6,7 +6,7 @@ with open('README.txt') as file:
 
 setup(
     name='ontic',
-    version='0.0.4',
+    version='0.0.5a',
     author='Raul Gonzalez',
     author_email='mindbender@gmail.com',
     url='https://github.com/neoinsanity/ontic',
