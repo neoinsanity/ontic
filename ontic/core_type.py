@@ -1,7 +1,5 @@
 from copy import copy, deepcopy
 
-__author__ = 'raulg'
-
 
 class CoreType(dict):
     """The root type of *Ontic* types.
@@ -44,6 +42,10 @@ class CoreType(dict):
         super(CoreType, self).__init__(*args, **kwargs)
 
         self.__dict__ = self
+
+    def __del__(self):
+        # The self reference is removed to promote fast garbage collection.
+        self.__dict__ = None
 
     def __copy__(self):
         return type(self)(copy(dict(self)))
