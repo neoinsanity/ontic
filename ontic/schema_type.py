@@ -52,8 +52,9 @@ and :meth:`validate_schema`.
     >>> errors = validate_schema(a_schema)
 
 """
+from core_type import CoreType
 from ontic import meta_type
-from ontic.meta_type import CoreType, PropertySchema
+from ontic.meta_type import PropertySchema
 from ontic.validation_exception import ValidationException
 
 

@@ -3,8 +3,9 @@
 from copy import copy, deepcopy
 from test_utils import base_test_case
 
+from ontic.core_type import CoreType
 from ontic import meta_type
-from ontic.meta_type import CoreType, MetaType, PropertySchema
+from ontic.meta_type import MetaType, PropertySchema
 from ontic.validation_exception import ValidationException
 
 
