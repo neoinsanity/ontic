@@ -1,7 +1,6 @@
 from test_utils import base_test_case
 
-from ontic import meta_type
-from ontic.meta_type import PropertySchema
+from ontic.property_schema import PropertySchema, perfect_property_schema
 from ontic import schema_type
 from ontic.schema_type import SchemaType
 from ontic.validation_exception import ValidationException
@@ -69,7 +68,7 @@ class PerfectSchemaPropertyTestCase(base_test_case.BaseTestCase):
 
     def test_perfect_empty_schema_property(self):
         """Validate the perfection of an empty schema property."""
-        candidate_schema_property = meta_type.PropertySchema()
+        candidate_schema_property = PropertySchema()
         self.assertEqual(10, len(candidate_schema_property))
         self.assertDictEqual(
             {
@@ -86,7 +85,7 @@ class PerfectSchemaPropertyTestCase(base_test_case.BaseTestCase):
             },
             candidate_schema_property)
 
-        meta_type.perfect_property_schema(candidate_schema_property)
+        perfect_property_schema(candidate_schema_property)
 
         self.assertEqual(10, len(candidate_schema_property))
         self.assertDictEqual(
@@ -105,7 +104,7 @@ class PerfectSchemaPropertyTestCase(base_test_case.BaseTestCase):
 
     def test_perfect_partial_schema_property(self):
         """Validate the perfection of a partial schema definition."""
-        candidate_schema_property = meta_type.PropertySchema(
+        candidate_schema_property = PropertySchema(
             {
                 'type': 'int',
                 'required': True,
@@ -127,7 +126,7 @@ class PerfectSchemaPropertyTestCase(base_test_case.BaseTestCase):
             },
             candidate_schema_property)
 
-        meta_type.perfect_property_schema(candidate_schema_property)
+        perfect_property_schema(candidate_schema_property)
 
         self.assertEqual(10, len(candidate_schema_property))
         self.assertDictEqual(
@@ -150,12 +149,12 @@ class PerfectSchemaPropertyTestCase(base_test_case.BaseTestCase):
         self.assertRaisesRegexp(
             ValueError,
             '"candidate_property_schema" must be provided.',
-            meta_type.perfect_property_schema, None)
+            perfect_property_schema, None)
 
         self.assertRaisesRegexp(
             ValueError,
             '"candidate_property_schema" must be PropertySchema type.',
-            meta_type.perfect_property_schema, {})
+            perfect_property_schema, {})
 
 
 class PerfectSchemaTestCase(base_test_case.BaseTestCase):
@@ -164,8 +163,8 @@ class PerfectSchemaTestCase(base_test_case.BaseTestCase):
     def test_perfect_schema_type(self):
         """Validate 'perfect_schema' method usage."""
         candidate_schema = SchemaType({
-            'prop1': meta_type.PropertySchema(),
-            'prop2': meta_type.PropertySchema({'type': 'str', 'min': 5})
+            'prop1': PropertySchema(),
+            'prop2': PropertySchema({'type': 'str', 'min': 5})
         })
         self.assertEqual(2, len(candidate_schema))
         self.assertEqual(10, len(candidate_schema.prop1))
@@ -231,8 +230,8 @@ class PerfectSchemaTestCase(base_test_case.BaseTestCase):
                     'type': str
                 }
             }, candidate_schema)
-        self.assertIsInstance(candidate_schema.prop1, meta_type.PropertySchema)
-        self.assertIsInstance(candidate_schema.prop2, meta_type.PropertySchema)
+        self.assertIsInstance(candidate_schema.prop1, PropertySchema)
+        self.assertIsInstance(candidate_schema.prop2, PropertySchema)
 
     def test_bad_perfect_schema(self):
         """Validate proper error handling in 'perfect_schema' method."""

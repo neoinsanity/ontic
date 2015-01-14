@@ -4,8 +4,8 @@ from copy import copy, deepcopy
 from test_utils import base_test_case
 
 from ontic.core_type import CoreType
-from ontic import meta_type
-from ontic.meta_type import MetaType, PropertySchema
+from ontic.meta_type import MetaType
+from ontic.property_schema import PropertySchema, validate_property_schema
 from ontic.validation_exception import ValidationException
 
 
@@ -188,12 +188,12 @@ class ValidateSchemaProperty(base_test_case.BaseTestCase):
         self.assertRaisesRegexp(
             ValueError,
             '"candidate_property_schema" must be provided.',
-            meta_type.validate_property_schema, None, list())
+            validate_property_schema, None, list())
 
         self.assertRaisesRegexp(
             ValueError,
             '"candidate_property_schema" must be PropertySchema type.',
-            meta_type.validate_property_schema, dict(), list())
+            validate_property_schema, dict(), list())
 
     def test_validate_schema_property_exception(self):
         """Test validate_schema validation exception handling."""
@@ -204,9 +204,9 @@ class ValidateSchemaProperty(base_test_case.BaseTestCase):
         self.assertRaisesRegexp(
             ValidationException,
             r"""The value "UNKNOWN" for "type" not in enumeration \[.*\].""",
-            meta_type.validate_property_schema, invalid_property_schema)
+            validate_property_schema, invalid_property_schema)
 
-        value_errors = meta_type.validate_property_schema(
+        value_errors = validate_property_schema(
             invalid_property_schema,
             raise_validation_exception=False)
         self.assertEqual(1, len(value_errors))

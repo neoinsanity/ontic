@@ -2,7 +2,7 @@
 
 from test_utils import base_test_case
 
-from ontic.meta_type import PropertySchema
+from ontic.property_schema import PropertySchema
 from ontic.schema_type import SchemaType
 
 
