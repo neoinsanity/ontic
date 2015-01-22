@@ -1,4 +1,3 @@
-
 from datetime import date, datetime, time
 import re
 
@@ -77,14 +76,13 @@ class MetaType(CoreType):
 
     @classmethod
     def get_schema(cls):
-        """Returns the schema object for the a given type definition.
+        """Returns the schema object for the given type definition.
 
         :return: The schema metadata definition for a :class:`PropertySchema`
             or a :class:`ontic.ontic_type.OnticType` derived child class.
         :rtype: :class:`CoreType`, :class:`ontic.schema_type.SchemaType`
         """
         return cls.ONTIC_SCHEMA
-
 
 def validate_value(name, property_schema, value):
     """Method to validate a given value against a given property schema.

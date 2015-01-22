@@ -53,10 +53,9 @@ and :meth:`validate_schema`.
 
 """
 from core_type import CoreType
-from ontic import meta_type
 from ontic.validation_exception import ValidationException
-from property_schema import PropertySchema, validate_property_schema, \
-    perfect_property_schema
+from property_schema import (PropertySchema, validate_property_schema,
+                             perfect_property_schema)
 
 
 class SchemaType(CoreType):
