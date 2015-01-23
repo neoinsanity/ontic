@@ -104,6 +104,12 @@ class SchemaType(CoreType):
             if not isinstance(value, PropertySchema):
                 self[key] = PropertySchema(value)
 
+    def perfect(self):
+        perfect_schema(self)
+
+    def validate(self):
+        return validate_schema(self)
+
 
 def perfect_schema(candidate_schema):
     """Method to clean and perfect a given schema.

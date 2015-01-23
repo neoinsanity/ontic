@@ -433,7 +433,7 @@ class PropertySchema(MetaType):
         self.validate()
 
     def validate(self, raise_validation_exception=True):
-        validate_property_schema(self, raise_validation_exception)
+        return validate_property_schema(self, raise_validation_exception)
 
     def perfect(self):
         perfect_property_schema(self)

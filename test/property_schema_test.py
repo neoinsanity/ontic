@@ -61,7 +61,7 @@ class PropertySchemaTest(base_test_case.BaseTestCase):
         self.assertIsNotNone(property_schema)
 
         property_schema.type = int
-        self.assertEqual(None, property_schema.validate())
+        self.assertEqual([], property_schema.validate())
 
         property_schema.type = '__WRONG__'
         self.assertRaises(ValidationException, property_schema.validate)
