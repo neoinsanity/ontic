@@ -65,6 +65,12 @@ class OnticType(MetaType):
     derived **Ontic** type instance.
     """
 
+    def perfect(self):
+        perfect_object(self)
+
+    def validate(self, raise_validation_exception=True):
+        validate_object(self, raise_validation_exception)
+
 
 def create_ontic_type(name, schema):
     """Create an **Ontic** type to generate objects with a given schema.
