@@ -429,9 +429,14 @@ class PropertySchema(MetaType):
         """
         super(PropertySchema, self).__init__(*args, **kwargs)
 
-        perfect_property_schema(self)
+        self.perfect()
+        self.validate()
 
-        validate_property_schema(self)
+    def validate(self, raise_validation_exception=True):
+        validate_property_schema(self, raise_validation_exception)
+
+    def perfect(self):
+        perfect_property_schema(self)
 
 
 def validate_property_schema(candidate_property_schema,

@@ -1,6 +1,7 @@
 from test.test_utils import base_test_case
 
-from ontic.property_schema import PropertySchema, validate_property_schema
+from ontic.property_schema import (PropertySchema, perfect_property_schema,
+                                   validate_property_schema)
 from ontic.validation_exception import ValidationException
 
 
@@ -54,6 +55,95 @@ class PropertySchemaTest(base_test_case.BaseTestCase):
             r"""Illegal type declaration: UNDEFINED""",
             PropertySchema, bad_schema_test_case)
 
+    def test_property_schema_validate(self):
+        """Test PropertySchema.validate method."""
+        property_schema = PropertySchema()
+        self.assertIsNotNone(property_schema)
+
+        property_schema.type = int
+        self.assertEqual(None, property_schema.validate())
+
+        property_schema.type = '__WRONG__'
+        self.assertRaises(ValidationException, property_schema.validate)
+
+
+    def test_property_schema_perfect(self):
+        """Test PropertySchema.perfect method."""
+        candidate_schema_property = PropertySchema()
+        self.assertEqual(10, len(candidate_schema_property))
+        self.assertDictEqual(
+            {
+                'default': None,
+                'enum': None,
+                'member_max': None,
+                'member_min': None,
+                'member_type': None,
+                'max': None,
+                'min': None,
+                'regex': None,
+                'required': False,
+                'type': None
+            },
+            candidate_schema_property)
+
+        candidate_schema_property.perfect()
+
+        self.assertEqual(10, len(candidate_schema_property))
+        self.assertDictEqual(
+            {
+                'regex': None,
+                'member_max': None,
+                'enum': None,
+                'min': None,
+                'default': None,
+                'max': None,
+                'required': False,
+                'member_min': None,
+                'member_type': None,
+                'type': None
+            }, candidate_schema_property)
+
+    def test_perfect_partial_schema_property(self):
+        """Validate the perfection of a partial schema definition."""
+        candidate_schema_property = PropertySchema(
+            {
+                'type': 'int',
+                'required': True,
+                'UNRECOGNIZED': 'irrelevant',
+            })
+        self.assertEqual(10, len(candidate_schema_property))
+        self.assertDictEqual(
+            {
+                'regex': None,
+                'member_max': None,
+                'enum': None,
+                'min': None,
+                'default': None,
+                'max': None,
+                'required': True,
+                'member_min': None,
+                'member_type': None,
+                'type': int
+            },
+            candidate_schema_property)
+
+        candidate_schema_property.perfect()
+
+        self.assertEqual(10, len(candidate_schema_property))
+        self.assertDictEqual(
+            {
+                'regex': None,
+                'member_max': None,
+                'enum': None,
+                'min': None,
+                'default': None,
+                'max': None,
+                'required': True,
+                'member_min': None,
+                'member_type': None,
+                'type': int
+            }, candidate_schema_property)
+
 
 class ValidateSchemaProperty(base_test_case.BaseTestCase):
     """Various tests of the 'validate_property_schema' method."""
@@ -87,3 +177,97 @@ class ValidateSchemaProperty(base_test_case.BaseTestCase):
         self.assertEqual(1, len(value_errors))
         self.assertTrue(value_errors[0].startswith(
             'The value "UNKNOWN" for "type" not in enumeration'))
+
+
+class PerfectSchemaPropertyTestCase(base_test_case.BaseTestCase):
+    """Test cases for the perfect_property_schema method."""
+
+    def test_perfect_empty_schema_property(self):
+        """Validate the perfection of an empty schema property."""
+        candidate_schema_property = PropertySchema()
+        self.assertEqual(10, len(candidate_schema_property))
+        self.assertDictEqual(
+            {
+                'default': None,
+                'enum': None,
+                'member_max': None,
+                'member_min': None,
+                'member_type': None,
+                'max': None,
+                'min': None,
+                'regex': None,
+                'required': False,
+                'type': None
+            },
+            candidate_schema_property)
+
+        perfect_property_schema(candidate_schema_property)
+
+        self.assertEqual(10, len(candidate_schema_property))
+        self.assertDictEqual(
+            {
+                'regex': None,
+                'member_max': None,
+                'enum': None,
+                'min': None,
+                'default': None,
+                'max': None,
+                'required': False,
+                'member_min': None,
+                'member_type': None,
+                'type': None
+            }, candidate_schema_property)
+
+    def test_perfect_partial_schema_property(self):
+        """Validate the perfection of a partial schema definition."""
+        candidate_schema_property = PropertySchema(
+            {
+                'type': 'int',
+                'required': True,
+                'UNRECOGNIZED': 'irrelevant',
+            })
+        self.assertEqual(10, len(candidate_schema_property))
+        self.assertDictEqual(
+            {
+                'regex': None,
+                'member_max': None,
+                'enum': None,
+                'min': None,
+                'default': None,
+                'max': None,
+                'required': True,
+                'member_min': None,
+                'member_type': None,
+                'type': int
+            },
+            candidate_schema_property)
+
+        perfect_property_schema(candidate_schema_property)
+
+        self.assertEqual(10, len(candidate_schema_property))
+        self.assertDictEqual(
+            {
+                'regex': None,
+                'member_max': None,
+                'enum': None,
+                'min': None,
+                'default': None,
+                'max': None,
+                'required': True,
+                'member_min': None,
+                'member_type': None,
+                'type': int
+            }, candidate_schema_property)
+
+    def test_bad_perfect_schema_property(self):
+        """Validate error handling for bad schemas passed to
+        perfect_property_schema."""
+        self.assertRaisesRegexp(
+            ValueError,
+            '"candidate_property_schema" must be provided.',
+            perfect_property_schema, None)
+
+        self.assertRaisesRegexp(
+            ValueError,
+            '"candidate_property_schema" must be PropertySchema type.',
+            perfect_property_schema, {})

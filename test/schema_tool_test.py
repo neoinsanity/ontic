@@ -1,6 +1,6 @@
 from test_utils import base_test_case
 
-from ontic.property_schema import PropertySchema, perfect_property_schema
+from ontic.property_schema import PropertySchema
 from ontic import schema_type
 from ontic.schema_type import SchemaType
 from ontic.validation_exception import ValidationException
@@ -49,7 +49,8 @@ class ValidateSchemaTestCase(base_test_case.BaseTestCase):
             schema_type.validate_schema, schema_instance)
 
         expected_errors_list = [
-            """The value for "required" is not of type "<type 'bool'>": UNDEFINED"""]
+            """The value for "required" is not of """
+            """type "<type 'bool'>": UNDEFINED"""]
 
         try:
             schema_type.validate_schema(schema_instance)
@@ -61,100 +62,6 @@ class ValidateSchemaTestCase(base_test_case.BaseTestCase):
             schema_instance,
             raise_validation_exception=False)
         self.assertListEqual(expected_errors_list, errors)
-
-
-class PerfectSchemaPropertyTestCase(base_test_case.BaseTestCase):
-    """Test cases for the perfect_property_schema method."""
-
-    def test_perfect_empty_schema_property(self):
-        """Validate the perfection of an empty schema property."""
-        candidate_schema_property = PropertySchema()
-        self.assertEqual(10, len(candidate_schema_property))
-        self.assertDictEqual(
-            {
-                'default': None,
-                'enum': None,
-                'member_max': None,
-                'member_min': None,
-                'member_type': None,
-                'max': None,
-                'min': None,
-                'regex': None,
-                'required': False,
-                'type': None
-            },
-            candidate_schema_property)
-
-        perfect_property_schema(candidate_schema_property)
-
-        self.assertEqual(10, len(candidate_schema_property))
-        self.assertDictEqual(
-            {
-                'regex': None,
-                'member_max': None,
-                'enum': None,
-                'min': None,
-                'default': None,
-                'max': None,
-                'required': False,
-                'member_min': None,
-                'member_type': None,
-                'type': None
-            }, candidate_schema_property)
-
-    def test_perfect_partial_schema_property(self):
-        """Validate the perfection of a partial schema definition."""
-        candidate_schema_property = PropertySchema(
-            {
-                'type': 'int',
-                'required': True,
-                'UNRECOGNIZED': 'irrelevant',
-            })
-        self.assertEqual(10, len(candidate_schema_property))
-        self.assertDictEqual(
-            {
-                'regex': None,
-                'member_max': None,
-                'enum': None,
-                'min': None,
-                'default': None,
-                'max': None,
-                'required': True,
-                'member_min': None,
-                'member_type': None,
-                'type': int
-            },
-            candidate_schema_property)
-
-        perfect_property_schema(candidate_schema_property)
-
-        self.assertEqual(10, len(candidate_schema_property))
-        self.assertDictEqual(
-            {
-                'regex': None,
-                'member_max': None,
-                'enum': None,
-                'min': None,
-                'default': None,
-                'max': None,
-                'required': True,
-                'member_min': None,
-                'member_type': None,
-                'type': int
-            }, candidate_schema_property)
-
-    def test_bad_perfect_schema_property(self):
-        """Validate error handling for bad schemas passed to
-        perfect_property_schema."""
-        self.assertRaisesRegexp(
-            ValueError,
-            '"candidate_property_schema" must be provided.',
-            perfect_property_schema, None)
-
-        self.assertRaisesRegexp(
-            ValueError,
-            '"candidate_property_schema" must be PropertySchema type.',
-            perfect_property_schema, {})
 
 
 class PerfectSchemaTestCase(base_test_case.BaseTestCase):
