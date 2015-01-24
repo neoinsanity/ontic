@@ -69,7 +69,10 @@ class OnticType(MetaType):
         perfect_object(self)
 
     def validate(self, raise_validation_exception=True):
-        validate_object(self, raise_validation_exception)
+        return validate_object(self, raise_validation_exception)
+
+    def validate_value(self, value_name, raise_validation_exception=True):
+        return validate_value(value_name, self, raise_validation_exception)
 
 
 def create_ontic_type(name, schema):

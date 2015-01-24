@@ -27,6 +27,67 @@ class OnticTypeTest(base_test_case.BaseTestCase):
         some_type = ontic_type.OnticType()
         self.assert_dynamic_accessing(some_type)
 
+    def test_ontic_type_perfect(self):
+        """Test the OnticType.perfect method."""
+        schema_def = SchemaType({
+            'prop_1': {'type': 'int'},
+            'prop_2': {'type': 'int', 'default': 20},
+            'prop_3': {'type': 'int', 'default': 30},
+            'prop_4': {'type': 'int', 'default': 40},
+        })
+        my_type = ontic_type.create_ontic_type('PerfectOntic', schema_def)
+
+        ontic_object = my_type()
+        ontic_object.prop_1 = 1
+        ontic_object.prop_3 = None
+        ontic_object.prop_4 = 400
+        ontic_object.extra_prop = 'Extra'
+
+        expected_dict = {
+            'prop_1': 1,
+            'prop_2': 20,
+            'prop_3': 30,
+            'prop_4': 400
+        }
+        ontic_object.perfect()
+        self.assertDictEqual(expected_dict, ontic_object)
+
+    def test_ontic_type_validate(self):
+        """Test the OonticType.validate method."""
+        schema = {
+            'some_property': {'required': True},
+            'other_property': {'required': False}
+        }
+
+        # Create the type
+        my_type = ontic_type.create_ontic_type('RequireCheck', schema)
+        self.assertIsNotNone(ontic_type)
+
+        # Create object of type
+        ontic_object = my_type()
+
+        # Validate an empty object, which should cause ValueError
+        self.assertRaisesRegexp(
+            ValidationException,
+            'The value for "some_property" is required.',
+            ontic_object.validate)
+
+        # Validate with data
+        ontic_object.some_property = 'Something'
+        ontic_object.other_property = 'Other'
+        ontic_type.validate_object(ontic_object)
+
+    def test_object_type_validate_value(self):
+        """Test ObjectType.validate_value method."""
+        # Test that scalar property is valid.
+        single_property_schema = {
+            'prop1': {'type': 'str'}
+        }
+        my_type = ontic_type.create_ontic_type(
+            'GoodValidateValue', single_property_schema)
+        ontic_object = my_type({'prop1': 'Hot Dog'})
+        self.assertEqual([], ontic_object.validate_value('prop1'))
+
 
 class CreateOnticTypeTestCase(base_test_case.BaseTestCase):
     """Test the dynamic creation of Ontic types."""
