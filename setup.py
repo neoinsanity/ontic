@@ -4,9 +4,12 @@ from setuptools import setup
 with open('README.txt') as file:
     long_description = file.read()
 
+with open('VERSION') as version_file:
+    version = version_file.read().strip()
+
 setup(
     name='ontic',
-    version='0.0.5a',
+    version=version,
     author='Raul Gonzalez',
     author_email='mindbender@gmail.com',
     url='https://github.com/neoinsanity/ontic',
