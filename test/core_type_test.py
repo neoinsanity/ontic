@@ -1,11 +1,9 @@
 """Test the basic functionality of the core and meta data types."""
 
 from copy import copy, deepcopy
-from test_utils import base_test_case
 
-from ontic import meta_type
-from ontic.meta_type import CoreType, MetaType, PropertySchema
-from ontic.validation_exception import ValidationException
+from test_utils import base_test_case
+from ontic.core_type import CoreType
 
 
 class CoreTypeTest(base_test_case.BaseTestCase):
@@ -99,115 +97,3 @@ class CoreTypeTest(base_test_case.BaseTestCase):
                          sub_object.dict_prop['list_key'])
 
 
-class MetaTypeTest(base_test_case.BaseTestCase):
-    """MetaType test cases"""
-
-    def test_meta_type_instantiation(self):
-        """MetaType instantiation testing to confirm dict behavior."""
-        meta_object = MetaType()
-        self.assertIsNotNone(meta_object)
-
-        meta_object = MetaType({'prop1': 'val1', 'prop2': 'val2'})
-        self.assertIsNotNone(meta_object)
-        self.assertEqual('val1', meta_object['prop1'])
-        self.assertEqual('val2', meta_object.prop2)
-
-        meta_object = MetaType(prop1='val1', prop2='val2')
-        self.assertIsNotNone(meta_object)
-        self.assertEqual('val1', meta_object['prop1'])
-        self.assertEqual('val2', meta_object.prop2)
-
-        meta_object = MetaType([['prop1', 'val1'], ['prop2', 'val2']])
-        self.assertIsNotNone(meta_object)
-        self.assertEqual('val1', meta_object['prop1'])
-        self.assertEqual('val2', meta_object.prop2)
-
-    def test_meta_type_dynamic_access(self):
-        """MetaType property access as a Dict and an Attribute."""
-        meta_object = MetaType()
-        self.assert_dynamic_accessing(meta_object)
-
-
-class PropertySchemaTest(base_test_case.BaseTestCase):
-    """PropertySchema test cases"""
-
-    def test_property_schema_instantiation(self):
-        """PropertySchema instantiation testing to confirm dict behavior."""
-        property_schema = PropertySchema()
-        self.assertIsNotNone(property_schema)
-
-        expected_schema = {
-            'default': None,
-            'enum': None,
-            'max': 7,
-            'member_max': None,
-            'member_min': None,
-            'member_type': None,
-            'min': 3,
-            'regex': None,
-            'required': True,
-            'type': int,
-        }
-
-        property_schema = PropertySchema({
-            'type': 'int',
-            'required': True,
-            'min': 3,
-            'max': 7,
-        })
-        self.assertIsNotNone(property_schema)
-        self.assertDictEqual(expected_schema, property_schema)
-
-        property_schema = PropertySchema(
-            type='int', required=True, min=3, max=7)
-        self.assertIsNotNone(property_schema)
-        self.assertDictEqual(expected_schema, property_schema)
-
-        property_schema = PropertySchema(
-            [['type', 'int'], ['required', True], ['min', 3], ['max', 7]])
-        self.assertIsNotNone(property_schema)
-        self.assertDictEqual(expected_schema, property_schema)
-
-    def test_property_schema_instantiation_failure(self):
-        """Validate error reporting for bad PropertySchema definition."""
-
-        bad_schema_test_case = {'type': 'UNDEFINED'}
-
-        self.assertRaisesRegexp(
-            ValueError,
-            r"""Illegal type declaration: UNDEFINED""",
-            PropertySchema, bad_schema_test_case)
-
-
-class ValidateSchemaProperty(base_test_case.BaseTestCase):
-    """Various tests of the 'validate_property_schema' method."""
-
-    def test_bad_validate_schema_property_call(self):
-        """Test bad use cases of validate_property_schema function call."""
-        self.assertRaisesRegexp(
-            ValueError,
-            '"candidate_property_schema" must be provided.',
-            meta_type.validate_property_schema, None, list())
-
-        self.assertRaisesRegexp(
-            ValueError,
-            '"candidate_property_schema" must be PropertySchema type.',
-            meta_type.validate_property_schema, dict(), list())
-
-    def test_validate_schema_property_exception(self):
-        """Test validate_schema validation exception handling."""
-        invalid_property_schema = PropertySchema()
-        invalid_property_schema.type = 'UNKNOWN'
-
-        self.maxDiff = None
-        self.assertRaisesRegexp(
-            ValidationException,
-            r"""The value "UNKNOWN" for "type" not in enumeration \[.*\].""",
-            meta_type.validate_property_schema, invalid_property_schema)
-
-        value_errors = meta_type.validate_property_schema(
-            invalid_property_schema,
-            raise_validation_exception=False)
-        self.assertEqual(1, len(value_errors))
-        self.assertTrue(value_errors[0].startswith(
-            'The value "UNKNOWN" for "type" not in enumeration'))

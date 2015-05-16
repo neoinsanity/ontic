@@ -9,7 +9,7 @@ class BaseTestCase(unittest.TestCase):
         """Assert that ontic_object exhibits dynamic property accessing.
 
         :param ontic_object: Ontic object to validate for dynamic access.
-        :type ontic_object: ontic.meta_type.CoreType
+        :type ontic_object: core_type.CoreType
         """
         # Assignment by attribute
         ontic_object.attr1 = 1
