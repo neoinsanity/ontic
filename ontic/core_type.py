@@ -46,6 +46,7 @@ class CoreType(dict):
     def __del__(self):
         # The self reference is removed to promote fast garbage collection.
         self.__dict__ = None
+        super(CoreType, self).__del__()
 
     def __copy__(self):
         return type(self)(copy(dict(self)))
