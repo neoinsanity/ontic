@@ -7,15 +7,6 @@ CoreType, MetaType, and PropertySchema Module
 Classes
 ========
 
-CoreType
----------
-
-.. autoclass:: CoreType
-    :special-members: __init__
-    :members:
-
----------------------------------------
-
 MetaType
 ---------
 

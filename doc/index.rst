@@ -85,6 +85,7 @@ API Specification
 .. toctree::
   :maxdepth: 3
 
+  ontic.core_type
   ontic.meta_type
   ontic.ontic_type
   ontic.schema_type
