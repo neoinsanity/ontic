@@ -43,7 +43,7 @@ the means of instantiating an instance.
 The most straight forward way to create an instance of a
 :class:`PropertySchema`:
 
->>> prop_schema = PropertySchema(type='str', required=True, min=3)
+>>> prop_schema = PropertyType(type='str', required=True, min=3)
 >>> prop_schema
 {'regex': None, 'enum': None, 'min': 3, 'default': None, 'max': None, \
 'required': True, 'member_type': None, 'member_min': None, \
@@ -69,7 +69,7 @@ Utilizing Property Schema
 Validation of a value utilizing the *prop_schema* created, is done with the
 :meth:`validate_value` method.
 
->>> prop_schema = PropertySchema(type='str', required=True)
+>>> prop_schema = PropertyType(type='str', required=True)
 >>> some_value = 'The cat is on the roof.'
 >>> validate_value(
 ...     name='some_value', property_schema=prop_schema, value=some_value)
@@ -87,7 +87,7 @@ The following example demonstrates how a :class:`PropertySchema` being
 instantiated with a dictionary. Subsequently a bad value is passed with
 multiple validation errors.
 
->>> other_schema = PropertySchema({
+>>> other_schema = PropertyType({
 ...     'type': 'str',
 ...     'max': 3,
 ...     'enum': {'dog', 'rat', 'cat'}
@@ -232,50 +232,48 @@ from ontic.core_type import CoreType
 from ontic.meta_type import (MetaType, TYPE_MAP, COMPARABLE_TYPES)
 from validation_exception import ValidationException
 
-__author__ = 'raulg'
 
-
-class PropertySchema(MetaType):
+class PropertyType(MetaType):
     """The object type for representing Property schema definitions.
 
-    The PropertySchema class is used to define individual properties of an
+    The PropertyType class is used to define individual properties of an
     object. For the complete set of property schema settings to define a
     property, see :ref:`property-schema-settings-table`
 
     Examples::
 
-        There are a number of ways to create a PropertySchema for use in
+        There are a number of ways to create a PropertyType for use in
         validation of a property. The most straight forward is to define
         a property schema with a dictionary.
 
-        >>> foo_schema = PropertySchema({
+        >>> foo_schema = PropertyType({
         ...     'type': 'str',
         ...     'required': True,
         ...     'default': 'Undefined',
         ... })
 
-        PropertySchema also support the full range of dict style instantiation.
+        PropertyType also support the full range of dict style instantiation.
 
-        >>> boo_schema = PropertySchema([('type','str'),('required',True)])
-        >>> moo_schema = PropertySchema(type='str', default='Cow')
+        >>> boo_schema = PropertyType([('type','str'),('required',True)])
+        >>> moo_schema = PropertyType(type='str', default='Cow')
 
-        PropertySchema can also be assembled pragmatically.
+        PropertyType can also be assembled pragmatically.
 
-        >>> bar_schema = PropertySchema()
+        >>> bar_schema = PropertyType()
         >>> bar_schema.type = 'int'
         >>> bar_schema.required = False
         >>> bar_schema.min = 3
-        >>> val_errors = validate_property_schema(bar_schema)
+        >>> val_errors = validate_property_type(bar_schema)
         >>> assert val_errors == []
 
-        >>> nutty_schema = PropertySchema()
+        >>> nutty_schema = PropertyType()
         >>> nutty_schema['type'] = 'str'
         >>> nutty_schema['required'] = True
         >>> nutty_schema['min'] = 5
-        >>> val_errors = validate_property_schema(nutty_schema)
+        >>> val_errors = validate_property_type(nutty_schema)
         >>> assert val_errors == []
     """
-    # The schema definition for the **PropertySchema** type.
+    # The schema definition for the **PropertyType** type.
     ONTIC_SCHEMA = CoreType({
         'type': MetaType({
             'type': (basestring, str, unicode, type),
@@ -402,50 +400,50 @@ class PropertySchema(MetaType):
     def __init__(self, *args, **kwargs):
         r"""Initializes in accordance with dict specification.
 
-        PropertySchema initialization can be done with a Dict object or with
-        None. A PropertySchema defined with None is legal and valid. It is
+        PropertyType initialization can be done with a Dict object or with
+        None. A PropertyType defined with None is legal and valid. It is
         therefore possible to define a property with no restrictions to
         assignment or requirement.
 
         Dict Style Initialization
-            *PropertySchema* supports dict style initialization.
+            *PropertyType* supports dict style initialization.
 
-            PropertySchema() -> new empty PropertySchema
+            PropertyType() -> new empty PropertyType
 
-            PropertySchema(mapping) -> new PropertySchema initialized from a
+            PropertyType(mapping) -> new PropertyType initialized from a
             mapping object's (key, value) pairs
 
-            PropertySchema(iterable) -> new PropertySchema initialized as if
+            PropertyType(iterable) -> new PropertyType initialized as if
             via::
 
-                d = PropertySchema()
+                d = PropertyType()
                 for k, v in iterable:
                     d[k] = v
 
-            PropertySchema(\*\*kwargs) -> new PropertySchema initialized with
+            PropertyType(\*\*kwargs) -> new PropertyType initialized with
             the name=value pairs in the keyword argument list.  For example::
 
-                PropertySchema(one=1, two=2)
+                PropertyType(one=1, two=2)
         """
-        super(PropertySchema, self).__init__(*args, **kwargs)
+        super(PropertyType, self).__init__(*args, **kwargs)
 
         self.perfect()
         self.validate()
 
     def validate(self, raise_validation_exception=True):
-        return validate_property_schema(self, raise_validation_exception)
+        return validate_property_type(self, raise_validation_exception)
 
     def perfect(self):
-        perfect_property_schema(self)
+        perfect_property_type(self)
 
 
-def validate_property_schema(candidate_property_schema,
+def validate_property_type(candidate_property_type,
                              raise_validation_exception=True):
     """Method to validate a property schema definition.
 
-    :param candidate_property_schema: The schema property to be validated.
-    :type candidate_property_schema: :class:`property_schema.PropertySchema`
-    :param raise_validation_exception: If True, then *validate_property_schema*
+    :param candidate_property_type: The schema property to be validated.
+    :type cacandidate_property_type:class:`property_type.PropertyType`
+    :param raise_validation_exception: If True, then *validate_property_type*
         will throw a *ValueException* upon validation failure. If False,
         then a list of validation errors is returned. Defaults to True.
     :type raise_validation_exception: bool
@@ -455,20 +453,20 @@ def validate_property_schema(candidate_property_schema,
     :rtype: list<str>, None
     :raises ValueError: *the_candidate_schema_property* is not an
         :class:`~ontic.ontic_type.OnticType`.
-    :raises ValidationException: A property of *candidate_property_schema*
+    :raises ValidationException: A property of *candidate_property_type*
         does not meet schema requirements.
     """
-    if candidate_property_schema is None:
-        raise ValueError('"candidate_property_schema" must be provided.')
-    if not isinstance(candidate_property_schema, PropertySchema):
+    if candidate_property_type is None:
+        raise ValueError('"candidate_property_type" must be provided.')
+    if not isinstance(candidate_property_type, PropertyType):
         raise ValueError(
-            '"candidate_property_schema" must be PropertySchema type.')
+            '"candidate_property_type" must be PropertyType type.')
 
     value_errors = list()
 
     for schema_name, schema_setting in (
-            candidate_property_schema.get_schema().iteritems()):
-        setting_value = candidate_property_schema.get(schema_name, None)
+            candidate_property_type.get_schema().iteritems()):
+        setting_value = candidate_property_type.get(schema_name, None)
 
         value_errors.extend(
             validate_value(schema_name, schema_setting, setting_value))
@@ -479,7 +477,7 @@ def validate_property_schema(candidate_property_schema,
     return value_errors
 
 
-def perfect_property_schema(candidate_property_schema):
+def perfect_property_type(candidate_property_type):
     """Method to ensure the completeness of a given schema property.
 
     This method ensures completeness by stripping out any properties that
@@ -487,50 +485,50 @@ def perfect_property_schema(candidate_property_schema):
     properties that are not included, the method will add those
     properties to the default value.
 
-    :param candidate_property_schema: The PropertySchema that is to be
+    :param candidate_property_type: The PropertyType that is to be
         clean and restricted.
-    :type candidate_property_schema: :class:`property_schema.PropertySchema`
+    :type cacandidate_property_type:class:`property_type.PropertyType`
     :rtype: None
-    :raises ValueError: If the candidate_property_schema is None, or not
-        of type *PropertySchema*.
+    :raises ValueError: If the candidate_property_type is None, or not
+        of type *PropertyType*.
     """
-    if candidate_property_schema is None:
-        raise ValueError('"candidate_property_schema" must be provided.')
-    if not isinstance(candidate_property_schema, PropertySchema):
+    if candidate_property_type is None:
+        raise ValueError('"candidate_property_type" must be provided.')
+    if not isinstance(candidate_property_type, PropertyType):
         raise ValueError(
-            '"candidate_property_schema" must be PropertySchema type.')
+            '"candidate_property_type" must be PropertyType type.')
 
-    schema_property_schema = candidate_property_schema.get_schema()
+    schema_property_schema = candidate_property_type.get_schema()
 
     # remove un-necessary properties.
-    extra_properties = set(candidate_property_schema.keys()) - set(
+    extra_properties = set(candidate_property_type.keys()) - set(
         schema_property_schema.keys())
     for property_name in extra_properties:
-        del candidate_property_schema[property_name]
+        del candidate_property_type[property_name]
 
-    if 'type' in candidate_property_schema:
+    if 'type' in candidate_property_type:
         # ensure that the type declaration is valid
-        if candidate_property_schema.type not in TYPE_MAP:
+        if candidate_property_type.type not in TYPE_MAP:
             raise ValueError('Illegal type declaration: %s' %
-                             candidate_property_schema.type)
+                             candidate_property_type.type)
         # coerce type declarations as string to base types.
-        candidate_property_schema.type = TYPE_MAP.get(
-            candidate_property_schema.type, None)
+        candidate_property_type.type = TYPE_MAP.get(
+            candidate_property_type.type, None)
     else:
-        candidate_property_schema.type = None
+        candidate_property_type.type = None
 
-    if 'member_type' in candidate_property_schema:
+    if 'member_type' in candidate_property_type:
         # coerce member_type declarations as string to base types.
-        candidate_property_schema.member_type = TYPE_MAP[
-            candidate_property_schema.member_type]
+        candidate_property_type.member_type = TYPE_MAP[
+            candidate_property_type.member_type]
     else:
-        candidate_property_schema.member_type = None
+        candidate_property_type.member_type = None
 
     for property_name, property_schema in (
             schema_property_schema.iteritems()):
-        if property_name not in candidate_property_schema:
-            candidate_property_schema[
+        if property_name not in candidate_property_type:
+            candidate_property_type[
                 property_name] = property_schema.default
             continue
-        if not candidate_property_schema[property_name]:
-            candidate_property_schema[property_name] = property_schema.default
+        if not candidate_property_type[property_name]:
+            candidate_property_type[property_name] = property_schema.default

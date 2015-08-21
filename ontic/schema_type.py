@@ -20,7 +20,7 @@ of the property. The value portion of the dictionary is a
 :class:`ontic.meta_type.PropertySchema` instance::
 
     >>> a_schema = SchemaType({
-    ...     'property_name': PropertySchema({'type': 'str'})
+    ...     'property_name': PropertyType({'type': 'str'})
     ... })
 
 While the example above give a strict definition of a schema, creation of a
@@ -43,7 +43,7 @@ Dynamic Schema
 In cases where necessary, a *SchemaType* can be created dynamically::
 
     >>> a_schema = SchemaType()
-    >>> a_schema['property_name'] = PropertySchema({'type': 'str'})
+    >>> a_schema['property_name'] = PropertyType({'type': 'str'})
 
 To aid in the handling of dynamic models, utilize the :meth:`perfect_schema`
 and :meth:`validate_schema`.
@@ -54,26 +54,26 @@ and :meth:`validate_schema`.
 """
 from core_type import CoreType
 from ontic.validation_exception import ValidationException
-from property_schema import (PropertySchema, validate_property_schema,
-                             perfect_property_schema)
+from property_type import (PropertyType, validate_property_type,
+                             perfect_property_type)
 
 
 class SchemaType(CoreType):
     """The type definition for a schema object.
 
     The **SchemaType** contains a dictionary of property field names and
-    the corresponding **PropertySchema** definition.
+    the corresponding **PropertyType** definition.
 
     Example SchemaType representation::
 
         SchemaType({
-          'some_property': PropertySchema({
+          'some_property': PropertyType({
                 'type': 'str',
                 'required': True
             })
         })
 
-    For a complete list of :class:`ontic.meta_type.PropertySchema`, see
+    For a complete list of :class:`ontic.meta_type.PropertyType`, see
     :ref:`property-schema-settings-table`.
     """
 
@@ -101,8 +101,8 @@ class SchemaType(CoreType):
         """
         super(SchemaType, self).__init__(*args, **kwargs)
         for key, value in self.iteritems():
-            if not isinstance(value, PropertySchema):
-                self[key] = PropertySchema(value)
+            if not isinstance(value, PropertyType):
+                self[key] = PropertyType(value)
 
     def perfect(self):
         perfect_schema(self)
@@ -115,7 +115,7 @@ def perfect_schema(candidate_schema):
     """Method to clean and perfect a given schema.
 
     The *perfect_schema* will fill in any missing schema setting for each of
-    the :class:`ontic.meta_type.PropertySchema`. This function should be used
+    the :class:`ontic.meta_type.PropertyType`. This function should be used
     to ensure property schema completeness.
 
     :param candidate_schema: The schema that is to be perfected.
@@ -128,14 +128,14 @@ def perfect_schema(candidate_schema):
         raise ValueError('"candidate_schema" must be of SchemaType.')
 
     for property_schema in candidate_schema.values():
-        perfect_property_schema(property_schema)
+        perfect_property_type(property_schema)
 
 
 def validate_schema(candidate_schema, raise_validation_exception=True):
     """Validate a given :class:`SchemaType`.
 
     This method will iterate through all of the
-    :class:`ontic.meta_type.PropertySchema` and validate that each definition
+    :class:`ontic.meta_type.PropertyType` and validate that each definition
     is valid.  The method will collect all of the errors and return those as
     a list of strings or raise a
     :class:`ontic.validation_exception.ValidationException`. The switch in
@@ -164,7 +164,7 @@ def validate_schema(candidate_schema, raise_validation_exception=True):
     value_errors = []
     for candidate_property_schema in candidate_schema.values():
         value_errors.extend(
-            validate_property_schema(
+            validate_property_type(
                 candidate_property_schema, False))
 
     if value_errors and raise_validation_exception:

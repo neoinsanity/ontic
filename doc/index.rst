@@ -88,6 +88,7 @@ API Specification
   ontic.core_type
   ontic.meta_type
   ontic.ontic_type
+  ontic.property_schema
   ontic.schema_type
   ontic.validation_exception
 

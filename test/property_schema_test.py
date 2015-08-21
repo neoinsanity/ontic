@@ -1,17 +1,17 @@
 from test.test_utils import base_test_case
 
-from ontic.property_schema import (PropertySchema, perfect_property_schema,
-                                   validate_property_schema)
+from ontic.property_type import (PropertyType, perfect_property_type,
+                                   validate_property_type)
 from ontic.validation_exception import ValidationException
 
 
-class PropertySchemaTest(base_test_case.BaseTestCase):
-    """PropertySchema test cases"""
+class PropertyTypeTest(base_test_case.BaseTestCase):
+    """PropertyType test cases"""
 
-    def test_property_schema_instantiation(self):
-        """PropertySchema instantiation testing to confirm dict behavior."""
-        property_schema = PropertySchema()
-        self.assertIsNotNone(property_schema)
+    def test_property_type_instantiation(self):
+        """PropertyType instantiation testing to confirm dict behavior."""
+        property_type = PropertyType()
+        self.assertIsNotNone(property_type)
 
         expected_schema = {
             'default': None,
@@ -26,38 +26,38 @@ class PropertySchemaTest(base_test_case.BaseTestCase):
             'type': int,
         }
 
-        property_schema = PropertySchema({
+        property_type = PropertyType({
             'type': 'int',
             'required': True,
             'min': 3,
             'max': 7,
         })
-        self.assertIsNotNone(property_schema)
-        self.assertDictEqual(expected_schema, property_schema)
+        self.assertIsNotNone(property_type)
+        self.assertDictEqual(expected_schema, property_type)
 
-        property_schema = PropertySchema(
+        property_type = PropertyType(
             type='int', required=True, min=3, max=7)
-        self.assertIsNotNone(property_schema)
-        self.assertDictEqual(expected_schema, property_schema)
+        self.assertIsNotNone(property_type)
+        self.assertDictEqual(expected_schema, property_type)
 
-        property_schema = PropertySchema(
+        property_type = PropertyType(
             [['type', 'int'], ['required', True], ['min', 3], ['max', 7]])
-        self.assertIsNotNone(property_schema)
-        self.assertDictEqual(expected_schema, property_schema)
+        self.assertIsNotNone(property_type)
+        self.assertDictEqual(expected_schema, property_type)
 
-    def test_property_schema_instantiation_failure(self):
-        """Validate error reporting for bad PropertySchema definition."""
+    def test_property_type_instantiation_failure(self):
+        """Validate error reporting for bad PropertyType definition."""
 
         bad_schema_test_case = {'type': 'UNDEFINED'}
 
         self.assertRaisesRegexp(
             ValueError,
             r"""Illegal type declaration: UNDEFINED""",
-            PropertySchema, bad_schema_test_case)
+            PropertyType, bad_schema_test_case)
 
-    def test_property_schema_validate(self):
-        """Test PropertySchema.validate method."""
-        property_schema = PropertySchema()
+    def test_property_type_validate(self):
+        """Test PropertyType.validate method."""
+        property_schema = PropertyType()
         self.assertIsNotNone(property_schema)
 
         property_schema.type = int
@@ -68,8 +68,8 @@ class PropertySchemaTest(base_test_case.BaseTestCase):
 
 
     def test_property_schema_perfect(self):
-        """Test PropertySchema.perfect method."""
-        candidate_schema_property = PropertySchema()
+        """Test PropertyType.perfect method."""
+        candidate_schema_property = PropertyType()
         self.assertEqual(10, len(candidate_schema_property))
         self.assertDictEqual(
             {
@@ -105,7 +105,7 @@ class PropertySchemaTest(base_test_case.BaseTestCase):
 
     def test_perfect_partial_schema_property(self):
         """Validate the perfection of a partial schema definition."""
-        candidate_schema_property = PropertySchema(
+        candidate_schema_property = PropertyType(
             {
                 'type': 'int',
                 'required': True,
@@ -146,32 +146,32 @@ class PropertySchemaTest(base_test_case.BaseTestCase):
 
 
 class ValidateSchemaProperty(base_test_case.BaseTestCase):
-    """Various tests of the 'validate_property_schema' method."""
+    """Various tests of the 'validate_property_type' method."""
 
     def test_bad_validate_schema_property_call(self):
-        """Test bad use cases of validate_property_schema function call."""
+        """Test bad use cases of validate_property_type function call."""
         self.assertRaisesRegexp(
             ValueError,
-            '"candidate_property_schema" must be provided.',
-            validate_property_schema, None, list())
+            '"candidate_property_type" must be provided.',
+            validate_property_type, None, list())
 
         self.assertRaisesRegexp(
             ValueError,
-            '"candidate_property_schema" must be PropertySchema type.',
-            validate_property_schema, dict(), list())
+            '"candidate_property_type" must be PropertyType type.',
+            validate_property_type, dict(), list())
 
     def test_validate_schema_property_exception(self):
         """Test validate_schema validation exception handling."""
-        invalid_property_schema = PropertySchema()
+        invalid_property_schema = PropertyType()
         invalid_property_schema.type = 'UNKNOWN'
 
         self.maxDiff = None
         self.assertRaisesRegexp(
             ValidationException,
             r"""The value "UNKNOWN" for "type" not in enumeration \[.*\].""",
-            validate_property_schema, invalid_property_schema)
+            validate_property_type, invalid_property_schema)
 
-        value_errors = validate_property_schema(
+        value_errors = validate_property_type(
             invalid_property_schema,
             raise_validation_exception=False)
         self.assertEqual(1, len(value_errors))
@@ -180,11 +180,11 @@ class ValidateSchemaProperty(base_test_case.BaseTestCase):
 
 
 class PerfectSchemaPropertyTestCase(base_test_case.BaseTestCase):
-    """Test cases for the perfect_property_schema method."""
+    """Test cases for the perfect_property_type method."""
 
     def test_perfect_empty_schema_property(self):
         """Validate the perfection of an empty schema property."""
-        candidate_schema_property = PropertySchema()
+        candidate_schema_property = PropertyType()
         self.assertEqual(10, len(candidate_schema_property))
         self.assertDictEqual(
             {
@@ -201,7 +201,7 @@ class PerfectSchemaPropertyTestCase(base_test_case.BaseTestCase):
             },
             candidate_schema_property)
 
-        perfect_property_schema(candidate_schema_property)
+        perfect_property_type(candidate_schema_property)
 
         self.assertEqual(10, len(candidate_schema_property))
         self.assertDictEqual(
@@ -220,7 +220,7 @@ class PerfectSchemaPropertyTestCase(base_test_case.BaseTestCase):
 
     def test_perfect_partial_schema_property(self):
         """Validate the perfection of a partial schema definition."""
-        candidate_schema_property = PropertySchema(
+        candidate_schema_property = PropertyType(
             {
                 'type': 'int',
                 'required': True,
@@ -242,7 +242,7 @@ class PerfectSchemaPropertyTestCase(base_test_case.BaseTestCase):
             },
             candidate_schema_property)
 
-        perfect_property_schema(candidate_schema_property)
+        perfect_property_type(candidate_schema_property)
 
         self.assertEqual(10, len(candidate_schema_property))
         self.assertDictEqual(
@@ -261,13 +261,13 @@ class PerfectSchemaPropertyTestCase(base_test_case.BaseTestCase):
 
     def test_bad_perfect_schema_property(self):
         """Validate error handling for bad schemas passed to
-        perfect_property_schema."""
+        perfect_property_type."""
         self.assertRaisesRegexp(
             ValueError,
-            '"candidate_property_schema" must be provided.',
-            perfect_property_schema, None)
+            '"candidate_property_type" must be provided.',
+            perfect_property_type, None)
 
         self.assertRaisesRegexp(
             ValueError,
-            '"candidate_property_schema" must be PropertySchema type.',
-            perfect_property_schema, {})
+            '"candidate_property_type" must be PropertyType type.',
+            perfect_property_type, {})
