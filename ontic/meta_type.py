@@ -1,3 +1,10 @@
+"""Class definition for a type that holds schema definitions.
+
+.. image:: images/meta_type.jpg
+
+.. contents::
+
+"""
 from datetime import date, datetime, time
 import re
 

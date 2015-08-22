@@ -1,3 +1,10 @@
+"""The root class for the construction of **Ontic** implementation types.
+
+.. image:: images/core_type.jpg
+
+.. contents::
+
+"""
 from copy import copy, deepcopy
 
 
