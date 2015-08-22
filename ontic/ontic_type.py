@@ -194,7 +194,7 @@ def validate_value(property_name,
     """Validate a specific value of a given :class:`OnticType` instance.
 
     :param property_name: The value to be validated against the given
-        **PropertySchema**.
+        **PropertyType**.
     :type property_name: basestring
     :param ontic_object: Ontic defined object to be validated.
     :type ontic_object: ontic_type.OnticType

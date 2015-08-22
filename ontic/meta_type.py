@@ -1,3 +1,10 @@
+"""Class definition for a type that holds schema definitions.
+
+.. image:: images/meta_type.jpg
+
+.. contents::
+
+"""
 from datetime import date, datetime, time
 import re
 
@@ -78,7 +85,7 @@ class MetaType(CoreType):
     def get_schema(cls):
         """Returns the schema object for the given type definition.
 
-        :return: The schema metadata definition for a :class:`PropertySchema`
+        :return: The schema metadata definition for a :class:`PropertyType`
             or a :class:`ontic.ontic_type.OnticType` derived child class.
         :rtype: :class:`CoreType`, :class:`ontic.schema_type.SchemaType`
         """
@@ -91,7 +98,7 @@ def validate_value(name, property_schema, value):
     :type name: str
     :param property_schema: The property schema that contains the validation
         rules.
-    :type property_schema: :class:`property_schema.PropertySchema`
+    :type property_schema: :class:`property_type.PropertyType`
     :param value: The value that is to be validated.
     :type value: object
     :return: A list that is utilized to collect the errors found
@@ -120,7 +127,7 @@ def validate_non_none_value(key, property_schema, value, value_errors):
     :param key: The name of the property to be validated.
     :type key: str
     :param property_schema: The property schema to utilize for validation.
-    :type property_schema: :class:`property_schema.PropertySchema`
+    :type property_schema: :class:`property_type.PropertyType`
     :param value: The non-None value to be validated.
     :type value: object
     :param value_errors: A list of errors found for a given value. If any
@@ -163,7 +170,7 @@ def validate_collection_members(key, property_schema, value, value_errors):
     :param key: The name of the collection property to validate.
     :type key: str
     :param property_schema: The property schema to utilize for validation.
-    :type property_schema: :class:`property_schema.PropertySchema`
+    :type property_schema: :class:`property_type.PropertyType`
     :param value: The collection whose members will be validated.
     :type value: list, set
     :param value_errors: A list of errors found for a given collection.
@@ -216,7 +223,7 @@ def execute_collection_validators(
     :param member_value: The member of the collection property to validate.
     :type member_value: str, int, float, date, datetime, time
     :param property_schema: The property schema to utilize for validation.
-    :type property_schema: :class:`property_schema.PropertySchema`
+    :type property_schema: :class:`property_type.PropertyType`
     :param validators: A list of validation methods to execute.
     :type validators: list<types.MethodType>
     :param value_errors: A list of errors found for a given value. If any
@@ -238,7 +245,7 @@ def validate_member_enum(key, member_value, property_schema, value_errors):
         validate.
     :type member_value: str, int, float, date, datetime, time
     :param property_schema: The property schema to utilize for validation.
-    :type property_schema: :class:`property_schema.PropertySchema`
+    :type property_schema: :class:`property_type.PropertyType`
     :param value_errors: A list of errors found for a given value. If the
         validate fails, then an error message is added to the
         value_errors list.
@@ -260,7 +267,7 @@ def validate_member_type(key, member_value, property_schema, value_errors):
         validate.
     :type member_value: object
     :param property_schema: The property schema to utilize for validation.
-    :type property_schema: :class:`property_schema.PropertySchema`
+    :type property_schema: :class:`property_type.PropertyType`
     :param value_errors: A list of errors found for a given value. If the
         validation fails, then an error message is added to the
         value_errors list.
@@ -282,7 +289,7 @@ def validate_member_regex(key, member_value, property_schema, value_errors):
         validate.
     :type member_value: str
     :param property_schema: The property schema to utilize for validation.
-    :type property_schema: :class:`property_schema.PropertySchema`
+    :type property_schema: :class:`property_type.PropertyType`
     :param value_errors: A list of errors found for a given value. If the
         validation fails, then an error message is added to the
         value_errors list.
@@ -304,7 +311,7 @@ def validate_member_min(key, member_value, property_schema, value_errors):
         validate.
     :type member_value: str, int, float, date, datetime, time
     :param property_schema: The property schema to utilize for validation.
-    :type property_schema: :class:`property_schema.PropertySchema`
+    :type property_schema: :class:`property_type.PropertyType`
     :param value_errors: A list of errors found for a given value. If the
         validation fails, then an error message is added to the
         value_errors list.
@@ -333,7 +340,7 @@ def validate_member_max(key, member_value, property_schema, value_errors):
         validate.
     :type member_value: str, int, float, date, datetime, time
     :param property_schema: The property schema to utilize for validation.
-    :type property_schema: :class:`property_schema.PropertySchema`
+    :type property_schema: :class:`property_type.PropertyType`
     :param value_errors: A list of errors found for a given value. If the
         validation fails, then an error message is added to the
         value_errors list.
@@ -357,7 +364,7 @@ def enum_validation(property_schema, value):
     """Validate a non-collection property for value in an enumeration set.
 
     :param property_schema: The property schema to utilize for validation.
-    :type property_schema: :class:`property_schema.PropertySchema`
+    :type property_schema: :class:`property_type.PropertyType`
     :param value: The value of the property to be validated.
     :type value: object
     :return: True if the validation is successful, else False.
@@ -373,7 +380,7 @@ def min_validation(property_schema, value):
     """Validate a non-collection property for minimum allowable value.
 
     :param property_schema: The property schema to utilize for validation.
-    :type property_schema: :class:`property_schema.PropertySchema`
+    :type property_schema: :class:`property_type.PropertyType`
     :param value: The value of the property to be validated.
     :type value: str, int, float, date, datetime, time, dict, list, set
     :return: True if the validation is successful, else False.
@@ -394,7 +401,7 @@ def max_validation(property_schema, value):
     """Validates a non-collection property for maximum allowable value.
 
     :param property_schema: The property schema to utilize for validation.
-    :type property_schema: :class:`property_schema.PropertySchema`
+    :type property_schema: :class:`property_type.PropertyType`
     :param value: The value of the property to be validated.
     :type value: str, int, float, date, datetime, time, dict, list, set
     :return: True if the validation is successful, else False.
@@ -420,7 +427,7 @@ def non_none_singular_validation(key, property_schema, value, value_errors):
     :param key: The name of the property that is being validated.
     :type key: str
     :param property_schema: The schema definition for the target property.
-    :type property_schema: :class:`property_schema.PropertySchema`
+    :type property_schema: :class:`property_type.PropertyType`
     :param value: The value to be tested against the given schema.
     :type value: str, int, float, date, datetime, time, dict, list, set
     :param value_errors: A list of the validation errors discovered. The

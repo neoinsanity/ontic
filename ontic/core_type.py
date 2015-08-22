@@ -1,19 +1,37 @@
+"""The root class for the construction of **Ontic** implementation types.
+
+.. image:: images/core_type.jpg
+
+.. contents::
+
+"""
 from copy import copy, deepcopy
 
 
 class CoreType(dict):
     """The root type of *Ontic* types.
 
-    **CoreType** ensures that *Ontic* object properties can be accessed by
-    either dict key or object attribute. For example::
+    **CoreType** provides for *Ontic* object properties to be accessible as
+    either dict key-value pairs or as object attributes.
 
-    >>> some_object = CoreType({'key1': 'value1'})
+    Example dict style and object style initialization::
+
+    >>> some_object = CoreType({'key1': 'value1'}) # Dict style initialization
+    >>> other_object = CoreType(key1='value1') # Object style initialization
+
+    Example dict style and object style property access::
+
+    >>> # Object attribute access to value
     >>> assert some_object.key1 == 'value1'
+    >>> assert other_object.key1 == 'value1'
+    >>> # Dict key access to value
     >>> assert some_object['key1'] == 'value1'
-    >>> some_object.key2 = 'value2'
+    >>> assert other_object['key1'] == 'value1'
+    >>> # Dynamic property assignment is supported
+    >>> some_object.key2 = 'value2' # Object value initialization
     >>> assert some_object['key2'] == 'value2'
-    >>> some_object['key3'] = 'value3'
-    >>> assert some_object.key3 == 'value3'
+    >>> other_object['key3'] = 'value3' # Dict style key-value assignment
+    >>> assert other_object.key3 == 'value3'
     """
 
     def __init__(self, *args, **kwargs):
@@ -42,11 +60,6 @@ class CoreType(dict):
         super(CoreType, self).__init__(*args, **kwargs)
 
         self.__dict__ = self
-
-    def __del__(self):
-        # The self reference is removed to promote fast garbage collection.
-        self.__dict__ = None
-        super(CoreType, self).__del__()
 
     def __copy__(self):
         return type(self)(copy(dict(self)))

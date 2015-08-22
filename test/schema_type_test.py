@@ -2,7 +2,7 @@
 
 from test_utils import base_test_case
 
-from ontic.property_schema import PropertySchema
+from ontic.property_type import PropertyType
 from ontic import schema_type
 from ontic.schema_type import SchemaType
 from ontic.validation_exception import ValidationException
@@ -26,8 +26,8 @@ class SchemaTypeTest(base_test_case.BaseTestCase):
     def test_schema_type_perfect(self):
         """Test the SchemaType.perfect method."""
         candidate_schema = SchemaType({
-            'prop1': PropertySchema(),
-            'prop2': PropertySchema({'type': 'str', 'min': 5})
+            'prop1': PropertyType(),
+            'prop2': PropertyType({'type': 'str', 'min': 5})
         })
         self.assertEqual(2, len(candidate_schema))
         self.assertEqual(10, len(candidate_schema.prop1))
@@ -93,8 +93,8 @@ class SchemaTypeTest(base_test_case.BaseTestCase):
                     'type': str
                 }
             }, candidate_schema)
-        self.assertIsInstance(candidate_schema.prop1, PropertySchema)
-        self.assertIsInstance(candidate_schema.prop2, PropertySchema)
+        self.assertIsInstance(candidate_schema.prop1, PropertyType)
+        self.assertIsInstance(candidate_schema.prop2, PropertyType)
 
     def test_schema_type_validate(self):
         """Test the SchemaType.validate method."""
@@ -143,7 +143,7 @@ class ValidateSchemaTestCase(base_test_case.BaseTestCase):
 
     def test_validate_schema_exception_handling(self):
         """Ensure validate_schema covers basic exception reporting."""
-        property_schema = PropertySchema()
+        property_schema = PropertyType()
         property_schema.required = 'UNDEFINED'
         schema_instance = SchemaType()
         schema_instance.some_attr = property_schema
@@ -176,8 +176,8 @@ class PerfectSchemaTestCase(base_test_case.BaseTestCase):
     def test_perfect_schema_type(self):
         """Validate 'perfect_schema' method usage."""
         candidate_schema = SchemaType({
-            'prop1': PropertySchema(),
-            'prop2': PropertySchema({'type': 'str', 'min': 5})
+            'prop1': PropertyType(),
+            'prop2': PropertyType({'type': 'str', 'min': 5})
         })
         self.assertEqual(2, len(candidate_schema))
         self.assertEqual(10, len(candidate_schema.prop1))
@@ -243,8 +243,8 @@ class PerfectSchemaTestCase(base_test_case.BaseTestCase):
                     'type': str
                 }
             }, candidate_schema)
-        self.assertIsInstance(candidate_schema.prop1, PropertySchema)
-        self.assertIsInstance(candidate_schema.prop2, PropertySchema)
+        self.assertIsInstance(candidate_schema.prop1, PropertyType)
+        self.assertIsInstance(candidate_schema.prop2, PropertyType)
 
     def test_bad_perfect_schema(self):
         """Validate proper error handling in 'perfect_schema' method."""
