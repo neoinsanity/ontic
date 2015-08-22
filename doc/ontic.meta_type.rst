@@ -1,5 +1,5 @@
 ==============================================
-CoreType, MetaType, and PropertyType Module
+MetaType Module
 ==============================================
 
 .. automodule:: ontic.meta_type
@@ -11,15 +11,6 @@ MetaType
 ---------
 
 .. autoclass:: MetaType
-    :special-members: __init__
-    :members:
-
----------------------------------------
-
-PropertyType
----------------
-
-.. autoclass:: PropertyType
     :special-members: __init__
     :members:
 
@@ -58,13 +49,6 @@ non_none_singular_validation
 -----------------------------
 
 .. autofunction:: non_none_singular_validation
-
----------------------------------------
-
-perfect_property_type
-------------------------
-
-.. autofunction:: perfect_property_type
 
 ---------------------------------------
 
@@ -114,13 +98,6 @@ validate_non_none_value
 ------------------------
 
 .. autofunction:: validate_non_none_value
-
----------------------------------------
-
-validate_property_type
--------------------------
-
-.. autofunction:: validate_property_type
 
 ---------------------------------------
 

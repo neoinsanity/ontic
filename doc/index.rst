@@ -1,11 +1,10 @@
 =============================================================
-Ontic - of or relating to entities and the facts about them
+Ontic - Of or Relating to Entities and the Facts about Them
 =============================================================
 
-The goal of **Ontic** is to provide a pure data object that is flexible to use in
-a python project. The motivation is to make it simple to utilize in a
-development environment that interfaces with external services and
-third-party tools, but not require an extensive library to convert objects.
+**Ontic** is an object definition tool. **Ontic** provides schema definition of
+object types that are accessible as a class instance or as a dictionary.
+**Ontic** also provides the tools to validate and perfect type instances.
 
 To that end **Ontic** objects can be accessed through attribute access or via
 dictionary key access. The theory is that most third party libraries, from JSON
@@ -18,7 +17,7 @@ example::
   >>> assert an_object.property1 == 1
   >>> an_object.property2 = 2
   >>> assert an_object['property2] == 2
-  >>> json.dumps(an_object)  # an_object implements dict.
+  >>> json.dumps(an_object)  # an_object implements dict interface.
     '{"property1": 1, "property2": 2}'
 
 As **Ontic** objects are designed to be utilized as pure data objects, they
@@ -67,10 +66,6 @@ and dynamic definition of Ontic type with schema.
 For full coverage of schema definitions and usage details,
 see :ref:`getting-started-with-ontic`.
 
-.. warning::
-    The limitation to this approach is that **Ontic** objects should not be
-    monkey patched with any public methods.
-
 *Share and Enjoy*.
 
 Usage Documentation
@@ -88,7 +83,7 @@ API Specification
   ontic.core_type
   ontic.meta_type
   ontic.ontic_type
-  ontic.property_schema
+  ontic.property_type
   ontic.schema_type
   ontic.validation_exception
 

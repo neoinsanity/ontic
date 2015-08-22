@@ -1,7 +1,7 @@
 """The base class for deriving types that require schema support.
 
 
-.. image:: images/metadata_types.jpg
+.. image:: images/property_type.jpg
 
 .. contents::
 
@@ -442,7 +442,7 @@ def validate_property_type(candidate_property_type,
     """Method to validate a property schema definition.
 
     :param candidate_property_type: The schema property to be validated.
-    :type cacandidate_property_type:class:`property_type.PropertyType`
+    :type cacandidate_property_type: :class:`property_type.PropertyType`
     :param raise_validation_exception: If True, then *validate_property_type*
         will throw a *ValueException* upon validation failure. If False,
         then a list of validation errors is returned. Defaults to True.
@@ -487,7 +487,7 @@ def perfect_property_type(candidate_property_type):
 
     :param candidate_property_type: The PropertyType that is to be
         clean and restricted.
-    :type cacandidate_property_type:class:`property_type.PropertyType`
+    :type cacandidate_property_type: :class:`property_type.PropertyType`
     :rtype: None
     :raises ValueError: If the candidate_property_type is None, or not
         of type *PropertyType*.
