@@ -47,6 +47,8 @@ TYPE_MAP = {
     long: long,
     'None': None,
     None: None,
+    'CoreType': CoreType,
+    CoreType: CoreType,
     'set': set,
     set: set,
     'str': str,

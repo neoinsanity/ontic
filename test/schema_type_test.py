@@ -257,3 +257,4 @@ class PerfectSchemaTestCase(base_test_case.BaseTestCase):
             ValueError,
             '"candidate_schema" must be of SchemaType.',
             schema_type.perfect_schema, {})
+

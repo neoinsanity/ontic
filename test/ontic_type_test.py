@@ -3,6 +3,7 @@ from datetime import date, time, datetime
 
 from test.test_utils import base_test_case
 
+from ontic.core_type import CoreType
 from ontic import ontic_type
 from ontic.schema_type import SchemaType
 from ontic.validation_exception import ValidationException
@@ -334,6 +335,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
             'float_property': {'type': 'float'},
             'int_property': {'type': 'int'},
             'list_property': {'type': 'list'},
+            'ontic_property': {'type': 'CoreType'},
             'set_property': {'type': 'set'},
             'str_property': {'type': 'str'},
             'date_property': {'type': 'date'},
@@ -354,6 +356,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         # Validate with known good data.
         ontic_object.bool_property = True
         ontic_object.dict_property = {'some_key': 'some_value'}
+        ontic_object.core_type_property = CoreType({'key':'val'})
         ontic_object.float_property = 3.4
         ontic_object.int_property = 5
         ontic_object.list_property = [5, 6, 7]
