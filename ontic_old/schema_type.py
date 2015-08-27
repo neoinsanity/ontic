@@ -52,9 +52,10 @@ and :meth:`validate_schema`.
     >>> errors = validate_schema(a_schema)
 
 """
-from ontic.core_type import CoreType
-from ontic.property_type import PropertyType
+from core_type import CoreType
 from ontic.validation_exception import ValidationException
+from property_type import (PropertyType, validate_property_type,
+                             perfect_property_type)
 
 
 class SchemaType(CoreType):
@@ -127,7 +128,7 @@ def perfect_schema(candidate_schema):
         raise ValueError('"candidate_schema" must be of SchemaType.')
 
     for property_schema in candidate_schema.values():
-        property_schema.perfect()
+        perfect_property_type(property_schema)
 
 
 def validate_schema(candidate_schema, raise_validation_exception=True):
@@ -162,8 +163,9 @@ def validate_schema(candidate_schema, raise_validation_exception=True):
 
     value_errors = []
     for candidate_property_schema in candidate_schema.values():
-        value_errors.extend(candidate_property_schema.validate(
-            raise_validation_exception=False))
+        value_errors.extend(
+            validate_property_type(
+                candidate_property_schema, False))
 
     if value_errors and raise_validation_exception:
         raise ValidationException(value_errors)

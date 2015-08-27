@@ -52,13 +52,13 @@ with the use of the :meth:`create_ontic_type` function.
 """
 from copy import deepcopy
 
-from ontic import meta_schema_type
-from ontic.meta_schema_type import MetaSchemaType, COLLECTION_TYPES, TYPE_MAP
+from ontic import meta_type
+from ontic.meta_type import COLLECTION_TYPES, MetaType, TYPE_MAP
 from ontic.schema_type import SchemaType
 from ontic.validation_exception import ValidationException
 
 
-class OnticType(MetaSchemaType):
+class OnticType(MetaType):
     """OnticType provides the **Ontic** schema interface.
 
     The **OnticType** provides the schema management functionality to a
@@ -237,7 +237,7 @@ def validate_value(property_name,
     value = ontic_object.get(property_name, None)
 
     value_errors.extend(
-        meta_schema_type.validate_value(property_name, property_schema, value))
+        meta_type.validate_value(property_name, property_schema, value))
 
     if value_errors and raise_validation_exception:
         raise ValidationException(value_errors)
