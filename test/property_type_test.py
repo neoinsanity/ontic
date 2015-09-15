@@ -1,7 +1,7 @@
 from test.test_utils import base_test_case
 
 from ontic.property_type import (PropertyType, perfect_property_type,
-                                   validate_property_type)
+                                 validate_property_type)
 from ontic.validation_exception import ValidationException
 
 
@@ -51,8 +51,17 @@ class PropertyTypeTest(base_test_case.BaseTestCase):
         bad_schema_test_case = {'type': 'UNDEFINED'}
 
         self.assertRaisesRegexp(
+        ValueError,
+        r"""Illegal type declaration: UNDEFINED""",
+            PropertyType, bad_schema_test_case)
+
+        class UNDEFINED(): pass
+
+        bad_schema_test_case = {'type': UNDEFINED}
+
+        self.assertRaisesRegexp(
             ValueError,
-            r"""Illegal type declaration: UNDEFINED""",
+            r"""Illegal type declaration: %s""" % UNDEFINED,
             PropertyType, bad_schema_test_case)
 
     def test_property_type_validate(self):
@@ -85,6 +94,10 @@ class PropertyTypeTest(base_test_case.BaseTestCase):
                 'type': None
             },
             candidate_schema_property)
+
+        # Remove a property and ensure perfect returns it.
+        delattr(candidate_schema_property, 'type')
+        self.assertEqual(9, len(candidate_schema_property))
 
         candidate_schema_property.perfect()
 
@@ -126,6 +139,10 @@ class PropertyTypeTest(base_test_case.BaseTestCase):
                 'type': int
             },
             candidate_schema_property)
+
+        # Remove a property and ensure perfect returns it.
+        delattr(candidate_schema_property, 'enum')
+        self.assertEqual(9, len(candidate_schema_property))
 
         candidate_schema_property.perfect()
 
@@ -201,6 +218,10 @@ class PerfectSchemaPropertyTestCase(base_test_case.BaseTestCase):
             },
             candidate_schema_property)
 
+        # Remove a property and ensure perfect returns it.
+        delattr(candidate_schema_property, 'type')
+        self.assertEqual(9, len(candidate_schema_property))
+
         perfect_property_type(candidate_schema_property)
 
         self.assertEqual(10, len(candidate_schema_property))
@@ -241,6 +262,10 @@ class PerfectSchemaPropertyTestCase(base_test_case.BaseTestCase):
                 'type': int
             },
             candidate_schema_property)
+
+        # Remove a property and ensure perfect returns it.
+        delattr(candidate_schema_property, 'min')
+        self.assertEqual(9, len(candidate_schema_property))
 
         perfect_property_type(candidate_schema_property)
 

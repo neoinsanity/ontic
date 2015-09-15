@@ -93,6 +93,24 @@ TYPE_MAP = {
     unicode: unicode,
 }
 
+TYPE_SET = (
+    basestring,
+    bool,
+    complex,
+    date,
+    datetime,
+    dict,
+    float,
+    int,
+    list,
+    long,
+#    MetaSchemaType,
+    set,
+    str,
+    time,
+    unicode,
+)
+
 
 def validate_value(name, property_schema, value):
     """Method to validate a given value against a given property schema.
@@ -157,6 +175,8 @@ def validate_non_none_value(key, property_schema, value, value_errors):
             # validate without errors.
             return
 
+        # TODO: raul - add the test for OnticType, and decide how to handle
+        # validation. Maybe I'll have to separate this to the property level
         if property_schema.type in COLLECTION_TYPES:
             validate_collection_members(
                 key, property_schema, value, value_errors)

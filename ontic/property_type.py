@@ -226,8 +226,11 @@ after the table.
     that the value is not more than the maximum.
 
 """
+import inspect
+
 from ontic.meta_schema_type import (
-    MetaSchemaType, COMPARABLE_TYPES, STRING_TYPES, TYPE_MAP, validate_value)
+    MetaSchemaType, COMPARABLE_TYPES, STRING_TYPES, TYPE_MAP,
+    TYPE_SET, validate_value)
 from ontic.validation_exception import ValidationException
 
 STRING_TYPES_TUPLE = tuple(STRING_TYPES)
@@ -239,7 +242,7 @@ class PropertyType(MetaSchemaType):
             'type': (basestring, str, unicode, type),
             'default': None,
             'required': False,
-            'enum': set(TYPE_MAP.keys()),
+            'enum': TYPE_SET + (None,),
             'min': None,
             'max': None,
             'regex': None,
@@ -323,7 +326,7 @@ class PropertyType(MetaSchemaType):
             'type': (basestring, str, unicode, type),
             'default': None,
             'required': False,
-            'enum': set(TYPE_MAP.keys()),
+            'enum': TYPE_SET + (None,),
             'min': None,
             'max': None,
             'regex': None,
@@ -428,6 +431,10 @@ def validate_property_type(candidate_property_type,
             candidate_property_type.get_schema().iteritems()):
         setting_value = candidate_property_type.get(schema_name, None)
 
+        if (isinstance(setting_value, type) and
+                issubclass(setting_value, MetaSchemaType)):
+            continue
+
         value_errors.extend(
             validate_value(schema_name, schema_setting, setting_value))
 
@@ -466,15 +473,23 @@ def perfect_property_type(candidate_property_type):
     for property_name in extra_properties:
         del candidate_property_type[property_name]
 
-    if 'type' in candidate_property_type:
-        # ensure that the type declaration is valid
-        if candidate_property_type.type not in TYPE_MAP:
-            raise ValueError('Illegal type declaration: %s' %
-                             candidate_property_type.type)
+    if ('type' in candidate_property_type and
+                candidate_property_type.type is not None):
+        candidate_type = candidate_property_type.type
         # coerce type declarations as string to base types.
-        if isinstance(candidate_property_type.type, STRING_TYPES_TUPLE):
-            candidate_property_type.type = TYPE_MAP[
-                candidate_property_type.type]
+        if isinstance(candidate_type, STRING_TYPES_TUPLE):
+            try:
+                candidate_type = candidate_property_type.type = TYPE_MAP[
+                    candidate_type]
+            except KeyError:
+                raise ValueError('Illegal type declaration: %s' %
+                                 candidate_property_type.type)
+        # ensure that the type declaration is valid
+        is_supported_type = candidate_type in TYPE_SET
+        is_meta_schema_type = issubclass(candidate_type, MetaSchemaType) \
+            if inspect.isclass(candidate_type) else False
+        if not (is_supported_type or is_meta_schema_type):
+            raise ValueError('Illegal type declaration: %s' % candidate_type)
     else:
         candidate_property_type.type = None
 

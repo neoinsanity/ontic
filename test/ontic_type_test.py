@@ -5,6 +5,8 @@ from test.test_utils import base_test_case
 
 from ontic.meta_schema_type import MetaSchemaType
 from ontic import ontic_type
+from ontic.ontic_type import OnticType
+from ontic.property_type import PropertyType
 from ontic.schema_type import SchemaType
 from ontic.validation_exception import ValidationException
 
@@ -311,11 +313,13 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
 
         self.assertRaisesRegexp(
             ValidationException,
-            r"""The value for "some_attr" is not of type "<type 'int'>": WRONG""",
+            r"""The value for "some_attr" is """
+            r"""not of type "<type 'int'>": WRONG""",
             ontic_type.validate_object, ontic_object)
 
         expected_errors = [
-            """The value for "some_attr" is not of type "<type \'int\'>": WRONG"""]
+            r"""The value for "some_attr" is not """
+            r"""of type "<type 'int'>": WRONG"""]
 
         try:
             ontic_type.validate_object(ontic_object)
@@ -356,7 +360,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         # Validate with known good data.
         ontic_object.bool_property = True
         ontic_object.dict_property = {'some_key': 'some_value'}
-        ontic_object.core_type_property = MetaSchemaType({'key':'val'})
+        ontic_object.core_type_property = MetaSchemaType({'key': 'val'})
         ontic_object.float_property = 3.4
         ontic_object.int_property = 5
         ontic_object.list_property = [5, 6, 7]
@@ -371,7 +375,8 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         ontic_object.bool_property = 'Dog'
         self.assertRaisesRegexp(
             ValidationException,
-            """The value for "bool_property" is not of type "<type 'bool'>": Dog""",
+            r"""The value for "bool_property" is not """
+            r"""of type "<type 'bool'>": Dog""",
             ontic_type.validate_object, ontic_object)
         ontic_object.bool_property = True
 
@@ -379,7 +384,8 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         ontic_object.list_property = 'some_string'
         self.assertRaisesRegexp(
             ValidationException,
-            """The value for "list_property" is not of type "<type 'list'>": some_string""",
+            r"""The value for "list_property" is not """
+            r"""of type "<type 'list'>": some_string""",
             ontic_type.validate_object, ontic_object)
 
     def test_type_bad_setting(self):
@@ -734,7 +740,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
             'meet regex: \^b\+',
             ontic_type.validate_object, ontic_object)
 
-    def test_item_type_setting(self):
+    def test_member_type_setting(self):
         """Validate 'member_type' setting."""
         schema = {
             'list_property': {'type': 'list', 'member_type': 'str'}
@@ -790,7 +796,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
             r'''Value "xxxxxx" for "set_property" does not meet regex: b+''',
             ontic_type.validate_object, ontic_object)
 
-    def test_item_min_setting(self):
+    def test_member_min_setting(self):
         """Validate 'member_min' setting."""
         # Test the item min setting for string items.
         schema = {
@@ -847,7 +853,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
             r'''The value of "1" for "list_property" fails min size of 4.''',
             ontic_type.validate_object, ontic_object)
 
-    def test_item_max_setting(self):
+    def test_member_max_setting(self):
         """Validate 'member_max' setting."""
         # Test the item max setting for string items.
         schema = {
@@ -986,3 +992,22 @@ class ValidateValueTestCase(base_test_case.BaseTestCase):
             'GoodValidateValue', single_property_schema)
         ontic_object = my_type({'prop1': 'Hot Dog'})
         ontic_type.validate_value('prop1', ontic_object)
+
+
+class ChildOnticType(OnticType):
+    pass
+
+
+class ParentOnticType(OnticType):
+    ONTIC_SCHEMA = SchemaType(
+        child_prop=PropertyType(type=ChildOnticType)
+    )
+
+
+class SettingOnticTypeTestCase(base_test_case.BaseTestCase):
+    """Test case the setting of an OnticType as a PropertyType.type setting."""
+
+
+    def test_non_ontic_type_failure(self):
+        parent = ParentOnticType()
+
