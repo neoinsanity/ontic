@@ -104,7 +104,6 @@ TYPE_SET = (
     int,
     list,
     long,
-#    MetaSchemaType,
     set,
     str,
     time,

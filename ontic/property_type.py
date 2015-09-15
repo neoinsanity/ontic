@@ -237,6 +237,7 @@ STRING_TYPES_TUPLE = tuple(STRING_TYPES)
 
 
 class PropertyType(MetaSchemaType):
+    """A class to define a schema for a property."""
     ONTIC_SCHEMA = MetaSchemaType({
         'type': MetaSchemaType({
             'type': (basestring, str, unicode, type),
@@ -394,9 +395,30 @@ class PropertyType(MetaSchemaType):
         self.validate()
 
     def validate(self, raise_validation_exception=True):
+        """Method to validate a property schema definition.
+
+        :param raise_validation_exception: If True, then *validate_property_type*
+            will throw a *ValueException* upon validation failure. If False,
+            then a list of validation errors is returned. Defaults to True.
+        :type raise_validation_exception: bool
+        :return: If no validation errors are found, then *None* is
+            returned. If validation fails, then a list of the errors is returned
+            if the *raise_validation_exception* is set to True.
+        :rtype: list<str>, None
+        :raises ValueError: *the_candidate_schema_property* is not an
+            :class:`~ontic.ontic_type.OnticType`.
+        :raises ValidationException: A property of *candidate_property_type*
+            does not meet schema requirements.
+        """
         return validate_property_type(self, raise_validation_exception)
 
     def perfect(self):
+        """Method to ensure the completeness of a given schema property.
+
+        :rtype: None
+        :raises ValueError: If the candidate_property_type is None, or not
+            of type *PropertyType*.
+        """
         perfect_property_type(self)
 
 
@@ -473,23 +495,8 @@ def perfect_property_type(candidate_property_type):
     for property_name in extra_properties:
         del candidate_property_type[property_name]
 
-    if ('type' in candidate_property_type and
-                candidate_property_type.type is not None):
-        candidate_type = candidate_property_type.type
-        # coerce type declarations as string to base types.
-        if isinstance(candidate_type, STRING_TYPES_TUPLE):
-            try:
-                candidate_type = candidate_property_type.type = TYPE_MAP[
-                    candidate_type]
-            except KeyError:
-                raise ValueError('Illegal type declaration: %s' %
-                                 candidate_property_type.type)
-        # ensure that the type declaration is valid
-        is_supported_type = candidate_type in TYPE_SET
-        is_meta_schema_type = issubclass(candidate_type, MetaSchemaType) \
-            if inspect.isclass(candidate_type) else False
-        if not (is_supported_type or is_meta_schema_type):
-            raise ValueError('Illegal type declaration: %s' % candidate_type)
+    if 'type' in candidate_property_type:
+        _perfect_type_setting(candidate_property_type)
     else:
         candidate_property_type.type = None
 
@@ -508,3 +515,26 @@ def perfect_property_type(candidate_property_type):
             continue
         if not candidate_property_type[property_name]:
             candidate_property_type[property_name] = property_schema.default
+
+
+def _perfect_type_setting(candidate_property_type):
+    """Perfect the type setting for a given candidate property schema."""
+    if candidate_property_type.type is None:
+        return
+
+    candidate_type = candidate_property_type.type
+    # coerce type declarations as string to base types.
+    if isinstance(candidate_type, STRING_TYPES_TUPLE):
+        try:
+            candidate_type = candidate_property_type.type = TYPE_MAP[
+                candidate_type]
+        except KeyError:
+            raise ValueError('Illegal type declaration: %s' %
+                             candidate_property_type.type)
+
+    # ensure that the type declaration is valid
+    is_supported_type = candidate_type in TYPE_SET
+    is_meta_schema_type = issubclass(candidate_type, MetaSchemaType) \
+        if inspect.isclass(candidate_type) else False
+    if not (is_supported_type or is_meta_schema_type):
+        raise ValueError('Illegal type declaration: %s' % candidate_type)

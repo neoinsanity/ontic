@@ -66,12 +66,48 @@ class OnticType(MetaSchemaType):
     """
 
     def perfect(self):
+        """Function to ensure complete attribute settings for a given object.
+
+        Perfecting an object instance will strip out any properties not defined in
+        the corresponding object type. If there are any missing properties in the
+        object, those properties will be added and set to the default value or
+        None, if no default has been set.
+
+        For the collection types (dict, list, set), the default values are deep
+        copied.
+
+        :rtype: None
+        """
         perfect_object(self)
 
     def validate(self, raise_validation_exception=True):
+        """Validate the given OnticType instance against it's defined schema.
+
+        :param raise_validation_exception: If True, then *validate_object* will
+            throw a *ValueException* upon validation failure. If False, then a
+            list of validation errors is returned. Defaults to True.
+        :type raise_validation_exception: bool
+        :return: If no validation errors are found, then *None* is
+            returned. If validation fails, then a list of the errors is returned
+            if the *raise_validation_exception* is set to True.
+        :rtype: list<str>, None
+        """
         return validate_object(self, raise_validation_exception)
 
     def validate_value(self, value_name, raise_validation_exception=True):
+        """Validate a target value of a given ontic object.
+
+        :param value_name: The value name to validate.
+        :type value_name: str
+        :param raise_validation_exception: If True, then *validate_object* will
+            throw a *ValueException* upon validation failure. If False, then a
+            list of validation errors is returned. Defaults to True.
+        :type raise_validation_exception: bool
+        :return: If no validation errors are found, then *None* is
+            returned. If validation fails, then a list of the errors is returned
+            if the *raise_validation_exception* is set to True.
+        :rtype: list<str>, None
+        """
         return validate_value(value_name, self, raise_validation_exception)
 
 
