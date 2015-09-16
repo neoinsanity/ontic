@@ -997,7 +997,7 @@ class ValidateValueTestCase(base_test_case.BaseTestCase):
 class ChildOnticType(OnticType):
     ONTIC_SCHEMA = SchemaType(
         int_prop=PropertyType(type=int),
-        str_prop=PropertyType(type=str)
+        str_prop=PropertyType(type=str, required=True, default='A Value')
     )
 
 
@@ -1007,18 +1007,44 @@ class ParentOnticType(OnticType):
     )
 
 
+DEFAULT_CHILD_PROP = ChildOnticType(int_prop=99, str_prop='The Value')
+
+
+class RequiredOnticChildType(OnticType):
+    ONTIC_SCHEMA = SchemaType(
+        child_prop=PropertyType(
+            type=ChildOnticType, required=True, default=DEFAULT_CHILD_PROP)
+    )
+
+
 class SettingOnticTypeTestCase(base_test_case.BaseTestCase):
     """Test case the setting of an OnticType as a PropertyType.type setting."""
 
-    def test_ontic_type_success(self):
+    def test_ontic_type_perfect(self):
+        """Test that Ontic child properties are perfected with parent."""
         parent = ParentOnticType()
         parent.child_prop = ChildOnticType()
+
+        self.assertNotIn('int_prop', parent.child_prop)
+        self.assertNotIn('str_prop', parent.child_prop)
+        parent.perfect()
+        self.assertIsNone(parent.child_prop.int_prop)
+        self.assertEqual('A Value', parent.child_prop.str_prop)
+
+        res = parent.validate()
+        self.assertListEqual([], res)
+
+    def test_ontic_type_success(self):
+        """Test validation of an OnticType property."""
+        parent = ParentOnticType()
+        parent.child_prop = ChildOnticType(str_prop='Some Value')
         parent.child_prop.int_prop = 1
 
         res = parent.validate(raise_validation_exception=True)
         self.assertListEqual(res, [])
 
     def test_non_ontic_type_failure(self):
+        """Test validation of an incorrect OnticType property."""
         parent = ParentOnticType()
         parent.child_prop = ChildOnticType()
         parent.child_prop.int_prop = '1'
@@ -1026,6 +1052,22 @@ class SettingOnticTypeTestCase(base_test_case.BaseTestCase):
         self.assertRaisesRegexp(
             ValidationException,
             r"""The child property child_prop, has errors:: """
-            r"""The value for "int_prop" is not of type "<type 'int'>": 1""",
+            r"""The value for "int_prop" is not of type "<type 'int'>": 1"""
+            r""" || The value for "str_prop" is required.""",
             parent.validate,
             raise_validation_exception=True)
+
+    def test_ontic_type_default_setting(self):
+        """Ensure that an OnticType property default is copied upon perfect."""
+        parent = RequiredOnticChildType()
+
+        self.assertNotIn('child_prop', parent)
+
+        parent.perfect()
+
+        self.assertIn('child_prop', parent)
+        self.assertIsNot(DEFAULT_CHILD_PROP, parent.child_prop)
+        self.assertEqual(99, parent.child_prop.int_prop)
+        self.assertEqual('The Value', parent.child_prop.str_prop)
+
+        self.assertEqual([], parent.validate())

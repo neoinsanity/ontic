@@ -51,6 +51,7 @@ with the use of the :meth:`create_ontic_type` function.
 
 """
 from copy import deepcopy
+import inspect
 
 from ontic import meta_schema_type
 from ontic.meta_schema_type import MetaSchemaType, COLLECTION_TYPES, TYPE_MAP
@@ -183,13 +184,22 @@ def perfect_object(the_object):
     for property_name, property_schema in schema.iteritems():
         if property_name not in the_object:
             the_object[property_name] = None
+        value = the_object[property_name]
 
-        if the_object[property_name] is None \
-                and property_schema.default is not None:
+        if (value is None
+            and property_schema.default is not None):
             if TYPE_MAP.get(property_schema.type) in COLLECTION_TYPES:
-                the_object[property_name] = deepcopy(property_schema.default)
+                value = the_object[property_name] = deepcopy(
+                    property_schema.default)
+            elif issubclass(property_schema.type, OnticType):
+                value = the_object[property_name] = deepcopy(
+                    property_schema.default)
             else:
-                the_object[property_name] = property_schema.default
+                value = the_object[property_name] = property_schema.default
+
+        if (value is not None
+            and isinstance(value, OnticType)):
+            value.perfect()
 
 
 def validate_object(the_object, raise_validation_exception=True):
@@ -284,7 +294,7 @@ def validate_value(property_name,
         child_errors = value.validate(raise_validation_exception=False)
         if child_errors:
             error_msg = 'The child property %s, has errors:: %s' % (
-                property_name, '/'.join(child_errors))
+                property_name, ' || '.join(child_errors))
             value_errors.append(error_msg)
 
     if value_errors and raise_validation_exception:
