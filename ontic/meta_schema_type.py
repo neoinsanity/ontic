@@ -23,6 +23,41 @@ BOUNDABLE_TYPES = {basestring, str, unicode, list, dict, set}
 # : The set of string types
 STRING_TYPES = {basestring, str, unicode}
 
+
+class MetaSchemaType(CoreType):
+    r"""Interface for type definition of **Ontic** schema defined classes.
+
+    Dict Style Initialization
+        MetaSchemaType() -> new empty MetaSchemaType
+
+        MetaSchemaType(mapping) -> new MetaSchemaType initialized from a
+        mapping object's (key, value) pairs
+
+        MetaSchemaType(iterable) -> new MetaSchemaType initialized as if via::
+
+            d = MetaSchemaType()
+            for k, v in iterable:
+                d[k] = v
+
+        MetaSchemaType(\*\*kwargs) -> new MetaSchemaType initialized with the name=value
+        pairs in the keyword argument list.  For example::
+
+            MetaSchemaType(one=1, two=2)
+    """
+    # : The Ontic schema pointer.
+    ONTIC_SCHEMA = None
+
+    @classmethod
+    def get_schema(cls):
+        """Returns the schema object for the given type definition.
+
+        :return: The schema metadata definition for a :class:`PropertyType`
+            or a :class:`ontic.ontic_type.OnticType` derived child class.
+        :rtype: :class:`CoreType`, :class:`ontic.schema_type.SchemaType`
+        """
+        return cls.ONTIC_SCHEMA
+
+
 # : Used to convert the string declaration of attribute type to native type.
 TYPE_MAP = {
     'basestring': basestring,
@@ -47,6 +82,7 @@ TYPE_MAP = {
     long: long,
     'None': None,
     None: None,
+    MetaSchemaType: MetaSchemaType,
     'set': set,
     set: set,
     'str': str,
@@ -57,39 +93,23 @@ TYPE_MAP = {
     unicode: unicode,
 }
 
+TYPE_SET = (
+    basestring,
+    bool,
+    complex,
+    date,
+    datetime,
+    dict,
+    float,
+    int,
+    list,
+    long,
+    set,
+    str,
+    time,
+    unicode,
+)
 
-class MetaType(CoreType):
-    r"""Interface for type definition of **Ontic** schema defined classes.
-
-    Dict Style Initialization
-        MetaType() -> new empty MetaType
-
-        MetaType(mapping) -> new MetaType initialized from a mapping object's
-            (key, value) pairs
-
-        MetaType(iterable) -> new MetaType initialized as if via::
-
-            d = MetaType()
-            for k, v in iterable:
-                d[k] = v
-
-        MetaType(\*\*kwargs) -> new MetaType initialized with the name=value
-        pairs in the keyword argument list.  For example::
-
-            MetaType(one=1, two=2)
-    """
-    # : The Ontic schema pointer.
-    ONTIC_SCHEMA = None
-
-    @classmethod
-    def get_schema(cls):
-        """Returns the schema object for the given type definition.
-
-        :return: The schema metadata definition for a :class:`PropertyType`
-            or a :class:`ontic.ontic_type.OnticType` derived child class.
-        :rtype: :class:`CoreType`, :class:`ontic.schema_type.SchemaType`
-        """
-        return cls.ONTIC_SCHEMA
 
 def validate_value(name, property_schema, value):
     """Method to validate a given value against a given property schema.

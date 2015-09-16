@@ -226,60 +226,24 @@ after the table.
     that the value is not more than the maximum.
 
 """
+import inspect
 
-from meta_type import validate_value, TYPE_MAP
-from ontic.core_type import CoreType
-from ontic.meta_type import (MetaType, TYPE_MAP, COMPARABLE_TYPES)
-from validation_exception import ValidationException
+from ontic.meta_schema_type import (
+    MetaSchemaType, COMPARABLE_TYPES, STRING_TYPES, TYPE_MAP,
+    TYPE_SET, validate_value)
+from ontic.validation_exception import ValidationException
+
+STRING_TYPES_TUPLE = tuple(STRING_TYPES)
 
 
-class PropertyType(MetaType):
-    """The object type for representing Property schema definitions.
-
-    The PropertyType class is used to define individual properties of an
-    object. For the complete set of property schema settings to define a
-    property, see :ref:`property-schema-settings-table`
-
-    Examples::
-
-        There are a number of ways to create a PropertyType for use in
-        validation of a property. The most straight forward is to define
-        a property schema with a dictionary.
-
-        >>> foo_schema = PropertyType({
-        ...     'type': 'str',
-        ...     'required': True,
-        ...     'default': 'Undefined',
-        ... })
-
-        PropertyType also support the full range of dict style instantiation.
-
-        >>> boo_schema = PropertyType([('type','str'),('required',True)])
-        >>> moo_schema = PropertyType(type='str', default='Cow')
-
-        PropertyType can also be assembled pragmatically.
-
-        >>> bar_schema = PropertyType()
-        >>> bar_schema.type = 'int'
-        >>> bar_schema.required = False
-        >>> bar_schema.min = 3
-        >>> val_errors = validate_property_type(bar_schema)
-        >>> assert val_errors == []
-
-        >>> nutty_schema = PropertyType()
-        >>> nutty_schema['type'] = 'str'
-        >>> nutty_schema['required'] = True
-        >>> nutty_schema['min'] = 5
-        >>> val_errors = validate_property_type(nutty_schema)
-        >>> assert val_errors == []
-    """
-    # The schema definition for the **PropertyType** type.
-    ONTIC_SCHEMA = CoreType({
-        'type': MetaType({
+class PropertyType(MetaSchemaType):
+    """A class to define a schema for a property."""
+    ONTIC_SCHEMA = MetaSchemaType({
+        'type': MetaSchemaType({
             'type': (basestring, str, unicode, type),
             'default': None,
             'required': False,
-            'enum': set(TYPE_MAP.keys()),
+            'enum': TYPE_SET + (None,),
             'min': None,
             'max': None,
             'regex': None,
@@ -287,7 +251,7 @@ class PropertyType(MetaType):
             'member_min': None,
             'member_max': None,
         }),
-        'default': MetaType({
+        'default': MetaSchemaType({
             'type': None,
             'default': None,
             'required': False,
@@ -299,7 +263,7 @@ class PropertyType(MetaType):
             'member_min': None,
             'member_max': None,
         }),
-        'required': MetaType({
+        'required': MetaSchemaType({
             'type': bool,
             'default': False,
             'required': False,
@@ -311,7 +275,7 @@ class PropertyType(MetaType):
             'member_min': None,
             'member_max': None,
         }),
-        'enum': MetaType({
+        'enum': MetaSchemaType({
             'type': set,
             'default': None,
             'required': False,
@@ -323,7 +287,7 @@ class PropertyType(MetaType):
             'member_min': None,
             'member_max': None,
         }),
-        'min': MetaType({
+        'min': MetaSchemaType({
             'type': tuple(COMPARABLE_TYPES),
             'default': None,
             'required': False,
@@ -335,7 +299,7 @@ class PropertyType(MetaType):
             'member_min': None,
             'member_max': None,
         }),
-        'max': MetaType({
+        'max': MetaSchemaType({
             'type': tuple(COMPARABLE_TYPES),
             'default': None,
             'required': False,
@@ -347,7 +311,7 @@ class PropertyType(MetaType):
             'member_min': None,
             'member_max': None,
         }),
-        'regex': MetaType({
+        'regex': MetaSchemaType({
             'type': (basestring, str, unicode),
             'default': None,
             'required': False,
@@ -359,11 +323,11 @@ class PropertyType(MetaType):
             'member_min': None,
             'member_max': None,
         }),
-        'member_type': MetaType({
+        'member_type': MetaSchemaType({
             'type': (basestring, str, unicode, type),
             'default': None,
             'required': False,
-            'enum': set(TYPE_MAP.keys()),
+            'enum': TYPE_SET + (None,),
             'min': None,
             'max': None,
             'regex': None,
@@ -371,7 +335,7 @@ class PropertyType(MetaType):
             'member_min': None,
             'member_max': None,
         }),
-        'member_min': MetaType({
+        'member_min': MetaSchemaType({
             'type': tuple(COMPARABLE_TYPES),
             'default': None,
             'required': False,
@@ -383,7 +347,7 @@ class PropertyType(MetaType):
             'member_min': None,
             'member_max': None,
         }),
-        'member_max': MetaType({
+        'member_max': MetaSchemaType({
             'type': tuple(COMPARABLE_TYPES),
             'default': None,
             'required': False,
@@ -431,18 +395,39 @@ class PropertyType(MetaType):
         self.validate()
 
     def validate(self, raise_validation_exception=True):
+        """Method to validate a property schema definition.
+
+        :param raise_validation_exception: If True, then *validate_property_type*
+            will throw a *ValueException* upon validation failure. If False,
+            then a list of validation errors is returned. Defaults to True.
+        :type raise_validation_exception: bool
+        :return: If no validation errors are found, then *None* is
+            returned. If validation fails, then a list of the errors is returned
+            if the *raise_validation_exception* is set to True.
+        :rtype: list<str>, None
+        :raises ValueError: *the_candidate_schema_property* is not an
+            :class:`~ontic.ontic_type.OnticType`.
+        :raises ValidationException: A property of *candidate_property_type*
+            does not meet schema requirements.
+        """
         return validate_property_type(self, raise_validation_exception)
 
     def perfect(self):
+        """Method to ensure the completeness of a given schema property.
+
+        :rtype: None
+        :raises ValueError: If the candidate_property_type is None, or not
+            of type *PropertyType*.
+        """
         perfect_property_type(self)
 
 
 def validate_property_type(candidate_property_type,
-                             raise_validation_exception=True):
+                           raise_validation_exception=True):
     """Method to validate a property schema definition.
 
     :param candidate_property_type: The schema property to be validated.
-    :type cacandidate_property_type: :class:`property_type.PropertyType`
+    :type candidate_property_type: :class:`property_type.PropertyType`
     :param raise_validation_exception: If True, then *validate_property_type*
         will throw a *ValueException* upon validation failure. If False,
         then a list of validation errors is returned. Defaults to True.
@@ -468,6 +453,10 @@ def validate_property_type(candidate_property_type,
             candidate_property_type.get_schema().iteritems()):
         setting_value = candidate_property_type.get(schema_name, None)
 
+        if (isinstance(setting_value, type) and
+                issubclass(setting_value, MetaSchemaType)):
+            continue
+
         value_errors.extend(
             validate_value(schema_name, schema_setting, setting_value))
 
@@ -487,7 +476,7 @@ def perfect_property_type(candidate_property_type):
 
     :param candidate_property_type: The PropertyType that is to be
         clean and restricted.
-    :type cacandidate_property_type: :class:`property_type.PropertyType`
+    :type candidate_property_type: :class:`property_type.PropertyType`
     :rtype: None
     :raises ValueError: If the candidate_property_type is None, or not
         of type *PropertyType*.
@@ -507,13 +496,7 @@ def perfect_property_type(candidate_property_type):
         del candidate_property_type[property_name]
 
     if 'type' in candidate_property_type:
-        # ensure that the type declaration is valid
-        if candidate_property_type.type not in TYPE_MAP:
-            raise ValueError('Illegal type declaration: %s' %
-                             candidate_property_type.type)
-        # coerce type declarations as string to base types.
-        candidate_property_type.type = TYPE_MAP.get(
-            candidate_property_type.type, None)
+        _perfect_type_setting(candidate_property_type)
     else:
         candidate_property_type.type = None
 
@@ -532,3 +515,26 @@ def perfect_property_type(candidate_property_type):
             continue
         if not candidate_property_type[property_name]:
             candidate_property_type[property_name] = property_schema.default
+
+
+def _perfect_type_setting(candidate_property_type):
+    """Perfect the type setting for a given candidate property schema."""
+    if candidate_property_type.type is None:
+        return
+
+    candidate_type = candidate_property_type.type
+    # coerce type declarations as string to base types.
+    if isinstance(candidate_type, STRING_TYPES_TUPLE):
+        try:
+            candidate_type = candidate_property_type.type = TYPE_MAP[
+                candidate_type]
+        except KeyError:
+            raise ValueError('Illegal type declaration: %s' %
+                             candidate_property_type.type)
+
+    # ensure that the type declaration is valid
+    is_supported_type = candidate_type in TYPE_SET
+    is_meta_schema_type = issubclass(candidate_type, MetaSchemaType) \
+        if inspect.isclass(candidate_type) else False
+    if not (is_supported_type or is_meta_schema_type):
+        raise ValueError('Illegal type declaration: %s' % candidate_type)

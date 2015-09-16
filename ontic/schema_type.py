@@ -52,10 +52,9 @@ and :meth:`validate_schema`.
     >>> errors = validate_schema(a_schema)
 
 """
-from core_type import CoreType
+from ontic.core_type import CoreType
+from ontic.property_type import PropertyType
 from ontic.validation_exception import ValidationException
-from property_type import (PropertyType, validate_property_type,
-                             perfect_property_type)
 
 
 class SchemaType(CoreType):
@@ -105,9 +104,39 @@ class SchemaType(CoreType):
                 self[key] = PropertyType(value)
 
     def perfect(self):
+        """Method to clean and perfect a given schema.
+
+        The *perfect_schema* will fill in any missing schema setting for each of
+        the :class:`ontic.meta_type.PropertyType`. This function should be used
+        to ensure property schema completeness.
+
+        :rtype: None
+        """
         perfect_schema(self)
 
     def validate(self):
+        """Validate a given :class:`SchemaType`.
+
+        This method will iterate through all of the
+        :class:`ontic.meta_type.PropertyType` and validate that each definition
+        is valid.  The method will collect all of the errors and return those as
+        a list of strings or raise a
+        :class:`ontic.validation_exception.ValidationException`. The switch in
+        behavior is determined by the *raise_validation_exception*
+
+        :param raise_validation_exception: If True, then *validate_schema* will
+            throw a *ValidationException* upon validation failure. If False, then a
+            list of validation errors is returned. Defaults to True.
+        :type raise_validation_exception: bool
+        :return: If no validation errors are found, then *None* is
+            returned. If validation fails, then a list of the errors is returned,
+            if the *raise_value_error* is not set to True.
+        :rtype: list<str>, None
+        :raises ValueError: *candidate_schema* is None, or not of type
+            :class:`SchemaType`.
+        :raises ValidationException: A property of *candidate_schema* does not
+            meet schema requirements.
+        """
         return validate_schema(self)
 
 
@@ -128,7 +157,7 @@ def perfect_schema(candidate_schema):
         raise ValueError('"candidate_schema" must be of SchemaType.')
 
     for property_schema in candidate_schema.values():
-        perfect_property_type(property_schema)
+        property_schema.perfect()
 
 
 def validate_schema(candidate_schema, raise_validation_exception=True):
@@ -163,9 +192,8 @@ def validate_schema(candidate_schema, raise_validation_exception=True):
 
     value_errors = []
     for candidate_property_schema in candidate_schema.values():
-        value_errors.extend(
-            validate_property_type(
-                candidate_property_schema, False))
+        value_errors.extend(candidate_property_schema.validate(
+            raise_validation_exception=False))
 
     if value_errors and raise_validation_exception:
         raise ValidationException(value_errors)

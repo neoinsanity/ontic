@@ -51,14 +51,15 @@ with the use of the :meth:`create_ontic_type` function.
 
 """
 from copy import deepcopy
+import inspect
 
-from ontic import meta_type
-from ontic.meta_type import COLLECTION_TYPES, MetaType, TYPE_MAP
+from ontic import meta_schema_type
+from ontic.meta_schema_type import MetaSchemaType, COLLECTION_TYPES, TYPE_MAP
 from ontic.schema_type import SchemaType
 from ontic.validation_exception import ValidationException
 
 
-class OnticType(MetaType):
+class OnticType(MetaSchemaType):
     """OnticType provides the **Ontic** schema interface.
 
     The **OnticType** provides the schema management functionality to a
@@ -66,12 +67,50 @@ class OnticType(MetaType):
     """
 
     def perfect(self):
+        """Function to ensure complete attribute settings for a given object.
+
+        Perfecting an object instance will strip out any properties not
+        defined in
+        the corresponding object type. If there are any missing properties in
+        the
+        object, those properties will be added and set to the default value or
+        None, if no default has been set.
+
+        For the collection types (dict, list, set), the default values are deep
+        copied.
+
+        :rtype: None
+        """
         perfect_object(self)
 
     def validate(self, raise_validation_exception=True):
+        """Validate the given OnticType instance against it's defined schema.
+
+        :param raise_validation_exception: If True, then *validate_object* will
+            throw a *ValueException* upon validation failure. If False, then a
+            list of validation errors is returned. Defaults to True.
+        :type raise_validation_exception: bool
+        :return: If no validation errors are found, then *None* is
+            returned. If validation fails, then a list of the errors is returned
+            if the *raise_validation_exception* is set to True.
+        :rtype: list<str>, None
+        """
         return validate_object(self, raise_validation_exception)
 
     def validate_value(self, value_name, raise_validation_exception=True):
+        """Validate a target value of a given ontic object.
+
+        :param value_name: The value name to validate.
+        :type value_name: str
+        :param raise_validation_exception: If True, then *validate_object* will
+            throw a *ValueException* upon validation failure. If False, then a
+            list of validation errors is returned. Defaults to True.
+        :type raise_validation_exception: bool
+        :return: If no validation errors are found, then *None* is
+            returned. If validation fails, then a list of the errors is returned
+            if the *raise_validation_exception* is set to True.
+        :rtype: list<str>, None
+        """
         return validate_value(value_name, self, raise_validation_exception)
 
 
@@ -145,13 +184,22 @@ def perfect_object(the_object):
     for property_name, property_schema in schema.iteritems():
         if property_name not in the_object:
             the_object[property_name] = None
+        value = the_object[property_name]
 
-        if the_object[property_name] is None \
-                and property_schema.default is not None:
+        if (value is None
+            and property_schema.default is not None):
             if TYPE_MAP.get(property_schema.type) in COLLECTION_TYPES:
-                the_object[property_name] = deepcopy(property_schema.default)
+                value = the_object[property_name] = deepcopy(
+                    property_schema.default)
+            elif issubclass(property_schema.type, OnticType):
+                value = the_object[property_name] = deepcopy(
+                    property_schema.default)
             else:
-                the_object[property_name] = property_schema.default
+                value = the_object[property_name] = property_schema.default
+
+        if (value is not None
+            and isinstance(value, OnticType)):
+            value.perfect()
 
 
 def validate_object(the_object, raise_validation_exception=True):
@@ -237,7 +285,17 @@ def validate_value(property_name,
     value = ontic_object.get(property_name, None)
 
     value_errors.extend(
-        meta_type.validate_value(property_name, property_schema, value))
+        meta_schema_type.validate_value(property_name, property_schema, value))
+
+    # if a value is an OnticType, then have it self validate.
+    if (property_schema.type is not None
+        and issubclass(property_schema.type, OnticType)
+        and value is not None):
+        child_errors = value.validate(raise_validation_exception=False)
+        if child_errors:
+            error_msg = 'The child property %s, has errors:: %s' % (
+                property_name, ' || '.join(child_errors))
+            value_errors.append(error_msg)
 
     if value_errors and raise_validation_exception:
         raise ValidationException(value_errors)
