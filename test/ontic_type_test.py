@@ -995,7 +995,10 @@ class ValidateValueTestCase(base_test_case.BaseTestCase):
 
 
 class ChildOnticType(OnticType):
-    pass
+    ONTIC_SCHEMA = SchemaType(
+        int_prop=PropertyType(type=int),
+        str_prop=PropertyType(type=str)
+    )
 
 
 class ParentOnticType(OnticType):
@@ -1007,7 +1010,22 @@ class ParentOnticType(OnticType):
 class SettingOnticTypeTestCase(base_test_case.BaseTestCase):
     """Test case the setting of an OnticType as a PropertyType.type setting."""
 
+    def test_ontic_type_success(self):
+        parent = ParentOnticType()
+        parent.child_prop = ChildOnticType()
+        parent.child_prop.int_prop = 1
+
+        res = parent.validate(raise_validation_exception=True)
+        self.assertListEqual(res, [])
 
     def test_non_ontic_type_failure(self):
         parent = ParentOnticType()
+        parent.child_prop = ChildOnticType()
+        parent.child_prop.int_prop = '1'
 
+        self.assertRaisesRegexp(
+            ValidationException,
+            r"""The child property child_prop, has errors:: """
+            r"""The value for "int_prop" is not of type "<type 'int'>": 1""",
+            parent.validate,
+            raise_validation_exception=True)

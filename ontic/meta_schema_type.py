@@ -174,8 +174,6 @@ def validate_non_none_value(key, property_schema, value, value_errors):
             # validate without errors.
             return
 
-        # TODO: raul - add the test for OnticType, and decide how to handle
-        # validation. Maybe I'll have to separate this to the property level
         if property_schema.type in COLLECTION_TYPES:
             validate_collection_members(
                 key, property_schema, value, value_errors)

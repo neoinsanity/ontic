@@ -68,8 +68,10 @@ class OnticType(MetaSchemaType):
     def perfect(self):
         """Function to ensure complete attribute settings for a given object.
 
-        Perfecting an object instance will strip out any properties not defined in
-        the corresponding object type. If there are any missing properties in the
+        Perfecting an object instance will strip out any properties not
+        defined in
+        the corresponding object type. If there are any missing properties in
+        the
         object, those properties will be added and set to the default value or
         None, if no default has been set.
 
@@ -274,6 +276,16 @@ def validate_value(property_name,
 
     value_errors.extend(
         meta_schema_type.validate_value(property_name, property_schema, value))
+
+    # if a value is an OnticType, then have it self validate.
+    if (property_schema.type is not None
+        and issubclass(property_schema.type, OnticType)
+        and value is not None):
+        child_errors = value.validate(raise_validation_exception=False)
+        if child_errors:
+            error_msg = 'The child property %s, has errors:: %s' % (
+                property_name, '/'.join(child_errors))
+            value_errors.append(error_msg)
 
     if value_errors and raise_validation_exception:
         raise ValidationException(value_errors)
