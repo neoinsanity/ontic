@@ -507,13 +507,15 @@ def perfect_property_type(candidate_property_type):
     else:
         candidate_property_type.member_type = None
 
+    # set the default for the given property.
     for property_name, property_schema in (
             schema_property_schema.iteritems()):
         if property_name not in candidate_property_type:
             candidate_property_type[
                 property_name] = property_schema.default
             continue
-        if not candidate_property_type[property_name]:
+        if candidate_property_type[property_name] is None:
+            # this may set the value to None if default is None.
             candidate_property_type[property_name] = property_schema.default
 
 
