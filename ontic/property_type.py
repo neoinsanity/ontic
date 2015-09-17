@@ -536,7 +536,6 @@ def _perfect_type_setting(candidate_property_type):
 
     # ensure that the type declaration is valid
     is_supported_type = candidate_type in TYPE_SET
-    is_meta_schema_type = issubclass(candidate_type, MetaSchemaType) \
-        if inspect.isclass(candidate_type) else False
+    is_meta_schema_type = issubclass(candidate_type, MetaSchemaType)
     if not (is_supported_type or is_meta_schema_type):
         raise ValueError('Illegal type declaration: %s' % candidate_type)
