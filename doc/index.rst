@@ -68,24 +68,6 @@ see :ref:`getting-started-with-ontic`.
 
 *Share and Enjoy*.
 
-Usage Documentation
---------------------
-.. toctree::
-  :maxdepth: 3
-
-  ontic
-
-API Specification
-------------------
-.. toctree::
-  :maxdepth: 3
-
-  ontic.core_type
-  ontic.meta_type
-  ontic.ontic_type
-  ontic.property_type
-  ontic.schema_type
-  ontic.validation_exception
 
 
 Indices and Tables

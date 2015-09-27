@@ -9,3 +9,5 @@ setuptools==1.4.2
 
 ### These are the documentation dependencies
 Sphinx==1.2
+# The Sphinx pygment style used
+cloud-sptheme==1.7
