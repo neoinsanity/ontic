@@ -9,7 +9,7 @@
 ###########################################################
 
 # Create the virtual environment
-virtualenv venv
+virtualenv -p python3 venv
 
 echo
 echo "------------------------------------------------"
