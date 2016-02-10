@@ -243,7 +243,7 @@ def validate_value(property_name,
 
     :param property_name: The value to be validated against the given
         **PropertyType**.
-    :type property_name: basestring
+    :type property_name: str
     :param ontic_object: Ontic defined object to be validated.
     :type ontic_object: ontic_type.OnticType
     :param raise_validation_exception: If True, then *validate_object* will
@@ -266,7 +266,7 @@ def validate_value(property_name,
     if property_name is None:
         raise ValueError(
             '"property_name" is required, cannot be None.')
-    if not isinstance(property_name, basestring) or len(property_name) < 1:
+    if not isinstance(property_name, str) or len(property_name) < 1:
         raise ValueError('"property_name" is not a valid string.')
     if ontic_object is None:
         raise ValueError(

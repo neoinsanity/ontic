@@ -110,10 +110,9 @@ after the table.
     ============ ========= ======== ========  =================================
     Name         Type      Default  Required  Enumeration
     ============ ========= ======== ========  =================================
-    type         str       None     False     basestring, bool, complex, date,
+    type         str       None     False     bool, complex, date,
                  type                         datetime, dict, float, int, list,
-                                              long, None, set, str, time,
-                                              unicode
+                                              None, set, str, time
     default      None      None     False
     required     bool      False    False
     enum         set       None     False
@@ -122,33 +121,28 @@ after the table.
                  datetime
                  float
                  int
-                 long
                  time
     max          complex   None     False
                  date
                  datetime
                  float
                  int
-                 long
                  time
     regex        str       None     False
-    member_type  str       None     False     basestring, bool, complex, date,
+    member_type  str       None     False     bool, complex, date,
                  type                         datetime, dict, float, int, list,
-                                              long, None, set, str, time,
-                                              unicode
+                                              None, set, str, time
     member_min   complex   None     False
                  date
                  datetime
                  float
                  int
-                 long
                  time
     member_max   complex   None     False
                  date
                  datetime
                  float
                  int
-                 long
                  time
     ============ ========= ======== ========  =================================
 
@@ -226,21 +220,18 @@ after the table.
     that the value is not more than the maximum.
 
 """
-import inspect
 
 from ontic.meta_schema_type import (
-    MetaSchemaType, COMPARABLE_TYPES, STRING_TYPES, TYPE_MAP,
+    MetaSchemaType, COMPARABLE_TYPES, TYPE_MAP,
     TYPE_SET, validate_value)
 from ontic.validation_exception import ValidationException
-
-STRING_TYPES_TUPLE = tuple(STRING_TYPES)
 
 
 class PropertyType(MetaSchemaType):
     """A class to define a schema for a property."""
     ONTIC_SCHEMA = MetaSchemaType({
         'type': MetaSchemaType({
-            'type': (basestring, str, unicode, type),
+            'type': (str, type),
             'default': None,
             'required': False,
             'enum': TYPE_SET + (None,),
@@ -312,7 +303,7 @@ class PropertyType(MetaSchemaType):
             'member_max': None,
         }),
         'regex': MetaSchemaType({
-            'type': (basestring, str, unicode),
+            'type': str,
             'default': None,
             'required': False,
             'enum': None,
@@ -324,7 +315,7 @@ class PropertyType(MetaSchemaType):
             'member_max': None,
         }),
         'member_type': MetaSchemaType({
-            'type': (basestring, str, unicode, type),
+            'type': (str, type),
             'default': None,
             'required': False,
             'enum': TYPE_SET + (None,),
@@ -450,7 +441,7 @@ def validate_property_type(candidate_property_type,
     value_errors = list()
 
     for schema_name, schema_setting in (
-            candidate_property_type.get_schema().iteritems()):
+            candidate_property_type.get_schema().items()):
         setting_value = candidate_property_type.get(schema_name, None)
 
         if (isinstance(setting_value, type) and
@@ -509,7 +500,7 @@ def perfect_property_type(candidate_property_type):
 
     # set the default for the given property.
     for property_name, property_schema in (
-            schema_property_schema.iteritems()):
+            schema_property_schema.items()):
         if property_name not in candidate_property_type:
             candidate_property_type[
                 property_name] = property_schema.default
@@ -526,7 +517,7 @@ def _perfect_type_setting(candidate_property_type):
 
     candidate_type = candidate_property_type.type
     # coerce type declarations as string to base types.
-    if isinstance(candidate_type, STRING_TYPES_TUPLE):
+    if isinstance(candidate_type, str):
         try:
             candidate_type = candidate_property_type.type = TYPE_MAP[
                 candidate_type]

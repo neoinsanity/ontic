@@ -1,6 +1,6 @@
 """Test the basic functionality of the schema data types."""
 
-from test_utils import base_test_case
+from test.test_utils import base_test_case
 
 from ontic.property_type import PropertyType
 from ontic import schema_type

@@ -15,13 +15,10 @@ from ontic.core_type import CoreType
 COLLECTION_TYPES = {dict, list, set}
 
 # : The set of types that can be compared with inequality operators.
-COMPARABLE_TYPES = {complex, date, datetime, float, int, long, time}
+COMPARABLE_TYPES = {complex, date, datetime, float, int, time}
 
 # : The set of types that may be limited in size.
-BOUNDABLE_TYPES = {basestring, str, unicode, list, dict, set}
-
-# : The set of string types
-STRING_TYPES = {basestring, str, unicode}
+BOUNDABLE_TYPES = {str, list, dict, set}
 
 
 class MetaSchemaType(CoreType):
@@ -60,8 +57,6 @@ class MetaSchemaType(CoreType):
 
 # : Used to convert the string declaration of attribute type to native type.
 TYPE_MAP = {
-    'basestring': basestring,
-    basestring: basestring,
     'bool': bool,
     bool: bool,
     'complex': complex,
@@ -78,8 +73,6 @@ TYPE_MAP = {
     int: int,
     'list': list,
     list: list,
-    'long': long,
-    long: long,
     'None': None,
     None: None,
     MetaSchemaType: MetaSchemaType,
@@ -89,12 +82,9 @@ TYPE_MAP = {
     str: str,
     'time': time,
     time: time,
-    'unicode': unicode,
-    unicode: unicode,
 }
 
 TYPE_SET = (
-    basestring,
     bool,
     complex,
     date,
@@ -103,11 +93,9 @@ TYPE_SET = (
     float,
     int,
     list,
-    long,
     set,
     str,
     time,
-    unicode,
 )
 
 

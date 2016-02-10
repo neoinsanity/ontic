@@ -87,32 +87,32 @@ Here is the list of schema definition properties provided by **Ontic**.
     ============ =============== ====================================
     Name         Type            Enumeration
     ============ =============== ====================================
-    type         str             basestring, bool, complex, date,
+    type         str             bool, complex, date,
                  type            datetime, dict, float, int, list,
-                                 long, None, set, str, time, unicode
+                                 None, set, str, time
     default      None
     required     bool
     enum         set
     min          complex, date,
                  datetime,
                  float, int,
-                 long, time
+                 time
     max          complex, date,
                  datetime,
                  float, int,
-                 long, time
+                 time
     regex        str
-    member_type  str             basestring, bool, complex, date,
+    member_type  str             bool, complex, date,
                  type            datetime, dict, float, int, list,
-                                 long, None, set, str, time, unicode
+                                 None, set, str, time
     member_min   complex, date,
                  datetime,
                  float, int,
-                 long, time
+                 time
     member_max   complex, date,
                  datetime,
                  float, int,
-                 long, time
+                 time
     ============ =============== ====================================
 
 The schema type settings are utilized to create a *SchemaType*::
