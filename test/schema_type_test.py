@@ -151,13 +151,12 @@ class ValidateSchemaTestCase(base_test_case.BaseTestCase):
         self.assertRaisesRegexp(
             ValidationException,
             r"""The value for "required" is not """
-            r"""of type "<type 'bool'>": UNDEFINED""",
+            r"""of type "<class 'bool'>": UNDEFINED""",
             schema_type.validate_schema, schema_instance)
 
         expected_errors_list = [
             """The value for "required" is not of """
-            """type "<type 'bool'>": UNDEFINED"""]
-
+            """type "<class 'bool'>": UNDEFINED"""]
         try:
             schema_type.validate_schema(schema_instance)
             self.fail('A ValidationException should have been thrown.')

@@ -150,8 +150,8 @@ def validate_non_none_value(key, property_schema, value, value_errors):
         if not enum_validation(property_schema, value):
             value_errors.append(
                 'The value "%s" for "%s" not in enumeration %s.' %
-                (value, key, sorted(property_schema.enum)))
-            return  # No further processing can occur
+                (value, key, _generate_sorted_list(property_schema.enum)))
+            return  # No further processing can occur.
     else:
         # type checking
         if not isinstance(value, property_schema.type):
@@ -168,6 +168,8 @@ def validate_non_none_value(key, property_schema, value, value_errors):
         else:
             non_none_singular_validation(
                 key, property_schema, value, value_errors)
+
+    return
 
 
 def validate_collection_members(key, property_schema, value, value_errors):
@@ -263,7 +265,7 @@ def validate_member_enum(key, member_value, property_schema, value_errors):
     if not enum_validation(property_schema, member_value):
         value_errors.append(
             'The value "%s" for "%s" not in enumeration %s.' %
-            (member_value, key, sorted(property_schema.enum)))
+            (member_value, key, _generate_sorted_list(property_schema.enum)))
 
 
 def validate_member_type(key, member_value, property_schema, value_errors):
@@ -446,7 +448,7 @@ def non_none_singular_validation(key, property_schema, value, value_errors):
     # enum
     if not enum_validation(property_schema, value):
         value_errors.append('The value "%s" for "%s" not in enumeration %s.' %
-                            (value, key, sorted(property_schema.enum)))
+                            (value, key, _generate_sorted_list(property_schema.enum)))
 
     # min
     if not min_validation(property_schema, value):
@@ -465,3 +467,15 @@ def non_none_singular_validation(key, property_schema, value, value_errors):
                 value_errors.append(
                     'Value "%s" for %s does not meet regex: %s' %
                     (value, key, property_schema.regex))
+
+
+def _generate_sorted_list(some_collection):
+    """Attempt to generate a sorted list from a collection.
+
+    :param some_collection: A collection that will attempt to be soreted.
+    :return: The sorted collection if possible, else return original collection.
+    """
+    try:
+        return sorted(some_collection)
+    except TypeError:
+        return list(some_collection)
