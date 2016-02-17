@@ -181,7 +181,7 @@ def perfect_object(the_object):
     for property_name in extra_properties:
         del the_object[property_name]
 
-    for property_name, property_schema in schema.iteritems():
+    for property_name, property_schema in schema.items():
         if property_name not in the_object:
             the_object[property_name] = None
         value = the_object[property_name]

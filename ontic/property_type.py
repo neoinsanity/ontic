@@ -44,10 +44,9 @@ The most straight forward way to create an instance of a
 :class:`PropertySchema`:
 
 >>> prop_schema = PropertyType(type='str', required=True, min=3)
->>> prop_schema
-{'regex': None, 'enum': None, 'min': 3, 'default': None, 'max': None, \
-'required': True, 'member_type': None, 'member_min': None, \
-'type': <type 'str'>, 'member_max': None}
+>>> assert prop_schema == {'regex': None, 'enum': None, 'min': 3, 'default': None, 'max': None,
+...     'required': True, 'member_type': None, 'member_min': None,
+...     'type': str, 'member_max': None}
 
 Demonstrated above is the creation of a property schema of type string. In
 addition the property schema forces the value of the property to required and
@@ -90,11 +89,12 @@ multiple validation errors.
 >>> other_schema = PropertyType({
 ...     'type': 'str',
 ...     'max': 3,
-...     'enum': {'dog', 'rat', 'cat'}
+...     'enum': {'fish', 'dog', 'cat'}
 ... })
->>> validate_value('other_prop', other_schema, 'frog')
-['The value "frog" for "other_prop" not in enumeration [\\'rat\\', \\'dog\\', \
-\\'cat\\'].', 'The value of "frog" for "other_prop" fails max of 3.']
+>>> ret = validate_value('other_prop', other_schema, 'frog')
+>>> assert len(ret) == 2
+>>> assert ret[0] == '''The value "frog" for "other_prop" not in enumeration ['cat', 'dog', 'fish'].'''
+>>> assert ret[1] == '''The value of "frog" for "other_prop" fails max of 3.'''
 
 .. _property-schema-settings-table:
 

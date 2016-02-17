@@ -150,7 +150,7 @@ def validate_non_none_value(key, property_schema, value, value_errors):
         if not enum_validation(property_schema, value):
             value_errors.append(
                 'The value "%s" for "%s" not in enumeration %s.' %
-                (value, key, list(property_schema.enum)))
+                (value, key, sorted(property_schema.enum)))
             return  # No further processing can occur
     else:
         # type checking
@@ -263,7 +263,7 @@ def validate_member_enum(key, member_value, property_schema, value_errors):
     if not enum_validation(property_schema, member_value):
         value_errors.append(
             'The value "%s" for "%s" not in enumeration %s.' %
-            (member_value, key, sorted(list(property_schema.enum))))
+            (member_value, key, sorted(property_schema.enum)))
 
 
 def validate_member_type(key, member_value, property_schema, value_errors):
@@ -326,7 +326,7 @@ def validate_member_min(key, member_value, property_schema, value_errors):
     :type value_errors: list<str>
     :rtype: None
     """
-    if property_schema.member_type in STRING_TYPES:
+    if property_schema.member_type is str:
         if len(member_value) < property_schema.member_min:
             value_errors.append(
                 'The value of "%s" for "%s" fails min length of %s.' %
@@ -355,7 +355,7 @@ def validate_member_max(key, member_value, property_schema, value_errors):
     :type value_errors: list<str>
     :rtype: None
     """
-    if property_schema.member_type in STRING_TYPES:
+    if property_schema.member_type is str:
         if len(member_value) > property_schema.member_max:
             value_errors.append(
                 'The value of "%s" for "%s" fails max length of %s.' %
@@ -446,7 +446,7 @@ def non_none_singular_validation(key, property_schema, value, value_errors):
     # enum
     if not enum_validation(property_schema, value):
         value_errors.append('The value "%s" for "%s" not in enumeration %s.' %
-                            (value, key, list(property_schema.enum)))
+                            (value, key, sorted(property_schema.enum)))
 
     # min
     if not min_validation(property_schema, value):
@@ -460,7 +460,7 @@ def non_none_singular_validation(key, property_schema, value, value_errors):
 
     # regex validation
     if property_schema.regex:
-        if property_schema.type in STRING_TYPES and value is not '':
+        if property_schema.type is str and value is not '':
             if not re.match(property_schema.regex, value):
                 value_errors.append(
                     'Value "%s" for %s does not meet regex: %s' %

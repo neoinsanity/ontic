@@ -1,7 +1,7 @@
 """Test the basic functionality of the base and core data types."""
 from datetime import date, time, datetime
 
-from test_utils import base_test_case
+from test.test_utils import base_test_case
 
 from ontic.meta_schema_type import MetaSchemaType
 from ontic import ontic_type
