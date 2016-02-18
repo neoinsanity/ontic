@@ -7,22 +7,22 @@
 """
 from datetime import date, datetime, time
 import re
+from typing import List, Any, Callable, Set, Tuple, TypeVar
 
 from ontic.core_type import CoreType
 
-
-# : The set of supported collection types.
+#: The set of supported collection types.
 COLLECTION_TYPES = {dict, list, set}
 
-# : The set of types that can be compared with inequality operators.
+#: The set of types that can be compared with inequality operators.
 COMPARABLE_TYPES = {complex, date, datetime, float, int, time}
 
-# : The set of types that may be limited in size.
+#: The set of types that may be limited in size.
 BOUNDABLE_TYPES = {str, list, dict, set}
 
 
 class MetaSchemaType(CoreType):
-    r"""Interface for type definition of **Ontic** schema defined classes.
+    """Interface for type definition of **Ontic** schema defined classes.
 
     Dict Style Initialization
         MetaSchemaType() -> new empty MetaSchemaType
@@ -36,16 +36,16 @@ class MetaSchemaType(CoreType):
             for k, v in iterable:
                 d[k] = v
 
-        MetaSchemaType(\*\*kwargs) -> new MetaSchemaType initialized with the name=value
-        pairs in the keyword argument list.  For example::
+        MetaSchemaType(\*\*kwargs) -> new MetaSchemaType initialized with the
+        name=value pairs in the keyword argument list.  For example::
 
             MetaSchemaType(one=1, two=2)
     """
-    # : The Ontic schema pointer.
+    #: The Ontic schema pointer.
     ONTIC_SCHEMA = None
 
     @classmethod
-    def get_schema(cls):
+    def get_schema(cls) -> CoreType:
         """Returns the schema object for the given type definition.
 
         :return: The schema metadata definition for a :class:`PropertyType`
@@ -55,7 +55,7 @@ class MetaSchemaType(CoreType):
         return cls.ONTIC_SCHEMA
 
 
-# : Used to convert the string declaration of attribute type to native type.
+#: Used to convert the string declaration of attribute type to native type.
 TYPE_MAP = {
     'bool': bool,
     bool: bool,
@@ -99,7 +99,10 @@ TYPE_SET = (
 )
 
 
-def validate_value(name, property_schema, value):
+def validate_value(
+        name: str,
+        property_schema: CoreType,
+        value: Any) -> List[str]:
     """Method to validate a given value against a given property schema.
 
     :param name: The name of the value to be validated.
@@ -125,7 +128,10 @@ def validate_value(name, property_schema, value):
     return value_errors
 
 
-def validate_non_none_value(key, property_schema, value, value_errors):
+def validate_non_none_value(
+        key: str,
+        property_schema: CoreType,
+        value: Any, value_errors: List[str]) -> None:
     """Validates an **Ontic** object value that is not None.
 
     This method validates singular and collection values. This method
@@ -169,10 +175,12 @@ def validate_non_none_value(key, property_schema, value, value_errors):
             non_none_singular_validation(
                 key, property_schema, value, value_errors)
 
-    return
 
-
-def validate_collection_members(key, property_schema, value, value_errors):
+def validate_collection_members(
+        key: str,
+        property_schema: CoreType,
+        value: Any,
+        value_errors: List[str]) -> None:
     """Method to validate the members of a collection.
 
     This method only operates on *list* and *set* collection types.
@@ -220,12 +228,16 @@ def validate_collection_members(key, property_schema, value, value_errors):
                 value_errors)
 
 
+#: Signature definition of a validator function.
+ValidatorFunc = Callable[[str, Any, CoreType, List[str]], None]
+
+
 def execute_collection_validators(
-        key,
-        member_value,
-        property_schema,
-        validators,
-        value_errors):
+        key: str,
+        member_value: Any,
+        property_schema: CoreType,
+        validators: List[ValidatorFunc],
+        value_errors) -> None:
     """Method to execute a list of validators on a given collection.
 
     :param key: The name of the collection property to validate.
@@ -246,7 +258,11 @@ def execute_collection_validators(
         validator(key, member_value, property_schema, value_errors)
 
 
-def validate_member_enum(key, member_value, property_schema, value_errors):
+def validate_member_enum(
+        key: str,
+        member_value: Any,
+        property_schema: CoreType,
+        value_errors: List[str]) -> None:
     """Validate a member of a collection is within a defined enumeration.
 
     :param key: The name of the collection property to validate.
@@ -268,7 +284,11 @@ def validate_member_enum(key, member_value, property_schema, value_errors):
             (member_value, key, _generate_sorted_list(property_schema.enum)))
 
 
-def validate_member_type(key, member_value, property_schema, value_errors):
+def validate_member_type(
+        key: str,
+        member_value: Any,
+        property_schema: CoreType,
+        value_errors: List[str]) -> None:
     """Validate a member of a collection is of a given type.
 
     :param key: The name of the collection property to validate.
@@ -290,7 +310,11 @@ def validate_member_type(key, member_value, property_schema, value_errors):
             (str(member_value), key, property_schema.member_type))
 
 
-def validate_member_regex(key, member_value, property_schema, value_errors):
+def validate_member_regex(
+        key: str,
+        member_value: Any,
+        property_schema: CoreType,
+        value_errors: List[str]) -> None:
     """Validate a member of a collection against a defined regex.
 
     :param key: The name of the collection property to validate.
@@ -312,7 +336,11 @@ def validate_member_regex(key, member_value, property_schema, value_errors):
             (member_value, key, property_schema.regex))
 
 
-def validate_member_min(key, member_value, property_schema, value_errors):
+def validate_member_min(
+        key: str,
+        member_value: Any,
+        property_schema: CoreType,
+        value_errors: List[str]) -> None:
     """Validate a member of a collection for minimum allowable value.
 
     :param key: The name of the collection property to validate.
@@ -341,7 +369,11 @@ def validate_member_min(key, member_value, property_schema, value_errors):
                 (member_value, key, property_schema.member_min))
 
 
-def validate_member_max(key, member_value, property_schema, value_errors):
+def validate_member_max(
+        key: str,
+        member_value: Any,
+        property_schema: CoreType,
+        value_errors: List[str]) -> None:
     """Validate a member of a collection for maximum allowable value.
 
     :param key: The name of the collection property to validate.
@@ -370,7 +402,7 @@ def validate_member_max(key, member_value, property_schema, value_errors):
                 (member_value, key, property_schema.member_max))
 
 
-def enum_validation(property_schema, value):
+def enum_validation(property_schema: CoreType, value: Any) -> bool:
     """Validate a non-collection property for value in an enumeration set.
 
     :param property_schema: The property schema to utilize for validation.
@@ -381,12 +413,12 @@ def enum_validation(property_schema, value):
     :rtype: bool
     """
     if property_schema.enum:
-        if not value in property_schema.enum:
+        if value not in property_schema.enum:
             return False
     return True
 
 
-def min_validation(property_schema, value):
+def min_validation(property_schema: CoreType, value: Any) -> bool:
     """Validate a non-collection property for minimum allowable value.
 
     :param property_schema: The property schema to utilize for validation.
@@ -407,7 +439,7 @@ def min_validation(property_schema, value):
     return True
 
 
-def max_validation(property_schema, value):
+def max_validation(property_schema: CoreType, value: Any) -> bool:
     """Validates a non-collection property for maximum allowable value.
 
     :param property_schema: The property schema to utilize for validation.
@@ -428,7 +460,11 @@ def max_validation(property_schema, value):
     return True
 
 
-def non_none_singular_validation(key, property_schema, value, value_errors):
+def non_none_singular_validation(
+        key: str,
+        property_schema: CoreType,
+        value: Any,
+        value_errors: List[str]) -> None:
     """Method to validate an object value meets schema requirements.
 
     This method validates non-collection properties. The method should
@@ -448,7 +484,8 @@ def non_none_singular_validation(key, property_schema, value, value_errors):
     # enum
     if not enum_validation(property_schema, value):
         value_errors.append('The value "%s" for "%s" not in enumeration %s.' %
-                            (value, key, _generate_sorted_list(property_schema.enum)))
+                            (value, key,
+                             _generate_sorted_list(property_schema.enum)))
 
     # min
     if not min_validation(property_schema, value):
@@ -469,10 +506,14 @@ def non_none_singular_validation(key, property_schema, value, value_errors):
                     (value, key, property_schema.regex))
 
 
-def _generate_sorted_list(some_collection):
+SortableCollection = TypeVar(
+    'SortableCollection', List[Any], Set[Any], Tuple[Any])
+
+
+def _generate_sorted_list(some_collection: SortableCollection) -> List[Any]:
     """Attempt to generate a sorted list from a collection.
 
-    :param some_collection: A collection that will attempt to be soreted.
+    :param some_collection: A collection that will attempt to be sorted.
     :return: The sorted collection if possible, else return original collection.
     """
     try:
