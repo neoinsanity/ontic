@@ -52,6 +52,8 @@ and :meth:`validate_schema`.
     >>> errors = validate_schema(a_schema)
 
 """
+from typing import List
+
 from ontic.core_type import CoreType
 from ontic.property_type import PropertyType
 from ontic.validation_exception import ValidationException
@@ -103,7 +105,7 @@ class SchemaType(CoreType):
             if not isinstance(value, PropertyType):
                 self[key] = PropertyType(value)
 
-    def perfect(self):
+    def perfect(self) -> None:
         """Method to clean and perfect a given schema.
 
         The *perfect_schema* will fill in any missing schema setting for each of
@@ -114,7 +116,7 @@ class SchemaType(CoreType):
         """
         perfect_schema(self)
 
-    def validate(self):
+    def validate(self) -> List[str]:
         """Validate a given :class:`SchemaType`.
 
         This method will iterate through all of the
@@ -140,7 +142,7 @@ class SchemaType(CoreType):
         return validate_schema(self)
 
 
-def perfect_schema(candidate_schema):
+def perfect_schema(candidate_schema: SchemaType) -> None:
     """Method to clean and perfect a given schema.
 
     The *perfect_schema* will fill in any missing schema setting for each of
@@ -160,7 +162,9 @@ def perfect_schema(candidate_schema):
         property_schema.perfect()
 
 
-def validate_schema(candidate_schema, raise_validation_exception=True):
+def validate_schema(
+        candidate_schema: SchemaType,
+        raise_validation_exception: bool = True) -> List[str]:
     """Validate a given :class:`SchemaType`.
 
     This method will iterate through all of the

@@ -220,6 +220,7 @@ after the table.
     that the value is not more than the maximum.
 
 """
+from typing import List
 
 from ontic.meta_schema_type import (
     MetaSchemaType, COMPARABLE_TYPES, TYPE_MAP,
@@ -385,7 +386,7 @@ class PropertyType(MetaSchemaType):
         self.perfect()
         self.validate()
 
-    def validate(self, raise_validation_exception=True):
+    def validate(self, raise_validation_exception:bool=True) -> None:
         """Method to validate a property schema definition.
 
         :param raise_validation_exception: If True, then *validate_property_type*
@@ -403,7 +404,7 @@ class PropertyType(MetaSchemaType):
         """
         return validate_property_type(self, raise_validation_exception)
 
-    def perfect(self):
+    def perfect(self) -> None:
         """Method to ensure the completeness of a given schema property.
 
         :rtype: None
@@ -413,8 +414,9 @@ class PropertyType(MetaSchemaType):
         perfect_property_type(self)
 
 
-def validate_property_type(candidate_property_type,
-                           raise_validation_exception=True):
+def validate_property_type(
+        candidate_property_type: PropertyType,
+        raise_validation_exception: bool = True) -> List[str]:
     """Method to validate a property schema definition.
 
     :param candidate_property_type: The schema property to be validated.
@@ -457,7 +459,7 @@ def validate_property_type(candidate_property_type,
     return value_errors
 
 
-def perfect_property_type(candidate_property_type):
+def perfect_property_type(candidate_property_type: PropertyType) -> None:
     """Method to ensure the completeness of a given schema property.
 
     This method ensures completeness by stripping out any properties that
@@ -510,7 +512,7 @@ def perfect_property_type(candidate_property_type):
             candidate_property_type[property_name] = property_schema.default
 
 
-def _perfect_type_setting(candidate_property_type):
+def _perfect_type_setting(candidate_property_type: PropertyType) -> None:
     """Perfect the type setting for a given candidate property schema."""
     if candidate_property_type.type is None:
         return
