@@ -100,6 +100,7 @@ class SchemaType(CoreType):
 
                 SchemaType(one={. . .}, two={. . .})
         """
+
         super(SchemaType, self).__init__(*args, **kwargs)
         for key, value in self.items():
             if not isinstance(value, PropertyType):
