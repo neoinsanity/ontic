@@ -1,10 +1,21 @@
 """
 
 """
+from datetime import date, datetime, time
 from typing import List, Union
 
 from ontic.ontic_core import OnticCore
 from ontic.validation_exception import ValidationException
+
+
+#: The set of supported collection types.
+COLLECTION_TYPES = {dict, list, set}
+
+#: The set of types that can be compared with inequality operators.
+COMPARABLE_TYPES = {complex, date, datetime, float, int, time}
+
+#: The set of types that may be limited in size.
+BOUNDABLE_TYPES = {str, list, dict, set}
 
 
 class SchemaInterface(OnticCore):
@@ -18,6 +29,50 @@ class SchemaInterface(OnticCore):
     def __set_schema_for_ontic_schema__(
             cls, ontic_schema: Union['OnticSchema', dict]) -> None:
         cls.ONTIC_SCHEMA = OnticSchema(ontic_schema)
+
+
+#: Used to convert the string declaration of attribute type to native type.
+TYPE_MAP = {
+    'bool': bool,
+    bool: bool,
+    'complex': complex,
+    complex: complex,
+    'date': date,
+    date: date,
+    'datetime': datetime,
+    datetime: datetime,
+    'dict': dict,
+    dict: dict,
+    'float': float,
+    float: float,
+    'int': int,
+    int: int,
+    'list': list,
+    list: list,
+    'None': None,
+    None: None,
+    SchemaInterface: SchemaInterface,
+    'set': set,
+    set: set,
+    'str': str,
+    str: str,
+    'time': time,
+    time: time,
+}
+
+TYPE_SET = (
+    bool,
+    complex,
+    date,
+    datetime,
+    dict,
+    float,
+    int,
+    list,
+    set,
+    str,
+    time,
+)
 
 
 class OnticProperty(SchemaInterface):
@@ -258,6 +313,28 @@ def validate_schema(
         raise ValidationException(value_errors)
 
     return value_errors
+
+
+def _perfect_type_setting(ontic_property: OnticProperty) -> None:
+    """Perfect the type setting for a given candidate property schema."""
+    if ontic_property.type is None:
+        return
+
+    candidate_type = ontic_property.type
+    # coerce type declarations as string to base types.
+    if isinstance(candidate_type, str):
+        try:
+            candidate_type = ontic_property.type = TYPE_MAP[
+                candidate_type]
+        except KeyError:
+            raise ValueError('Illegal type declaration: %s' %
+                             ontic_property.type)
+
+    # ensure that the type declaration is valid
+    is_supported_type = candidate_type in TYPE_SET
+    is_meta_schema_type = issubclass(candidate_type, SchemaInterface)
+    if not (is_supported_type or is_meta_schema_type):
+        raise ValueError('Illegal type declaration: %s' % candidate_type)
 
 
 __ONTIC_SCHEMA_BOOTSTRAP_SCHEMA__ = OnticSchema(
