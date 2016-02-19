@@ -44,10 +44,9 @@ The most straight forward way to create an instance of a
 :class:`PropertySchema`:
 
 >>> prop_schema = PropertyType(type='str', required=True, min=3)
->>> prop_schema
-{'regex': None, 'enum': None, 'min': 3, 'default': None, 'max': None, \
-'required': True, 'member_type': None, 'member_min': None, \
-'type': <type 'str'>, 'member_max': None}
+>>> assert prop_schema == {'regex': None, 'enum': None, 'min': 3, 'default': None, 'max': None,
+...     'required': True, 'member_type': None, 'member_min': None,
+...     'type': str, 'member_max': None}
 
 Demonstrated above is the creation of a property schema of type string. In
 addition the property schema forces the value of the property to required and
@@ -90,11 +89,12 @@ multiple validation errors.
 >>> other_schema = PropertyType({
 ...     'type': 'str',
 ...     'max': 3,
-...     'enum': {'dog', 'rat', 'cat'}
+...     'enum': {'fish', 'dog', 'cat'}
 ... })
->>> validate_value('other_prop', other_schema, 'frog')
-['The value "frog" for "other_prop" not in enumeration [\\'rat\\', \\'dog\\', \
-\\'cat\\'].', 'The value of "frog" for "other_prop" fails max of 3.']
+>>> ret = validate_value('other_prop', other_schema, 'frog')
+>>> assert len(ret) == 2
+>>> assert ret[0] == '''The value "frog" for "other_prop" not in enumeration ['cat', 'dog', 'fish'].'''
+>>> assert ret[1] == '''The value of "frog" for "other_prop" fails max of 3.'''
 
 .. _property-schema-settings-table:
 
@@ -110,10 +110,9 @@ after the table.
     ============ ========= ======== ========  =================================
     Name         Type      Default  Required  Enumeration
     ============ ========= ======== ========  =================================
-    type         str       None     False     basestring, bool, complex, date,
+    type         str       None     False     bool, complex, date,
                  type                         datetime, dict, float, int, list,
-                                              long, None, set, str, time,
-                                              unicode
+                                              None, set, str, time
     default      None      None     False
     required     bool      False    False
     enum         set       None     False
@@ -122,33 +121,28 @@ after the table.
                  datetime
                  float
                  int
-                 long
                  time
     max          complex   None     False
                  date
                  datetime
                  float
                  int
-                 long
                  time
     regex        str       None     False
-    member_type  str       None     False     basestring, bool, complex, date,
+    member_type  str       None     False     bool, complex, date,
                  type                         datetime, dict, float, int, list,
-                                              long, None, set, str, time,
-                                              unicode
+                                              None, set, str, time
     member_min   complex   None     False
                  date
                  datetime
                  float
                  int
-                 long
                  time
     member_max   complex   None     False
                  date
                  datetime
                  float
                  int
-                 long
                  time
     ============ ========= ======== ========  =================================
 
@@ -226,21 +220,19 @@ after the table.
     that the value is not more than the maximum.
 
 """
-import inspect
+from typing import List
 
 from ontic.meta_schema_type import (
-    MetaSchemaType, COMPARABLE_TYPES, STRING_TYPES, TYPE_MAP,
+    MetaSchemaType, COMPARABLE_TYPES, TYPE_MAP,
     TYPE_SET, validate_value)
 from ontic.validation_exception import ValidationException
-
-STRING_TYPES_TUPLE = tuple(STRING_TYPES)
 
 
 class PropertyType(MetaSchemaType):
     """A class to define a schema for a property."""
     ONTIC_SCHEMA = MetaSchemaType({
         'type': MetaSchemaType({
-            'type': (basestring, str, unicode, type),
+            'type': (str, type),
             'default': None,
             'required': False,
             'enum': TYPE_SET + (None,),
@@ -312,7 +304,7 @@ class PropertyType(MetaSchemaType):
             'member_max': None,
         }),
         'regex': MetaSchemaType({
-            'type': (basestring, str, unicode),
+            'type': str,
             'default': None,
             'required': False,
             'enum': None,
@@ -324,7 +316,7 @@ class PropertyType(MetaSchemaType):
             'member_max': None,
         }),
         'member_type': MetaSchemaType({
-            'type': (basestring, str, unicode, type),
+            'type': (str, type),
             'default': None,
             'required': False,
             'enum': TYPE_SET + (None,),
@@ -394,7 +386,7 @@ class PropertyType(MetaSchemaType):
         self.perfect()
         self.validate()
 
-    def validate(self, raise_validation_exception=True):
+    def validate(self, raise_validation_exception:bool=True) -> None:
         """Method to validate a property schema definition.
 
         :param raise_validation_exception: If True, then *validate_property_type*
@@ -412,7 +404,7 @@ class PropertyType(MetaSchemaType):
         """
         return validate_property_type(self, raise_validation_exception)
 
-    def perfect(self):
+    def perfect(self) -> None:
         """Method to ensure the completeness of a given schema property.
 
         :rtype: None
@@ -422,8 +414,9 @@ class PropertyType(MetaSchemaType):
         perfect_property_type(self)
 
 
-def validate_property_type(candidate_property_type,
-                           raise_validation_exception=True):
+def validate_property_type(
+        candidate_property_type: PropertyType,
+        raise_validation_exception: bool = True) -> List[str]:
     """Method to validate a property schema definition.
 
     :param candidate_property_type: The schema property to be validated.
@@ -450,7 +443,7 @@ def validate_property_type(candidate_property_type,
     value_errors = list()
 
     for schema_name, schema_setting in (
-            candidate_property_type.get_schema().iteritems()):
+            candidate_property_type.get_schema().items()):
         setting_value = candidate_property_type.get(schema_name, None)
 
         if (isinstance(setting_value, type) and
@@ -466,7 +459,7 @@ def validate_property_type(candidate_property_type,
     return value_errors
 
 
-def perfect_property_type(candidate_property_type):
+def perfect_property_type(candidate_property_type: PropertyType) -> None:
     """Method to ensure the completeness of a given schema property.
 
     This method ensures completeness by stripping out any properties that
@@ -507,24 +500,26 @@ def perfect_property_type(candidate_property_type):
     else:
         candidate_property_type.member_type = None
 
+    # set the default for the given property.
     for property_name, property_schema in (
-            schema_property_schema.iteritems()):
+            schema_property_schema.items()):
         if property_name not in candidate_property_type:
             candidate_property_type[
                 property_name] = property_schema.default
             continue
-        if not candidate_property_type[property_name]:
+        if candidate_property_type[property_name] is None:
+            # this may set the value to None if default is None.
             candidate_property_type[property_name] = property_schema.default
 
 
-def _perfect_type_setting(candidate_property_type):
+def _perfect_type_setting(candidate_property_type: PropertyType) -> None:
     """Perfect the type setting for a given candidate property schema."""
     if candidate_property_type.type is None:
         return
 
     candidate_type = candidate_property_type.type
     # coerce type declarations as string to base types.
-    if isinstance(candidate_type, STRING_TYPES_TUPLE):
+    if isinstance(candidate_type, str):
         try:
             candidate_type = candidate_property_type.type = TYPE_MAP[
                 candidate_type]
@@ -534,7 +529,6 @@ def _perfect_type_setting(candidate_property_type):
 
     # ensure that the type declaration is valid
     is_supported_type = candidate_type in TYPE_SET
-    is_meta_schema_type = issubclass(candidate_type, MetaSchemaType) \
-        if inspect.isclass(candidate_type) else False
+    is_meta_schema_type = issubclass(candidate_type, MetaSchemaType)
     if not (is_supported_type or is_meta_schema_type):
         raise ValueError('Illegal type declaration: %s' % candidate_type)

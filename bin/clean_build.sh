@@ -11,5 +11,9 @@ rm -f .coverage
 
 # Remove the BUILD directory which will get filled
 # with build collateral.
-echo 'Removing the BUILD directory.'
+echo 'Removing the BUILD/ directory.'
 rm -rf BUILD
+
+# Remove the dist if any is existing by setup.py.
+echo 'Removing the dist/ directory.'
+rm -rf dist

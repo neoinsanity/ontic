@@ -13,15 +13,22 @@ Creating a Simple OnticType Object
 
 **Ontic** objects strive to provide all the benefits of utilizing a Python dict
 object, with the benefits of having class-like attributes for data access.
-The default behavior of an **Ontic** object to to be a schema-less dictionary.
+The default behavior of an **Ontic** object to be a schema-less dictionary.
 The example for the simplest **Ontic** object is::
 
   >>> from ontic.ontic_type import OnticType
   >>> my_object = OnticType()
-  >>> my_object['some_property'] = 'Some value'
-  >>> my_object.other_property = 3
+  >>> my_object['some_property'] = 'Some value'  # Set value by key
+  >>> my_object.other_property = 3  # Set value by attribute
   >>> my_object
   {'other_property': 3, 'some_property': 'Some value'}
+  >>> my_object['other_property']  # Get value by key
+  3
+  >>> my_object.some_property  # Get value by attribute
+  'Some value'
+
+It should be noted in the example above, that the values assigned to the
+*OnticType* object are accessible by key and as an attribute.
 
 The ability to use *OnticType* objects as dict, makes it easy to utilize with
 most common interfaces. Here is an *OnticType* object with pymongo::
@@ -35,11 +42,10 @@ most common interfaces. Here is an *OnticType* object with pymongo::
   >>> person.age = 32
   >>> person.id = persons.insert(person)
 
-
 Dict Style Initialization
 --------------------------
 
-*OnticType* objects can be instantiated in the same fashion as a *dict* type.
+*OnticType* objects can be initialized in the same fashion as a *dict* type.
 
     OnticType() -> new empty OnticType
 
@@ -59,8 +65,8 @@ Dict Style Initialization
 
       OnticType(one={. . .}, two={. . .})
 
-Creation of Ontic Types
-========================
+Ontic Type Schema Definition
+=============================
 
 The steps for creating an *OnticType*, beyond the simplistic use case,
 begins with *SchemaType* definition. *SchemaType* definitions are used to
@@ -81,32 +87,32 @@ Here is the list of schema definition properties provided by **Ontic**.
     ============ =============== ====================================
     Name         Type            Enumeration
     ============ =============== ====================================
-    type         str             basestring, bool, complex, date,
+    type         str             bool, complex, date,
                  type            datetime, dict, float, int, list,
-                                 long, None, set, str, time, unicode
+                                 None, set, str, time
     default      None
     required     bool
     enum         set
     min          complex, date,
                  datetime,
                  float, int,
-                 long, time
+                 time
     max          complex, date,
                  datetime,
                  float, int,
-                 long, time
+                 time
     regex        str
-    member_type  str             basestring, bool, complex, date,
+    member_type  str             bool, complex, date,
                  type            datetime, dict, float, int, list,
-                                 long, None, set, str, time, unicode
+                                 None, set, str, time
     member_min   complex, date,
                  datetime,
                  float, int,
-                 long, time
+                 time
     member_max   complex, date,
                  datetime,
                  float, int,
-                 long, time
+                 time
     ============ =============== ====================================
 
 The schema type settings are utilized to create a *SchemaType*::
@@ -292,3 +298,4 @@ failures. Demonstrated by::
   >>> validate_object(person, raise_validation_exception=False)
   ['The value "W" for "gender" not in enumeration [\'NA\', \'M\', \'F\'].',
   'The value for "name" is required.']
+

@@ -1,4 +1,5 @@
 """An exception to signal a validation failure."""
+from typing import List
 
 
 class ValidationException(Exception):
@@ -16,7 +17,7 @@ class ValidationException(Exception):
         super(ValidationException, self).__init__(message)
 
     @property
-    def validation_errors(self):
+    def validation_errors(self) -> List[str]:
         """List of validation errors that triggered the *ValidationException*.
 
         :return: A list of the validation errors encountered.

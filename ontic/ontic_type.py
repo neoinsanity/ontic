@@ -51,7 +51,7 @@ with the use of the :meth:`create_ontic_type` function.
 
 """
 from copy import deepcopy
-import inspect
+from typing import List, Union
 
 from ontic import meta_schema_type
 from ontic.meta_schema_type import MetaSchemaType, COLLECTION_TYPES, TYPE_MAP
@@ -66,7 +66,7 @@ class OnticType(MetaSchemaType):
     derived **Ontic** type instance.
     """
 
-    def perfect(self):
+    def perfect(self) -> None:
         """Function to ensure complete attribute settings for a given object.
 
         Perfecting an object instance will strip out any properties not
@@ -83,7 +83,7 @@ class OnticType(MetaSchemaType):
         """
         perfect_object(self)
 
-    def validate(self, raise_validation_exception=True):
+    def validate(self, raise_validation_exception: bool = True) -> List[str]:
         """Validate the given OnticType instance against it's defined schema.
 
         :param raise_validation_exception: If True, then *validate_object* will
@@ -97,7 +97,9 @@ class OnticType(MetaSchemaType):
         """
         return validate_object(self, raise_validation_exception)
 
-    def validate_value(self, value_name, raise_validation_exception=True):
+    def validate_value(self,
+                       value_name: str,
+                       raise_validation_exception: bool = True) -> List[str]:
         """Validate a target value of a given ontic object.
 
         :param value_name: The value name to validate.
@@ -114,7 +116,7 @@ class OnticType(MetaSchemaType):
         return validate_value(value_name, self, raise_validation_exception)
 
 
-def create_ontic_type(name, schema):
+def create_ontic_type(name: str, schema: Union[dict, SchemaType]) -> type:
     """Create an **Ontic** type to generate objects with a given schema.
 
     *create_ontic_type* function creates an :class:`OnticType` with a given
@@ -145,7 +147,7 @@ def create_ontic_type(name, schema):
     if not isinstance(schema, dict):
         raise ValueError('The schema must be a dict or SchemaType.')
 
-    ontic_type = type(name, (OnticType, ), dict())
+    ontic_type = type(name, (OnticType,), dict())
 
     if not isinstance(schema, SchemaType):
         schema = SchemaType(schema)
@@ -155,7 +157,7 @@ def create_ontic_type(name, schema):
     return ontic_type
 
 
-def perfect_object(the_object):
+def perfect_object(the_object: OnticType) -> None:
     """Function to ensure complete attribute settings for a given object.
 
     Perfecting an object instance will strip out any properties not defined in
@@ -181,13 +183,12 @@ def perfect_object(the_object):
     for property_name in extra_properties:
         del the_object[property_name]
 
-    for property_name, property_schema in schema.iteritems():
+    for property_name, property_schema in schema.items():
         if property_name not in the_object:
             the_object[property_name] = None
         value = the_object[property_name]
 
-        if (value is None
-            and property_schema.default is not None):
+        if value is None and property_schema.default is not None:
             if TYPE_MAP.get(property_schema.type) in COLLECTION_TYPES:
                 value = the_object[property_name] = deepcopy(
                     property_schema.default)
@@ -197,12 +198,13 @@ def perfect_object(the_object):
             else:
                 value = the_object[property_name] = property_schema.default
 
-        if (value is not None
-            and isinstance(value, OnticType)):
+        if value is not None and isinstance(value, OnticType):
             value.perfect()
 
 
-def validate_object(the_object, raise_validation_exception=True):
+def validate_object(
+        the_object: OnticType,
+        raise_validation_exception: bool = True) -> List[str]:
     """Function that will validate if an object meets the schema requirements.
 
     :param the_object: An object instant to be validity tested.
@@ -236,14 +238,14 @@ def validate_object(the_object, raise_validation_exception=True):
     return value_errors
 
 
-def validate_value(property_name,
-                   ontic_object,
-                   raise_validation_exception=True):
+def validate_value(property_name: str,
+                   ontic_object: OnticType,
+                   raise_validation_exception: bool = True) -> List[str]:
     """Validate a specific value of a given :class:`OnticType` instance.
 
     :param property_name: The value to be validated against the given
         **PropertyType**.
-    :type property_name: basestring
+    :type property_name: str
     :param ontic_object: Ontic defined object to be validated.
     :type ontic_object: ontic_type.OnticType
     :param raise_validation_exception: If True, then *validate_object* will
@@ -266,7 +268,7 @@ def validate_value(property_name,
     if property_name is None:
         raise ValueError(
             '"property_name" is required, cannot be None.')
-    if not isinstance(property_name, basestring) or len(property_name) < 1:
+    if not isinstance(property_name, str) or len(property_name) < 1:
         raise ValueError('"property_name" is not a valid string.')
     if ontic_object is None:
         raise ValueError(
@@ -288,14 +290,15 @@ def validate_value(property_name,
         meta_schema_type.validate_value(property_name, property_schema, value))
 
     # if a value is an OnticType, then have it self validate.
-    if (property_schema.type is not None
-        and issubclass(property_schema.type, OnticType)
-        and value is not None):
+    is_ontic_type = (property_schema.type is not None and
+                     issubclass(property_schema.type, OnticType))
+    child_errors = None
+    if is_ontic_type and value is not None:
         child_errors = value.validate(raise_validation_exception=False)
-        if child_errors:
-            error_msg = 'The child property %s, has errors:: %s' % (
-                property_name, ' || '.join(child_errors))
-            value_errors.append(error_msg)
+    if child_errors:
+        error_msg = 'The child property %s, has errors:: %s' % (
+            property_name, ' || '.join(child_errors))
+        value_errors.append(error_msg)
 
     if value_errors and raise_validation_exception:
         raise ValidationException(value_errors)

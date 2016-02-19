@@ -1,4 +1,4 @@
- # -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 #
 # Documentation build configuration file, created by
 # sphinx-quickstart on Mon Nov 19 09:06:51 2012.
@@ -12,11 +12,12 @@
 # serve to show the default.
 
 import sys, os
+import cloud_sptheme as csp
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
-#sys.path.insert(0, os.path.abspath('.'))
+# sys.path.insert(0, os.path.abspath('.'))
 
 # Added package for autodoc generation of documentation
 _abs_path = os.path.abspath('..')
@@ -26,11 +27,17 @@ sys.path.insert(0, _abs_path)
 # -- General configuration -----------------------------------------------------
 
 # If your documentation needs a minimal Sphinx version, state it here.
-#needs_sphinx = '1.0'
+# needs_sphinx = '1.0'
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.coverage']
+extensions = \
+    [
+        'sphinx.ext.autodoc',
+        'sphinx.ext.coverage',
+        'cloud_sptheme.ext.index_styling',
+        'cloud_sptheme.ext.relbar_toc',
+    ]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['.templates']
@@ -42,11 +49,14 @@ source_suffix = '.rst'
 #source_encoding = 'utf-8-sig'
 
 # The master toctree document.
-master_doc = 'index'
+master_doc = 'contents'
+
+# The front page document.
+index_doc = 'index'
 
 # General information about the project.
 project = u'Ontic'
-copyright = u'2014, Raul Gonzalez'
+copyright = u'2015, Raul Gonzalez'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
@@ -102,17 +112,20 @@ pygments_style = 'default'
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 # html_theme = 'default'
-html_theme = 'default'
+html_theme = 'cloud'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further.  For a list of options available for each theme, see the
 # documentation.
-html_theme_options = {
-    'collapsiblesidebar': 'true',
-}
+html_theme_options = {}
+if csp.is_cloud_theme(html_theme):
+    html_theme_options.update(
+        roottarget=index_doc,
+    )
 
 # Add any paths that contain custom themes here, relative to this directory.
 #html_theme_path = []
+html_theme_path = [csp.get_theme_dir()]
 
 # The name for this set of Sphinx documents.  If None, it defaults to
 # "<project> v<release> documentation".
@@ -196,7 +209,7 @@ latex_elements = {
 # Grouping the document tree into LaTeX files. List of tuples
 # (source start file, target name, title, author, documentclass [howto/manual]).
 latex_documents = [
-    ('index', 'Ontic.tex', u'Ontic Documentation',
+    (index_doc, 'Ontic.tex', u'Ontic Documentation',
      u'Raul Gonzalez', 'manual'),
 ]
 
@@ -226,7 +239,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section).
 man_pages = [
-    ('index', 'Ontic', u'Ontic Documentation',
+    (index_doc, 'Ontic', u'Ontic Documentation',
      [u'Raul Gonzalez'], 1)
 ]
 
@@ -240,7 +253,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    ('index', 'k', u'Ontic Documentation',
+    (index_doc, 'k', u'Ontic Documentation',
      u'Raul Gonzalez', 'Ontic', 'Object of Knowledge.',
      'Miscellaneous'),
 ]

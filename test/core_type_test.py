@@ -2,7 +2,7 @@
 
 from copy import copy, deepcopy
 
-from test_utils import base_test_case
+from test.test_utils import base_test_case
 from ontic.core_type import CoreType
 
 
