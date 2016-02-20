@@ -84,7 +84,7 @@ def perfect_schema(ontic_schema: OnticSchema) -> None:
     if not isinstance(ontic_schema, OnticSchema):
         raise ValueError('"ontic_schema" argument must be of OnticSchema type.')
 
-    [property.perfect() for property in ontic_schema.properties]
+    [property_schema.perfect() for property_schema in ontic_schema.values()]
 
 
 def validate_schema(
@@ -117,9 +117,9 @@ def validate_schema(
         raise ValueError('"ontic_schema" argument must be of OnticSchema type.')
 
     value_errors = []
-    for property in ontic_schema.properties:
+    for prop in ontic_schema.values():
         value_errors.extend(
-            property.validate(raise_validation_exception=False))
+            prop.validate(raise_validation_exception=False))
 
     if value_errors and raise_validation_exception:
         raise ValidationException(value_errors)

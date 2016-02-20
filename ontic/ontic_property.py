@@ -71,9 +71,7 @@ def perfect_property(ontic_property: OnticProperty) -> None:
         ontic_property.type = None
 
     if 'member_type' in ontic_property:
-        # coerce member_type declarations as string to base types.
-        ontic_property.member_type = ontic_meta.TYPE_MAP[
-            ontic_property.member_type]
+        _perfect_member_type_setting(ontic_property)
     else:
         ontic_property.member_type = None
 
@@ -144,6 +142,28 @@ def _perfect_type_setting(ontic_property: OnticProperty) -> None:
         except KeyError:
             raise ValueError('Illegal type declaration: %s' %
                              ontic_property.type)
+
+    # ensure that the type declaration is valid
+    is_supported_type = candidate_type in ontic_meta.TYPE_SET
+    is_meta_schema_type = issubclass(candidate_type, ontic_meta.OnticMeta)
+    if not (is_supported_type or is_meta_schema_type):
+        raise ValueError('Illegal type declaration: %s' % candidate_type)
+
+
+def _perfect_member_type_setting(ontic_property: OnticProperty) -> None:
+    """Perfect the member_type setting for a given candidate property schema."""
+    if ontic_property.member_type is None:
+        return
+
+    candidate_type = ontic_property.member_type
+    # coerce type declarations as string to base types.
+    if isinstance(candidate_type, str):
+        try:
+            candidate_type = ontic_property.member_type = ontic_meta.TYPE_MAP[
+                candidate_type]
+        except KeyError:
+            raise ValueError('Illegal member_type declaration: %s' %
+                             ontic_property.member_type)
 
     # ensure that the type declaration is valid
     is_supported_type = candidate_type in ontic_meta.TYPE_SET

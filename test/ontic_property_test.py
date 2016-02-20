@@ -54,61 +54,36 @@ class OnticMetaTest(BaseTestCase):
         """Ensure that OnticProperty supports copy operations."""
 
         # Create the test data.
-        sub_object = SubType( alsdkjfasdlfkj  - TODO: convert this to an actual OnticProperty for testing.
-            int_prop=1,
-            str_prop='dog',
-            list_prop=[2, 'cat'],
-            dict_prop={
-                'int_key': 3,
-                'str_key': 'mouse',
-                'list_key': [4, 'fish'],
-                'dict_key': {
-                    'key1': 'red',
-                    'key2': 'blue',
-                    'key3': 'green'
-                }
-            }
+        ontic_property = OnticProperty(
+            type=str,
+            required=False,
+            enum=('dog', 'cat'),
         )
 
         # Execute the test.
-        sub_copy = copy(sub_object)
+        property_copy = copy(ontic_property)
 
         # Validate the test results.
-        self.assertIsInstance(sub_copy, SubType)
-        self.assertIsNot(sub_object, sub_copy)
-        self.assertDictEqual(sub_object, sub_copy)
-        self.assertIs(sub_copy.int_prop, sub_object.int_prop)
-        self.assertIs(sub_copy.str_prop, sub_object.str_prop)
-        self.assertIs(sub_copy.list_prop, sub_object.list_prop)
-        self.assertIs(sub_copy.dict_prop, sub_object.dict_prop)
+        self.assertIsNot(ontic_property, property_copy)
+        self.assertIs(ontic_property.type, property_copy.type)
+        self.assertIs(ontic_property.required, property_copy.required)
+        self.assertIs(ontic_property.enum, property_copy.enum)
 
     def test_deepcopy(self):
         """Ensure that OnticMeta supports deepcopy operation."""
 
-        sub_object = SubType(
-            int_prop=1,
-            str_prop='dog',
-            list_prop=[2, 'cat'],
-            dict_prop={
-                'int_key': 3,
-                'str_key': 'mouse',
-                'list_key': [4, 'fish'],
-                'dict_key': {'key1': 'red',
-                             'key2': 'blue',
-                             'key3': 'green'}
-            }
+        # Create the test data.
+        ontic_property = OnticProperty(
+            type=str,
+            required=False,
+            enum=('dog', 'cat'),
         )
 
         # Execute the test.
-        sub_copy = deepcopy(sub_object)
+        property_copy = deepcopy(ontic_property)
 
         # Validate the test results.
-        self.assertIsInstance(sub_copy, SubType)
-        self.assertIsNot(sub_object, sub_copy)
-        self.assertDictEqual(sub_object, sub_copy)
-        self.assertIs(sub_copy.int_prop, sub_object.int_prop)
-        self.assertIs(sub_copy.str_prop, sub_object.str_prop)
-        self.assertIsNot(sub_copy.list_prop, sub_object.list_prop)
-        self.assertIsNot(sub_copy.dict_prop, sub_object.dict_prop)
-        self.assertIsNot(sub_copy.dict_prop['list_key'],
-                         sub_object.dict_prop['list_key'])
+        self.assertIsNot(ontic_property, property_copy)
+        self.assertIs(ontic_property.type, property_copy.type)
+        self.assertIs(ontic_property.required, property_copy.required)
+        self.assertIs(ontic_property.enum, property_copy.enum)

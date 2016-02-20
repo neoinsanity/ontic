@@ -13,18 +13,9 @@ OnticTypes = Union[ontic_property.OnticProperty,
                    ontic_schema.OnticSchema,
                    ontic_class.OnticClass]
 
-__ONTIC_SCHEMA_BOOTSTRAP_SCHEMA__ = ontic_schema.OnticSchema(
-    properties=ontic_property.OnticProperty(
-        type=list,
-        member_type=ontic_property.OnticProperty,
-        default=[],
-        required=True
-    )
-)
-
 __ONTIC_PROPERTY_BOOTSTRAP_SCHEMA__ = ontic_schema.OnticSchema({
     'type': ontic_property.OnticProperty({
-        'type': (str, type),
+        'type': (str, type),  # todo: raul - this could be restricted list
         'default': None,
         'required': False,
         'enum': ontic_meta.TYPE_SET + (None,),
@@ -108,7 +99,8 @@ __ONTIC_PROPERTY_BOOTSTRAP_SCHEMA__ = ontic_schema.OnticSchema({
         'member_max': None,
     }),
     'member_type': ontic_property.OnticProperty({
-        'type': (str, type),
+        'type': (str, type),  # todo: raul - this could be restricted list
+        #  subclass testing.
         'default': None,
         'required': False,
         'enum': ontic_meta.TYPE_SET + (None,),
@@ -145,10 +137,11 @@ __ONTIC_PROPERTY_BOOTSTRAP_SCHEMA__ = ontic_schema.OnticSchema({
     }),
 })
 
-# Bootstrap OnticSchema class with a schema definition.
-ontic_schema.OnticSchema.__set_schema_for_ontic_schema__(
-    __ONTIC_SCHEMA_BOOTSTRAP_SCHEMA__)
-
 # Bootstrap OnticProperty class with a schema definition.
 ontic_property.OnticProperty.__set_schema_for_ontic_schema__(
     __ONTIC_PROPERTY_BOOTSTRAP_SCHEMA__)
+
+# todo: raul - get the self-referential perfection and validation working.
+# Finalize boot strap by perfecting and validating the OnticSchema schema.
+# ontic_property.OnticProperty.get_schema().perfect()
+# ontic_property.OnticProperty.get_schema().validate()
