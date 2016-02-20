@@ -35,7 +35,7 @@ class CoreType(dict):
     """
 
     def __init__(self, *args, **kwargs):
-        r"""**CoreType** initialized as a `dict` type.
+        """**CoreType** initialized as a `dict` type.
 
         Initializes the accessor behavior to allow for property access as
         dict key or object attribute.

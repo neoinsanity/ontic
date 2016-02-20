@@ -1,202 +1,14 @@
 """
 
 """
-from datetime import date, datetime, time
-from typing import List, Union
+from typing import List
 
-from ontic.ontic_core import OnticCore
+from ontic import ontic_meta
+from ontic import ontic_property
 from ontic.validation_exception import ValidationException
 
 
-#: The set of supported collection types.
-COLLECTION_TYPES = {dict, list, set}
-
-#: The set of types that can be compared with inequality operators.
-COMPARABLE_TYPES = {complex, date, datetime, float, int, time}
-
-#: The set of types that may be limited in size.
-BOUNDABLE_TYPES = {str, list, dict, set}
-
-
-class SchemaInterface(OnticCore):
-    ONTIC_SCHEMA = None
-
-    @classmethod
-    def get_schema(cls) -> 'OnticSchema':
-        return cls.ONTIC_SCHEMA
-
-    @classmethod
-    def __set_schema_for_ontic_schema__(
-            cls, ontic_schema: Union['OnticSchema', dict]) -> None:
-        cls.ONTIC_SCHEMA = OnticSchema(ontic_schema)
-
-
-#: Used to convert the string declaration of attribute type to native type.
-TYPE_MAP = {
-    'bool': bool,
-    bool: bool,
-    'complex': complex,
-    complex: complex,
-    'date': date,
-    date: date,
-    'datetime': datetime,
-    datetime: datetime,
-    'dict': dict,
-    dict: dict,
-    'float': float,
-    float: float,
-    'int': int,
-    int: int,
-    'list': list,
-    list: list,
-    'None': None,
-    None: None,
-    SchemaInterface: SchemaInterface,
-    'set': set,
-    set: set,
-    'str': str,
-    str: str,
-    'time': time,
-    time: time,
-}
-
-TYPE_SET = (
-    bool,
-    complex,
-    date,
-    datetime,
-    dict,
-    float,
-    int,
-    list,
-    set,
-    str,
-    time,
-)
-
-
-class OnticProperty(SchemaInterface):
-    """A class to define a schema for a property."""
-
-    def perfect(self) -> None:
-        """Method to ensure the completeness of a given schema property.
-
-        :rtype: None
-        :raises ValueError: If the candidate_property_type is None, or not
-            of type *PropertyType*.
-        """
-        perfect_property(self)
-
-    def validate(self, raise_validation_exception: bool = True) -> None:
-        """Method to validate a property schema definition.
-
-        :param raise_validation_exception: If True, then
-            *validate_property_type* will throw a *ValueException* upon
-            validation failure. If False, then a list of validation errors is
-            returned. Defaults to True.
-        :type raise_validation_exception: bool
-        :return: If no validation errors are found, then *None* is returned.
-            If validation fails, then a list of the errors is returned if the
-            *raise_validation_exception* is set to True.
-        :rtype: list<str>, None
-        :raises ValueError: *the_candidate_schema_property* is not an
-            :class:`OnticProperty`.
-        :raises ValidationException: A property of *candidate_property_type*
-            does not meet schema requirements.
-        """
-        return validate_property(self, raise_validation_exception)
-
-
-def perfect_property(ontic_property: OnticProperty) -> None:
-    """Method to ensure the completeness of a given schema property.
-
-    This method ensures completeness by stripping out any properties that
-    are not defined by the schema definition. In addition, for any schema
-    properties that are not included, the method will add those
-    properties to the default value.
-
-    :param ontic_property: The OnticProperty that is to be clean and restricted.
-    :type ontic_property: :class:`OnticProperty`
-    :rtype: None
-    :raises ValueError: If the ontic_property is None, or not of type
-        *OnticProperty*.
-    """
-    if ontic_property is None:
-        raise ValueError('"ontic_property" must be provided.')
-    if not isinstance(ontic_property, OnticProperty):
-        raise ValueError('"ontic_property" must be OnticProperty type.')
-
-    property_schema = ontic_property.get_schema()
-
-    # remove un-necessary properties.
-    extra_properties = set(ontic_property.keys()) - set(property_schema.keys())
-    for property_name in extra_properties:
-        del ontic_property[property_name]
-
-    if 'type' in ontic_property:
-        _perfect_type_setting(ontic_property)
-    else:
-        ontic_property.type = None
-
-    if 'member_type' in ontic_property:
-        # coerce member_type declarations as string to base types.
-        ontic_property.member_type = TYPE_MAP[ontic_property.member_type]
-    else:
-        ontic_property.member_type = None
-
-    # set the default for the given property.
-    for property_name, property_schema in property_schema.items():
-        if property_name not in ontic_property:
-            ontic_property[property_name] = None
-        if ontic_property[property_name] is None:
-            ontic_property[property_name] = property_schema.default
-
-
-def validate_property(
-        ontic_property: OnticProperty,
-        raise_validation_exception: bool = True) -> List[str]:
-    """Method to validate a property schema definition.
-
-    :param candidate_property_type: The schema property to be validated.
-    :type candidate_property_type: :class:`property_type.PropertyType`
-    :param raise_validation_exception: If True, then *validate_property_type*
-        will throw a *ValueException* upon validation failure. If False,
-        then a list of validation errors is returned. Defaults to True.
-    :type raise_validation_exception: bool
-    :return: If no validation errors are found, then *None* is
-        returned. If validation fails, then a list of the errors is returned
-        if the *raise_validation_exception* is set to True.
-    :rtype: list<str>, None
-    :raises ValueError: *the_candidate_schema_property* is not an
-        :class:`~ontic.ontic_type.OnticType`.
-    :raises ValidationException: A property of *candidate_property_type*
-        does not meet schema requirements.
-    """
-    if ontic_property is None:
-        raise ValueError('"ontic_property" must be provided.')
-    if not isinstance(ontic_property, OnticProperty):
-        raise ValueError('"ontic_property" must be OnticProperty type.')
-
-    value_errors = []
-
-    for setting_name, setting_schema in ontic_property.get_schema().items():
-        setting_value = ontic_property.get(setting_name, None)
-
-        # todo: raul - for now skip validating compound schemas.
-        if (isinstance(setting_value, type) and
-                issubclass(setting_value, SchemaInterface)):
-            continue
-
-        value_errors.extend(
-            validate_value(setting_name, setting_schema, setting_value))
-
-    if value_errors and raise_validation_exception:
-        raise ValidationException(value_errors)
-
-    return value_errors
-
-
-class OnticSchema(SchemaInterface):
+class OnticSchema(ontic_meta.OnticMeta):
     """The type definition for a schema object.
 
     The **OnticSchema** contains a dictionary of property field names and
@@ -218,8 +30,8 @@ class OnticSchema(SchemaInterface):
     def __init__(self, *args, **kwargs):
         super(OnticSchema, self).__init__(*args, **kwargs)
         for key, value in self.items():
-            if not isinstance(value, OnticProperty):
-                self[key] = OnticProperty(value)
+            if not isinstance(value, ontic_property.OnticProperty):
+                self[key] = ontic_property.OnticProperty(value)
 
     def perfect(self) -> None:
         """Method to clean and perfect a given schema.
@@ -272,7 +84,7 @@ def perfect_schema(ontic_schema: OnticSchema) -> None:
     if not isinstance(ontic_schema, OnticSchema):
         raise ValueError('"ontic_schema" argument must be of OnticSchema type.')
 
-    [ontic_property.perfect() for ontic_property in ontic_schema.properties]
+    [property.perfect() for property in ontic_schema.properties]
 
 
 def validate_schema(
@@ -305,172 +117,11 @@ def validate_schema(
         raise ValueError('"ontic_schema" argument must be of OnticSchema type.')
 
     value_errors = []
-    for ontic_property in ontic_schema.properties:
+    for property in ontic_schema.properties:
         value_errors.extend(
-            ontic_property.validate(raise_validation_exception=False))
+            property.validate(raise_validation_exception=False))
 
     if value_errors and raise_validation_exception:
         raise ValidationException(value_errors)
 
     return value_errors
-
-
-def _perfect_type_setting(ontic_property: OnticProperty) -> None:
-    """Perfect the type setting for a given candidate property schema."""
-    if ontic_property.type is None:
-        return
-
-    candidate_type = ontic_property.type
-    # coerce type declarations as string to base types.
-    if isinstance(candidate_type, str):
-        try:
-            candidate_type = ontic_property.type = TYPE_MAP[
-                candidate_type]
-        except KeyError:
-            raise ValueError('Illegal type declaration: %s' %
-                             ontic_property.type)
-
-    # ensure that the type declaration is valid
-    is_supported_type = candidate_type in TYPE_SET
-    is_meta_schema_type = issubclass(candidate_type, SchemaInterface)
-    if not (is_supported_type or is_meta_schema_type):
-        raise ValueError('Illegal type declaration: %s' % candidate_type)
-
-
-__ONTIC_SCHEMA_BOOTSTRAP_SCHEMA__ = OnticSchema(
-    properties=OnticProperty(
-        type=list,
-        required=True
-    )
-)
-
-__ONTIC_PROPERTY_BOOTSTRAP_SCHEMA__ = OnticSchema({
-    'type': OnticProperty({
-        'type': (str, type),
-        'default': None,
-        'required': False,
-        'enum': TYPE_SET + (None,),
-        'min': None,
-        'max': None,
-        'regex': None,
-        'member_type': None,
-        'member_min': None,
-        'member_max': None,
-    }),
-    'default': OnticProperty({
-        'type': None,
-        'default': None,
-        'required': False,
-        'enum': None,
-        'min': None,
-        'max': None,
-        'regex': None,
-        'member_type': None,
-        'member_min': None,
-        'member_max': None,
-    }),
-    'required': OnticProperty({
-        'type': bool,
-        'default': False,
-        'required': False,
-        'enum': None,
-        'min': None,
-        'max': None,
-        'regex': None,
-        'member_type': None,
-        'member_min': None,
-        'member_max': None,
-    }),
-    'enum': OnticProperty({
-        'type': set,
-        'default': None,
-        'required': False,
-        'enum': None,
-        'min': None,
-        'max': None,
-        'regex': None,
-        'member_type': None,
-        'member_min': None,
-        'member_max': None,
-    }),
-    'min': OnticProperty({
-        'type': tuple(COMPARABLE_TYPES),
-        'default': None,
-        'required': False,
-        'enum': None,
-        'min': None,
-        'max': None,
-        'regex': None,
-        'member_type': None,
-        'member_min': None,
-        'member_max': None,
-    }),
-    'max': OnticProperty({
-        'type': tuple(COMPARABLE_TYPES),
-        'default': None,
-        'required': False,
-        'enum': None,
-        'min': None,
-        'max': None,
-        'regex': None,
-        'member_type': None,
-        'member_min': None,
-        'member_max': None,
-    }),
-    'regex': OnticProperty({
-        'type': str,
-        'default': None,
-        'required': False,
-        'enum': None,
-        'min': 1,
-        'max': None,
-        'regex': None,
-        'member_type': None,
-        'member_min': None,
-        'member_max': None,
-    }),
-    'member_type': OnticProperty({
-        'type': (str, type),
-        'default': None,
-        'required': False,
-        'enum': TYPE_SET + (None,),
-        'min': None,
-        'max': None,
-        'regex': None,
-        'member_type': None,
-        'member_min': None,
-        'member_max': None,
-    }),
-    'member_min': OnticProperty({
-        'type': tuple(COMPARABLE_TYPES),
-        'default': None,
-        'required': False,
-        'enum': None,
-        'min': None,
-        'max': None,
-        'regex': None,
-        'member_type': None,
-        'member_min': None,
-        'member_max': None,
-    }),
-    'member_max': OnticProperty({
-        'type': tuple(COMPARABLE_TYPES),
-        'default': None,
-        'required': False,
-        'enum': None,
-        'min': None,
-        'max': None,
-        'regex': None,
-        'member_type': None,
-        'member_min': None,
-        'member_max': None,
-    }),
-})
-
-# Bootstrap OnticSchema class with a schema definition.
-OnticSchema.__set_schema_for_ontic_schema__(
-    __ONTIC_SCHEMA_BOOTSTRAP_SCHEMA__)
-
-# Bootstrap OnticPropeerty class with a schema defintion.
-OnticProperty.__set_schema_for_ontic_schema__(
-    __ONTIC_PROPERTY_BOOTSTRAP_SCHEMA__)

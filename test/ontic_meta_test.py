@@ -1,49 +1,48 @@
-"""OnticCore unit tests."""
+"""OnticMeta unit tests."""
 from copy import copy, deepcopy
+from ontic.ontic_meta import OnticMeta
 
-from test import utils
-
-from ontic.ontic_core import OnticCore
+from test.test_utils import base_test_case
 
 
-class SubType(OnticCore):
-    """Sub-class of OnticCore for testing purposes."""
+class SubType(OnticMeta):
+    """Sub-class of OnticMeta for testing purposes."""
     pass
 
 
-class OnticCoreTest(utils.BaseTestCase):
-    """OnticCore test cases."""
+class OnticMetaTest(base_test_case.BaseTestCase):
+    """OnticMeta test cases."""
 
-    def test_ontic_core_instantiation(self):
-        """OnticCore instantiation to confirm dict behavior."""
-        ontic_core1 = OnticCore()
-        self.assertIsNotNone(ontic_core1)
+    def test_ontic_meta_instantiation(self):
+        """OnticMeta instantiation testing to confirm dict behaviour."""
+        ontic_meta1 = OnticMeta()
+        self.assertIsNotNone(ontic_meta1)
 
         # Test dictionary initialization.
-        ontic_core2 = OnticCore({'prop1': 'val1', 'prop2': 'val2'})
-        self.assertIsNotNone(ontic_core2)
-        self.assertEqual('val1', ontic_core2['prop1'])
-        self.assertEqual('val2', ontic_core2.prop2)
+        ontic_meta2 = OnticMeta({'prop1': 'val1', 'prop2': 'val2'})
+        self.assertIsNotNone(ontic_meta2)
+        self.assertEqual('val1', ontic_meta2['prop1'])
+        self.assertEqual('val2', ontic_meta2.prop2)
 
         # Test initialization by property.
-        ontic_core3 = OnticCore(prop1='val1', prop2='val2')
-        self.assertIsNotNone(ontic_core3)
-        self.assertEqual('val1', ontic_core3.prop1)
-        self.assertEqual('val2', ontic_core3['prop2'])
+        ontic_meta3 = OnticMeta(prop1='val1', prop2='val2')
+        self.assertIsNotNone(ontic_meta3)
+        self.assertEqual('val1', ontic_meta3.prop1)
+        self.assertEqual('val2', ontic_meta3['prop2'])
 
         # Test initialization by list.
-        ontic_core4 = OnticCore([['prop1', 'val1'], ['prop2', 'val2']])
-        self.assertIsNotNone(ontic_core4)
-        self.assertEqual('val1', ontic_core4['prop1'])
-        self.assertEqual('val2', ontic_core4.prop2)
+        ontic_meta4 = OnticMeta([['prop1', 'val1'], ['prop2', 'val2']])
+        self.assertIsNotNone(ontic_meta4)
+        self.assertEqual('val1', ontic_meta4['prop1'])
+        self.assertEqual('val2', ontic_meta4.prop2)
 
     def test_dynamic_access(self):
-        """OnticCore property access as a dict and as attribute."""
-        ontic_core = OnticCore()
-        self.assert_dynamic_accessing(ontic_core)
+        """OnticMeta property access as dict and attribute."""
+        ontic_meta = OnticMeta()
+        self.assert_dynamic_accessing(ontic_meta)
 
     def test_copy(self):
-        """Ensure that OnticCore supports copy operations."""
+        """Ensure that OnticMeta supports copy operations."""
 
         # Create the test data.
         sub_object = SubType(
@@ -75,7 +74,7 @@ class OnticCoreTest(utils.BaseTestCase):
         self.assertIs(sub_copy.dict_prop, sub_object.dict_prop)
 
     def test_deepcopy(self):
-        """Ensure that OnticCore supports deepcopy operation."""
+        """Ensure that OnticMeta supports deepcopy operation."""
 
         # Create the test data.
         sub_object = SubType(
