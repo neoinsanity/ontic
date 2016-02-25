@@ -13,7 +13,7 @@ from ontic import ontic_core
 
 
 class OnticMeta(ontic_core.OnticCore):
-    ONTIC_SCHEMA = None
+    ONTIC_SCHEMA = ontic_core.OnticCore()
 
     @classmethod
     def get_schema(cls) -> 'ontic.ontic_schema.OnticSchema':

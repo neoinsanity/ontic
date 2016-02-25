@@ -10,6 +10,12 @@ from ontic import validation_exception
 class OnticProperty(ontic_meta.OnticMeta):
     """A class to define a schema for a property."""
 
+    def __init__(self, *args, **kwargs):
+        super(OnticProperty, self).__init__(*args, **kwargs)
+
+        self.perfect()
+        self.validate()
+
     def perfect(self) -> None:
         """Method to ensure the completeness of a given schema property.
 
@@ -147,7 +153,7 @@ def _perfect_type_setting(ontic_property: OnticProperty) -> None:
     is_supported_type = candidate_type in ontic_meta.TYPE_SET
     is_meta_schema_type = issubclass(candidate_type, ontic_meta.OnticMeta)
     if not (is_supported_type or is_meta_schema_type):
-        raise ValueError('Illegal type declaration: %s' % candidate_type)
+        raise ValueError('Illegal type declaration: %s' % str(candidate_type))
 
 
 def _perfect_member_type_setting(ontic_property: OnticProperty) -> None:

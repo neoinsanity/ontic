@@ -75,7 +75,6 @@ class PropertyTypeTest(base_test_case.BaseTestCase):
         property_schema.type = '__WRONG__'
         self.assertRaises(ValidationException, property_schema.validate)
 
-
     def test_property_schema_perfect(self):
         """Test PropertyType.perfect method."""
         candidate_schema_property = PropertyType()

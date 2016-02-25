@@ -3,12 +3,12 @@
 """
 from typing import List
 
-from ontic import ontic_meta
+from ontic import ontic_core
 from ontic import ontic_property
 from ontic.validation_exception import ValidationException
 
 
-class OnticSchema(ontic_meta.OnticMeta):
+class OnticSchema(ontic_core.OnticCore):
     """The type definition for a schema object.
 
     The **OnticSchema** contains a dictionary of property field names and
