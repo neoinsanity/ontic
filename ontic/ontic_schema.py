@@ -1,6 +1,7 @@
 """
 
 """
+import logging
 from typing import List
 
 from ontic import ontic_core
@@ -31,7 +32,12 @@ class OnticSchema(ontic_core.OnticCore):
         super(OnticSchema, self).__init__(*args, **kwargs)
         for key, value in self.items():
             if not isinstance(value, ontic_property.OnticProperty):
-                self[key] = ontic_property.OnticProperty(value)
+                try:
+                    self[key] = ontic_property.OnticProperty(value)
+                except Exception:
+                    logging.exception(
+                        'Exception while converting "%s" to OnticProperty', key)
+                    raise
 
     def perfect(self) -> None:
         """Method to clean and perfect a given schema.
