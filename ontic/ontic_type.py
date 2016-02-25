@@ -18,7 +18,7 @@ functions to handle the creation and validation of *OnticType* instances.
 Construction of **Ontic** data types as a class definition::
 
     >>> class MyType(OnticType):
-    ...     ONTIC_SCHEMA = SchemaType({
+    ...     ONTIC_SCHEMA = OnticSchema({
     ...         'some_property': {
     ...             'type': 'int',
     ...             'required': True,
@@ -53,13 +53,13 @@ with the use of the :meth:`create_ontic_type` function.
 from copy import deepcopy
 from typing import List, Union
 
-from ontic import meta_schema_type
-from ontic.meta_schema_type import MetaSchemaType, COLLECTION_TYPES, TYPE_MAP
-from ontic.schema_type import SchemaType
+from ontic import ontic_meta
+from ontic.ontic_meta import OnticMeta, COLLECTION_TYPES, TYPE_MAP
+from ontic.ontic_schema import OnticSchema
 from ontic.validation_exception import ValidationException
 
 
-class OnticType(MetaSchemaType):
+class OnticType(OnticMeta):
     """OnticType provides the **Ontic** schema interface.
 
     The **OnticType** provides the schema management functionality to a
@@ -116,7 +116,7 @@ class OnticType(MetaSchemaType):
         return validate_value(value_name, self, raise_validation_exception)
 
 
-def create_ontic_type(name: str, schema: Union[dict, SchemaType]) -> type:
+def create_ontic_type(name: str, schema: Union[dict, OnticSchema]) -> type:
     """Create an **Ontic** type to generate objects with a given schema.
 
     *create_ontic_type* function creates an :class:`OnticType` with a given
@@ -149,8 +149,8 @@ def create_ontic_type(name: str, schema: Union[dict, SchemaType]) -> type:
 
     ontic_type = type(name, (OnticType,), dict())
 
-    if not isinstance(schema, SchemaType):
-        schema = SchemaType(schema)
+    if not isinstance(schema, OnticSchema):
+        schema = OnticSchema(schema)
 
     ontic_type.ONTIC_SCHEMA = schema
 
@@ -287,7 +287,7 @@ def validate_value(property_name: str,
     value = ontic_object.get(property_name, None)
 
     value_errors.extend(
-        meta_schema_type.validate_value(property_name, property_schema, value))
+        ontic_meta.validate_value(property_name, property_schema, value))
 
     # if a value is an OnticType, then have it self validate.
     is_ontic_type = (property_schema.type is not None and

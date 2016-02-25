@@ -6,7 +6,8 @@
 
 """
 from datetime import date, datetime, time
-from typing import Any, List, Callable, re, TypeVar, Set, Tuple
+import re
+from typing import Any, List, Callable, TypeVar, Set, Tuple
 
 import ontic
 from ontic import ontic_core

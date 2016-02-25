@@ -1,8 +1,8 @@
 """OnticProperty unit tests."""
 from copy import copy, deepcopy
 
-from ontic.ontic_property import (OnticProperty, 
-                                  perfect_property, 
+from ontic.ontic_property import (OnticProperty,
+                                  perfect_property,
                                   validate_property)
 from ontic.validation_exception import ValidationException
 
@@ -342,3 +342,31 @@ class ValidateSchemaProperty(BaseTestCase):
         self.assertEqual(1, len(value_errors))
         self.assertTrue(value_errors[0].startswith(
             'The value "UNKNOWN" for "type" not in enumeration'))
+
+    def test_validate_schema_bad_member_type(self):
+        """Test validate for bad member type."""
+        invalid_property_schema = OnticProperty()
+        invalid_property_schema.type = list
+        invalid_property_schema.member_type = 'UNKNOWN'
+
+        self.maxDiff = None
+        self.assertRaisesRegexp(
+            ValidationException,
+            r"""The value \"UNKNOWN\" for \"member_type\" not in enumeration """
+            r"""\[<class 'bool'>, <class 'complex'>, <class 'datetime.date'>"""
+            r""", <class 'datetime.datetime'>, <class 'dict'>, """
+            r"""<class 'float'>, <class 'int'>, <class 'list'>, <class 'set'>"""
+            r""", <class 'str'>, <class 'datetime.time'>, None\].""",
+            validate_property, invalid_property_schema)
+
+        value_errors = validate_property(
+            invalid_property_schema,
+            raise_validation_exception=False)
+        self.assertEqual(1, len(value_errors))
+        self.assertEqual(
+            value_errors[0],
+            """The value "UNKNOWN" for "member_type" not in enumeration """
+            """[<class 'bool'>, <class 'complex'>, <class 'datetime.date'>"""
+            """, <class 'datetime.datetime'>, <class 'dict'>, <class 'float'>"""
+            """, <class 'int'>, <class 'list'>, <class 'set'>, <class 'str'>"""
+            """, <class 'datetime.time'>, None].""")
