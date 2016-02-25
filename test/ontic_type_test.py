@@ -1,17 +1,17 @@
 """Test the basic functionality of the base and core data types."""
 from datetime import date, time, datetime
 
-from test.test_utils import base_test_case
+from test.utils import BaseTestCase
 
-from ontic.meta_schema_type import MetaSchemaType
+from ontic.ontic_meta import OnticMeta
 from ontic import ontic_type
 from ontic.ontic_type import OnticType
-from ontic.property_type import PropertyType
-from ontic.schema_type import SchemaType
+from ontic.ontic_property import OnticProperty
+from ontic.ontic_schema import OnticSchema
 from ontic.validation_exception import ValidationException
 
 
-class OnticTypeTest(base_test_case.BaseTestCase):
+class OnticTypeTest(BaseTestCase):
     """OnticType test cases."""
 
     def test_object_type_instantiation(self):
@@ -32,7 +32,7 @@ class OnticTypeTest(base_test_case.BaseTestCase):
 
     def test_ontic_type_perfect(self):
         """Test the OnticType.perfect method."""
-        schema_def = SchemaType({
+        schema_def = OnticSchema({
             'prop_1': {'type': 'int'},
             'prop_2': {'type': 'int', 'default': 20},
             'prop_3': {'type': 'int', 'default': 30},
@@ -56,7 +56,7 @@ class OnticTypeTest(base_test_case.BaseTestCase):
         self.assertDictEqual(expected_dict, ontic_object)
 
     def test_ontic_type_validate(self):
-        """Test the OonticType.validate method."""
+        """Test the OnticType.validate method."""
         schema = {
             'some_property': {'required': True},
             'other_property': {'required': False}
@@ -92,7 +92,7 @@ class OnticTypeTest(base_test_case.BaseTestCase):
         self.assertEqual([], ontic_object.validate_value('prop1'))
 
 
-class CreateOnticTypeTestCase(base_test_case.BaseTestCase):
+class CreateOnticTypeTestCase(BaseTestCase):
     """Test the dynamic creation of Ontic types."""
 
     def test_create_ontic_type_arg_errors(self):
@@ -118,9 +118,9 @@ class CreateOnticTypeTestCase(base_test_case.BaseTestCase):
         self.assert_dynamic_accessing(ontic_object)
         self.assertIsInstance(ontic_object, my_type)
 
-        # Test creation using a SchemaType object.
+        # Test creation using a OnticSchema object.
         my_type = ontic_type.create_ontic_type('AnotherSimple',
-                                               SchemaType())
+                                               OnticSchema())
 
         self.assertIsNotNone(my_type)
 
@@ -129,7 +129,7 @@ class CreateOnticTypeTestCase(base_test_case.BaseTestCase):
         self.assertIsInstance(ontic_object, my_type)
 
 
-class PerfectObjectTestCase(base_test_case.BaseTestCase):
+class PerfectObjectTestCase(BaseTestCase):
     """Test ontic_type.perfect_object method."""
 
     def test_bad_perfect_usage(self):
@@ -146,7 +146,7 @@ class PerfectObjectTestCase(base_test_case.BaseTestCase):
 
     def test_valid_perfect_usage(self):
         """Ensure that the perfect behavior is correct."""
-        schema_def = SchemaType({
+        schema_def = OnticSchema({
             'prop_1': {'type': 'int'},
             'prop_2': {'type': 'int', 'default': 20},
             'prop_3': {'type': 'int', 'default': 30},
@@ -171,7 +171,7 @@ class PerfectObjectTestCase(base_test_case.BaseTestCase):
 
     def test_perfect_collection_types(self):
         """Ensure that collection defaults are handled correctly."""
-        schema_def = SchemaType({
+        schema_def = OnticSchema({
             'dict_prop': {
                 'type': 'dict',
                 'default': {'a': 1, 'b': 2, 'c': 3}
@@ -222,7 +222,7 @@ class PerfectObjectTestCase(base_test_case.BaseTestCase):
         default_deep_list = [default_dict]
         default_deep_set = {(inner_tuple, outer_tuple)}
 
-        schema_def = SchemaType({
+        schema_def = OnticSchema({
             'dict_no_default': {
                 'type': 'dict',
             },
@@ -287,7 +287,7 @@ class PerfectObjectTestCase(base_test_case.BaseTestCase):
         self.assertIsNot(default_deep_set, my_object.set_deep_default)
 
 
-class ValidateObjectTestCase(base_test_case.BaseTestCase):
+class ValidateObjectTestCase(BaseTestCase):
     """Test ontic_types.validate_object method basics."""
 
     def test_bad_validate_object(self):
@@ -305,7 +305,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
 
     def test_validation_exception_handling(self):
         """Ensure that validate_object handles error reporting."""
-        schema_instance = SchemaType(some_attr={'type': 'int'})
+        schema_instance = OnticSchema(some_attr={'type': 'int'})
         my_type = ontic_type.create_ontic_type('ValidateCheck',
                                                schema_instance)
         ontic_object = my_type()
@@ -339,7 +339,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
             'float_property': {'type': 'float'},
             'int_property': {'type': 'int'},
             'list_property': {'type': 'list'},
-            'ontic_property': {'type': MetaSchemaType},
+            'ontic_property': {'type': OnticMeta},
             'set_property': {'type': 'set'},
             'str_property': {'type': 'str'},
             'date_property': {'type': 'date'},
@@ -360,7 +360,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         # Validate with known good data.
         ontic_object.bool_property = True
         ontic_object.dict_property = {'some_key': 'some_value'}
-        ontic_object.core_type_property = MetaSchemaType({'key': 'val'})
+        ontic_object.core_type_property = OnticMeta({'key': 'val'})
         ontic_object.float_property = 3.4
         ontic_object.int_property = 5
         ontic_object.list_property = [5, 6, 7]
@@ -557,7 +557,8 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
         ontic_object.set_min_property = set()
         self.assertRaisesRegexp(
             ValidationException,
-            r"""The value of "set\(\)" for "set_min_property" fails min of 1.""",
+            r"""The value of \"set\(\)\" """
+            r"""for "set_min_property" fails min of 1.""",
             ontic_type.validate_object, ontic_object)
         ontic_object.set_min_property = {'one item'}
 
@@ -667,10 +668,14 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
 
         # Set failure
         ontic_object.set_max_property = {'one item', 'two item'}
+        expected_error = (
+            r"""The value of """
+            r"""("\{'two item', 'one item'\}"|"\{'one item', 'two item'\}") """
+            r"""for "set_max_property" fails max of 1\.""")
+
         self.assertRaisesRegexp(
             ValidationException,
-            r"""The value of ("\{'two item', 'one item'\}"|"\{'one item', 'two item'\}") """
-            r"""for "set_max_property" fails max of 1\.""",
+            expected_error,
             ontic_type.validate_object, ontic_object)
         ontic_object.set_max_property = {'one item'}
 
@@ -911,7 +916,7 @@ class ValidateObjectTestCase(base_test_case.BaseTestCase):
             ontic_type.validate_object, ontic_object)
 
 
-class ValidateValueTestCase(base_test_case.BaseTestCase):
+class ValidateValueTestCase(BaseTestCase):
     """Test ontic_types.validate_value method."""
 
     def test_bad_validate_value(self):
@@ -956,7 +961,7 @@ class ValidateValueTestCase(base_test_case.BaseTestCase):
 
     def test_validate_value_exception_handling(self):
         """Ensure validation exception handling by validation_object method."""
-        schema_instance = SchemaType(some_attr={'type': 'int'})
+        schema_instance = OnticSchema(some_attr={'type': 'int'})
         my_type = ontic_type.create_ontic_type('ValidateCheck',
                                                schema_instance)
         ontic_object = my_type()
@@ -971,7 +976,8 @@ class ValidateValueTestCase(base_test_case.BaseTestCase):
         with self.assertRaises(ValidationException) as ve:
             ontic_type.validate_value('some_attr', ontic_object)
         expected_errors = [
-            '''The value for "some_attr" is not of type "<class 'int'>": WRONG'''
+            r"""The value for "some_attr" is not """
+            r"""of type "<class 'int'>": WRONG"""
         ]
         self.assertListEqual(expected_errors, ve.exception.validation_errors)
 
@@ -992,15 +998,15 @@ class ValidateValueTestCase(base_test_case.BaseTestCase):
 
 
 class ChildOnticType(OnticType):
-    ONTIC_SCHEMA = SchemaType(
-        int_prop=PropertyType(type=int),
-        str_prop=PropertyType(type=str, required=True, default='A Value')
+    ONTIC_SCHEMA = OnticSchema(
+        int_prop=OnticProperty(type=int),
+        str_prop=OnticProperty(type=str, required=True, default='A Value')
     )
 
 
 class ParentOnticType(OnticType):
-    ONTIC_SCHEMA = SchemaType(
-        child_prop=PropertyType(type=ChildOnticType)
+    ONTIC_SCHEMA = OnticSchema(
+        child_prop=OnticProperty(type=ChildOnticType)
     )
 
 
@@ -1008,14 +1014,14 @@ DEFAULT_CHILD_PROP = ChildOnticType(int_prop=99, str_prop='The Value')
 
 
 class RequiredOnticChildType(OnticType):
-    ONTIC_SCHEMA = SchemaType(
-        child_prop=PropertyType(
+    ONTIC_SCHEMA = OnticSchema(
+        child_prop=OnticProperty(
             type=ChildOnticType, required=True, default=DEFAULT_CHILD_PROP)
     )
 
 
-class SettingOnticTypeTestCase(base_test_case.BaseTestCase):
-    """Test case the setting of an OnticType as a PropertyType.type setting."""
+class SettingOnticTypeTestCase(BaseTestCase):
+    """Test case the setting of an OnticType as a OnticProperty.type setting."""
 
     def test_ontic_type_perfect(self):
         """Test that Ontic child properties are perfected with parent."""
