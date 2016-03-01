@@ -1,4 +1,55 @@
-"""
+"""The classes utilized to construct schemas for object definitions.
+
+.. image:: images/schema_type.jpg
+
+.. contents::
+
+======
+Usage
+======
+
+The *schema_type* module contains the class :class:`SchemaType` and a set of
+functions to create and validate schema. *SchemaType* are used to validate
+:class:`ontic.ontic_type.OnticType` derived instances.
+
+Creating Schema
+----------------
+
+A *SchemaType* is defined as a dictionary with the key entry being the name
+of the property. The value portion of the dictionary is a
+:class:`ontic.meta_type.PropertySchema` instance::
+
+    >>> a_schema = SchemaType({
+    ...     'property_name': PropertyType({'type': 'str'})
+    ... })
+
+While the example above give a strict definition of a schema, creation of a
+schema can omit the use of the *PropertySchema*, as the *SchemaType*
+instantiation will convert a dict value to a *PropertySchema* object. The
+above example can be simplified to be::
+
+    >>> a_schema = SchemaType({
+    ...     'property_name': {'type': 'str'}
+    ... })
+
+The *SchemaType* also supports the dict style of instantiation via parameter
+naming::
+
+    >>> a_schema = SchemaType(property_name={'type': 'str'})
+
+Dynamic Schema
+-----------------
+
+In cases where necessary, a *SchemaType* can be created dynamically::
+
+    >>> a_schema = SchemaType()
+    >>> a_schema['property_name'] = PropertyType({'type': 'str'})
+
+To aid in the handling of dynamic models, utilize the :meth:`perfect_schema`
+and :meth:`validate_schema`.
+
+    >>> perfect_schema(a_schema)
+    >>> errors = validate_schema(a_schema)
 
 """
 import logging

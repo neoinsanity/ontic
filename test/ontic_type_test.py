@@ -6,6 +6,7 @@ from test.utils import BaseTestCase
 from ontic.ontic_meta import OnticMeta
 from ontic import ontic_type
 from ontic.ontic_type import OnticType
+from ontic import ontic_property
 from ontic.ontic_property import OnticProperty
 from ontic.ontic_schema import OnticSchema
 from ontic.validation_exception import ValidationException
@@ -206,6 +207,10 @@ class PerfectObjectTestCase(BaseTestCase):
         self.assertIsNot(schema_def.set_prop.default,
                          ontic_object.set_prop)
 
+    def test_perfect_bad_collection_type(self):
+        """Test for the handling of bad collection member type."""
+
+
     def test_perfect_collection_default_copy(self):
         """Ensure that collection default settings are handled correctly."""
         # Configure default collection.
@@ -285,6 +290,34 @@ class PerfectObjectTestCase(BaseTestCase):
         self.assertIsNot(default_deep_list[0], my_object.list_deep_default[0])
         self.assertSetEqual(default_deep_set, my_object.set_deep_default)
         self.assertIsNot(default_deep_set, my_object.set_deep_default)
+
+    def test_perfect_schema_bad_member_type(self):
+        """Test perfect for bad member type."""
+        invalid_property_schema = OnticProperty()
+        invalid_property_schema.type = list
+        invalid_property_schema.member_type = 'UNKNOWN'
+
+        self.maxDiff = None
+        self.assertRaisesRegexp(
+            ValidationException,
+            r"""The value \"UNKNOWN\" for \"member_type\" not in enumeration """
+            r"""\[<class 'bool'>, <class 'complex'>, <class 'datetime.date'>"""
+            r""", <class 'datetime.datetime'>, <class 'dict'>, """
+            r"""<class 'float'>, <class 'int'>, <class 'list'>, <class 'set'>"""
+            r""", <class 'str'>, <class 'datetime.time'>, None\].""",
+            ontic_property.validate_property, invalid_property_schema)
+
+        value_errors = ontic_property.validate_property(
+            invalid_property_schema,
+            raise_validation_exception=False)
+        self.assertEqual(1, len(value_errors))
+        self.assertEqual(
+            value_errors[0],
+            """The value "UNKNOWN" for "member_type" not in enumeration """
+            """[<class 'bool'>, <class 'complex'>, <class 'datetime.date'>"""
+            """, <class 'datetime.datetime'>, <class 'dict'>, <class 'float'>"""
+            """, <class 'int'>, <class 'list'>, <class 'set'>, <class 'str'>"""
+            """, <class 'datetime.time'>, None].""")
 
 
 class ValidateObjectTestCase(BaseTestCase):
