@@ -3,7 +3,7 @@ from copy import copy, deepcopy
 
 from test import utils
 
-from ontic.ontic_meta import Meta
+from ontic.meta import Meta
 
 
 class SubType(Meta):

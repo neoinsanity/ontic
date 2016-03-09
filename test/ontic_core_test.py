@@ -3,7 +3,7 @@ from copy import copy, deepcopy
 
 from test import utils
 
-from ontic.ontic_core import Core
+from ontic.core import Core
 
 
 class SubType(Core):

@@ -53,9 +53,9 @@ with the use of the :meth:`create_ontic_type` function.
 from copy import deepcopy
 from typing import List, Union
 
-from ontic import ontic_meta
-from ontic.ontic_meta import Meta, COLLECTION_TYPES, TYPE_MAP
-from ontic.ontic_schema import Schema
+from ontic import meta
+from ontic.meta import Meta, COLLECTION_TYPES, TYPE_MAP
+from ontic.schema import Schema
 from ontic.validation_exception import ValidationException
 
 
@@ -169,7 +169,7 @@ def perfect_object(the_object: OnticType) -> None:
     copied.
 
     :param the_object: Ab object instance that is to be perfected.
-    :type the_object: :class:`ontic.ontic_type.OnticType`
+    :type the_object: :class:`ontic.type.OnticType`
     :rtype: None
     """
     if the_object is None:
@@ -247,7 +247,7 @@ def validate_value(property_name: str,
         **PropertyType**.
     :type property_name: str
     :param ontic_object: Ontic defined object to be validated.
-    :type ontic_object: ontic_type.OnticType
+    :type ontic_object: type.OnticType
     :param raise_validation_exception: If True, then *validate_object* will
         throw a *ValueException* upon validation failure. If False, then a
         list of validation errors is returned. Defaults to True.
@@ -287,7 +287,7 @@ def validate_value(property_name: str,
     value = ontic_object.get(property_name, None)
 
     value_errors.extend(
-        ontic_meta.validate_value(property_schema, value))
+        meta.validate_value(property_schema, value))
 
     # if a value is an OnticType, then have it self validate.
     is_ontic_type = (property_schema.type is not None and

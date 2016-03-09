@@ -20,7 +20,7 @@ of the property. The value portion of the dictionary is a
 :class:`ontic.meta_type.PropertySchema` instance::
 
     >>> a_schema = Schema([
-    ...     ontic_property.OnticProperty(name='property_name', type= 'str')
+    ...     property.OnticProperty(name='property_name', type= 'str')
     ... ])
 
 While the example above give a strict definition of a schema, creation of a
@@ -43,7 +43,7 @@ Dynamic Schema
 In cases where necessary, a *Schema* can be created dynamically::
 
     >>> a_schema = Schema()
-    >>> a_schema.add(ontic_property.OnticProperty({'name': 'a', 'type': 'str'}))
+    >>> a_schema.add(property.OnticProperty({'name': 'a', 'type': 'str'}))
 
 To aid in the handling of dynamic models, utilize the :meth:`perfect_schema`
 and :meth:`validate_schema`.
@@ -55,12 +55,12 @@ and :meth:`validate_schema`.
 import logging
 from typing import List, Union
 
-from ontic import ontic_core
-from ontic import ontic_property
+from ontic import core
+from ontic import property
 from ontic.validation_exception import ValidationException
 
 
-class Schema(ontic_core.Core):
+class Schema(core.Core):
     """The type definition for a schema object.
 
     The **Schema** contains a dictionary of property field names and
@@ -96,31 +96,31 @@ class Schema(ontic_core.Core):
         super(Schema, self).__init__(*args, **kwargs)
 
         for key, value in self.items():
-            if not isinstance(value, ontic_property.OnticProperty):
+            if not isinstance(value, property.OnticProperty):
                 try:
                     if isinstance(value, dict):
                         value['name'] = key  # Set name for consistency.
-                    self[key] = ontic_property.OnticProperty(value)
+                    self[key] = property.OnticProperty(value)
                 except Exception:
                     logging.exception(
                         'Exception while converting "%s" to OnticProperty', key)
                     raise
 
     def add(self,
-            property_type: Union[dict, ontic_property.OnticProperty]) -> None:
+            property_type: Union[dict, property.OnticProperty]) -> None:
         """
 
         :param property_type:
         :type property_type: [dict, ontic_property.OnticProperty]
         """
-        if not isinstance(property_type, (dict, ontic_property.OnticProperty)):
+        if not isinstance(property_type, (dict, property.OnticProperty)):
             raise ValueError(
                 '"property_type" must be dict or OnticProperty type.')
-        if isinstance(property_type, ontic_property.OnticProperty):
+        if isinstance(property_type, property.OnticProperty):
             self[property_type.name] = property_type
 
         else:
-            ontic_prop = ontic_property.OnticProperty(property_type)
+            ontic_prop = property.OnticProperty(property_type)
             self[ontic_prop.name] = ontic_prop
 
     def perfect(self) -> None:

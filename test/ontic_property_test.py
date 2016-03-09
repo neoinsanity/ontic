@@ -1,9 +1,9 @@
 """OnticProperty unit tests."""
 from copy import copy, deepcopy
 
-from ontic.ontic_property import (OnticProperty,
-                                  perfect_property,
-                                  validate_property)
+from ontic.property import (OnticProperty,
+                            perfect_property,
+                            validate_property)
 from ontic.validation_exception import ValidationException
 
 from test.utils import BaseTestCase

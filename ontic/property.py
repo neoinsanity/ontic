@@ -78,7 +78,7 @@ Validation of a value utilizing the *prop_schema* created, is done with the
 The *name* parameter of the :meth:`validate_value`, is used to construct
 friendly error messages. For example:
 
->>> ontic_meta.validate_value(prop_schema, None)
+>>> meta.validate_value(prop_schema, None)
 ['The value for "some_prop" is required.']
 
 The following example demonstrates how a :class:`PropertySchema` being
@@ -222,15 +222,15 @@ after the table.
 """
 from typing import List, Any, Union
 
-from ontic import ontic_meta
+from ontic import meta
 from ontic import validation_exception
 
 
-class OnticProperty(ontic_meta.Meta):
+class OnticProperty(meta.Meta):
     """A class to define a schema for a property."""
 
-    ONTIC_SCHEMA = ontic_meta.Meta({
-        'name': ontic_meta.Meta({
+    ONTIC_SCHEMA = meta.Meta({
+        'name': meta.Meta({
             'name': 'name',
             'type': str,
             'default': None,
@@ -243,12 +243,12 @@ class OnticProperty(ontic_meta.Meta):
             'member_min': None,
             'member_max': None,
         }),
-        'type': ontic_meta.Meta({
+        'type': meta.Meta({
             'name': 'type',
             'type': (str, type),  # todo: raul - this could be restricted list
             'default': None,
             'required': False,
-            'enum': ontic_meta.TYPE_SET + (None,),
+            'enum': meta.TYPE_SET + (None,),
             'min': None,
             'max': None,
             'regex': None,
@@ -256,7 +256,7 @@ class OnticProperty(ontic_meta.Meta):
             'member_min': None,
             'member_max': None,
         }),
-        'default': ontic_meta.Meta({
+        'default': meta.Meta({
             'name': 'default',
             'type': None,
             'default': None,
@@ -269,7 +269,7 @@ class OnticProperty(ontic_meta.Meta):
             'member_min': None,
             'member_max': None,
         }),
-        'required': ontic_meta.Meta({
+        'required': meta.Meta({
             'name': 'required',
             'type': bool,
             'default': False,
@@ -282,7 +282,7 @@ class OnticProperty(ontic_meta.Meta):
             'member_min': None,
             'member_max': None,
         }),
-        'enum': ontic_meta.Meta({
+        'enum': meta.Meta({
             'name': 'enum',
             'type': set,
             'default': None,
@@ -295,9 +295,9 @@ class OnticProperty(ontic_meta.Meta):
             'member_min': None,
             'member_max': None,
         }),
-        'min': ontic_meta.Meta({
+        'min': meta.Meta({
             'name': 'min',
-            'type': tuple(ontic_meta.COMPARABLE_TYPES),
+            'type': tuple(meta.COMPARABLE_TYPES),
             'default': None,
             'required': False,
             'enum': None,
@@ -308,9 +308,9 @@ class OnticProperty(ontic_meta.Meta):
             'member_min': None,
             'member_max': None,
         }),
-        'max': ontic_meta.Meta({
+        'max': meta.Meta({
             'name': 'max',
-            'type': tuple(ontic_meta.COMPARABLE_TYPES),
+            'type': tuple(meta.COMPARABLE_TYPES),
             'default': None,
             'required': False,
             'enum': None,
@@ -321,7 +321,7 @@ class OnticProperty(ontic_meta.Meta):
             'member_min': None,
             'member_max': None,
         }),
-        'regex': ontic_meta.Meta({
+        'regex': meta.Meta({
             'name': 'regex',
             'type': str,
             'default': None,
@@ -334,13 +334,13 @@ class OnticProperty(ontic_meta.Meta):
             'member_min': None,
             'member_max': None,
         }),
-        'member_type': ontic_meta.Meta({
+        'member_type': meta.Meta({
             'name': 'member_type',
             'type': (str, type),  # todo: raul - this could be restricted list
             #  subclass testing.
             'default': None,
             'required': False,
-            'enum': ontic_meta.TYPE_SET + (None,),
+            'enum': meta.TYPE_SET + (None,),
             'min': None,
             'max': None,
             'regex': None,
@@ -348,9 +348,9 @@ class OnticProperty(ontic_meta.Meta):
             'member_min': None,
             'member_max': None,
         }),
-        'member_min': ontic_meta.Meta({
+        'member_min': meta.Meta({
             'name': 'member_min',
-            'type': tuple(ontic_meta.COMPARABLE_TYPES),
+            'type': tuple(meta.COMPARABLE_TYPES),
             'default': None,
             'required': False,
             'enum': None,
@@ -361,9 +361,9 @@ class OnticProperty(ontic_meta.Meta):
             'member_min': None,
             'member_max': None,
         }),
-        'member_max': ontic_meta.Meta({
+        'member_max': meta.Meta({
             'name': 'member_max',
-            'type': tuple(ontic_meta.COMPARABLE_TYPES),
+            'type': tuple(meta.COMPARABLE_TYPES),
             'default': None,
             'required': False,
             'enum': None,
@@ -416,7 +416,7 @@ class OnticProperty(ontic_meta.Meta):
                        value: Any,
                        raise_validation_exception: bool = False) -> List[str]:
         """"""
-        value_errors = ontic_meta.validate_value(self, value)
+        value_errors = meta.validate_value(self, value)
 
         if value_errors and raise_validation_exception:
             raise validation_exception.ValidationException(value_errors)
@@ -500,11 +500,11 @@ def validate_property(
 
         # todo: raul - for now skip validating compound schemas.
         if (isinstance(property_value, type) and
-                issubclass(property_value, ontic_meta.Meta)):
+                issubclass(property_value, meta.Meta)):
             continue
 
         value_errors.extend(
-            ontic_meta.validate_value(
+            meta.validate_value(
                 property_schema, property_value))
 
     if value_errors and raise_validation_exception:
@@ -522,15 +522,15 @@ def _perfect_type_setting(ontic_property: OnticProperty) -> None:
     # coerce type declarations as string to base types.
     if isinstance(candidate_type, str):
         try:
-            candidate_type = ontic_property.type = ontic_meta.TYPE_MAP[
+            candidate_type = ontic_property.type = meta.TYPE_MAP[
                 candidate_type]
         except KeyError:
             raise ValueError('Illegal type declaration: %s' %
                              ontic_property.type)
 
     # ensure that the type declaration is valid
-    is_supported_type = candidate_type in ontic_meta.TYPE_SET
-    is_meta_schema_type = issubclass(candidate_type, ontic_meta.Meta)
+    is_supported_type = candidate_type in meta.TYPE_SET
+    is_meta_schema_type = issubclass(candidate_type, meta.Meta)
     if not (is_supported_type or is_meta_schema_type):
         raise ValueError('Illegal type declaration: %s' % str(candidate_type))
 
@@ -544,14 +544,14 @@ def _perfect_member_type_setting(ontic_property: OnticProperty) -> None:
     # coerce type declarations as string to base types.
     if isinstance(candidate_type, str):
         try:
-            candidate_type = ontic_property.member_type = ontic_meta.TYPE_MAP[
+            candidate_type = ontic_property.member_type = meta.TYPE_MAP[
                 candidate_type]
         except KeyError:
             raise ValueError('Illegal member_type declaration: %s' %
                              ontic_property.member_type)
 
     # ensure that the type declaration is valid
-    is_supported_type = candidate_type in ontic_meta.TYPE_SET
-    is_meta_schema_type = issubclass(candidate_type, ontic_meta.Meta)
+    is_supported_type = candidate_type in meta.TYPE_SET
+    is_meta_schema_type = issubclass(candidate_type, meta.Meta)
     if not (is_supported_type or is_meta_schema_type):
         raise ValueError('Illegal type declaration: %s' % candidate_type)
