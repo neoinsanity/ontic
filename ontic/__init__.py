@@ -1,14 +1,17 @@
 from typing import Union
 
 from ontic import (core,
-                   meta,
                    property,
                    schema,
                    type)
+from ontic.property import OnticProperty
+from ontic.schema import Schema
+from ontic.type import OnticType
 
-__all__ = ['core.py', 'property.py', 'schema.py', 'type.py']
+__all__ = ['OnticProperty', 'Schema', 'OnticType',
+           'core', 'property', 'schema', 'type']
 
 # Type declaration for all ontic types. Used for type hinting.
-OnticTypes = Union[property.OnticProperty,
-                   schema.Schema,
-                   type.OnticType]
+OnticTypes = Union[OnticProperty,
+                   Schema,
+                   OnticType]

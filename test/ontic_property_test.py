@@ -1,9 +1,8 @@
 """OnticProperty unit tests."""
 from copy import copy, deepcopy
 
-from ontic.property import (OnticProperty,
-                            perfect_property,
-                            validate_property)
+from ontic import OnticProperty
+from ontic.property import perfect_property, validate_property
 from ontic.validation_exception import ValidationException
 
 from test.utils import BaseTestCase
@@ -46,7 +45,8 @@ class OnticPropertyTest(BaseTestCase):
 
         # Test initialization by list.
         ontic_property4 = OnticProperty(
-            [['name', 'fin'],['type', int], ['default', 1], ['required', True]])
+            [['name', 'fin'], ['type', int], ['default', 1],
+             ['required', True]])
         self.assertIsNotNone(ontic_property4)
         self.assertEqual('fin', ontic_property4.name)
         self.assertEqual(int, ontic_property4['type'])

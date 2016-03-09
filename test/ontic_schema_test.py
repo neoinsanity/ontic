@@ -1,12 +1,12 @@
-"""Test the basic functionality of the schema data types."""
+"""Test the basic functionality of the oschema data types."""
 
 from copy import copy, deepcopy
 
 from test.utils import BaseTestCase
 
-from ontic.property import OnticProperty
-from ontic import schema
-from ontic.schema import Schema
+from ontic import OnticProperty
+from ontic import schema as o_schema
+from ontic import Schema
 from ontic.validation_exception import ValidationException
 
 
@@ -86,8 +86,8 @@ class OnticSchemaTest(BaseTestCase):
 
     def test_dynamic_access(self):
         """Core property access as a dict and as attribute."""
-        schema = Schema()
-        self.assert_dynamic_accessing(schema)
+        oschema = Schema()
+        self.assert_dynamic_accessing(oschema)
 
     def test_copy(self):
         """Ensure that Core supports copy operations."""
@@ -229,11 +229,11 @@ class OnticSchemaTest(BaseTestCase):
 
         # OnticType test
         base_type_schema = Schema(a_schema)
-        schema.validate_schema(base_type_schema)
+        o_schema.validate_schema(base_type_schema)
 
         # Schema test
         ontic_schema_schema = Schema(a_schema)
-        schema.validate_schema(ontic_schema_schema)
+        o_schema.validate_schema(ontic_schema_schema)
 
 
 class ValidateSchemaTestCase(BaseTestCase):
@@ -244,26 +244,26 @@ class ValidateSchemaTestCase(BaseTestCase):
         self.assertRaisesRegexp(
             ValueError,
             r""""ontic_schema" argument must be provided.""",
-            schema.validate_schema, None)
+            o_schema.validate_schema, None)
         self.assertRaisesRegexp(
             ValueError,
             r""""ontic_schema" argument must be of Schema type.""",
-            schema.validate_schema, "not a schema")
+            o_schema.validate_schema, "not a oschema")
 
     def test_validate_schema(self):
-        """Valid schema testing of validate_schema."""
+        """Valid oschema testing of validate_schema."""
         a_schema = Schema({'some_property': {'type': 'int'}})
 
         # Dict test
-        schema.validate_schema(a_schema)
+        o_schema.validate_schema(a_schema)
 
         # OnticType test
         base_type_schema = Schema(a_schema)
-        schema.validate_schema(base_type_schema)
+        o_schema.validate_schema(base_type_schema)
 
         # Schema test
         ontic_schema_schema = Schema(a_schema)
-        schema.validate_schema(ontic_schema_schema)
+        o_schema.validate_schema(ontic_schema_schema)
 
     def test_validate_schema_exception_handling(self):
         """Ensure validate_schema covers basic exception reporting."""
@@ -276,18 +276,18 @@ class ValidateSchemaTestCase(BaseTestCase):
             ValidationException,
             r"""The value for "required" is not """
             r"""of type "<class 'bool'>": UNDEFINED""",
-            schema.validate_schema, schema_instance)
+            o_schema.validate_schema, schema_instance)
 
         expected_errors_list = [
             """The value for "required" is not of """
             """type "<class 'bool'>": UNDEFINED"""]
         try:
-            schema.validate_schema(schema_instance)
+            o_schema.validate_schema(schema_instance)
             self.fail('A ValidationException should have been thrown.')
         except ValidationException as ve:
             self.assertListEqual(expected_errors_list, ve.validation_errors)
 
-        errors = schema.validate_schema(
+        errors = o_schema.validate_schema(
             schema_instance,
             raise_validation_exception=False)
         self.assertListEqual(expected_errors_list, errors)
@@ -337,7 +337,7 @@ class PerfectSchemaTestCase(BaseTestCase):
                 }},
             some_schema)
 
-        schema.perfect_schema(some_schema)
+        o_schema.perfect_schema(some_schema)
 
         self.assertEqual(2, len(some_schema))
         self.assertEqual(11, len(some_schema.prop1))
@@ -379,9 +379,9 @@ class PerfectSchemaTestCase(BaseTestCase):
         self.assertRaisesRegexp(
             ValueError,
             r""""ontic_schema" must be provided.""",
-            schema.perfect_schema, None)
+            o_schema.perfect_schema, None)
 
         self.assertRaisesRegexp(
             ValueError,
             r""""ontic_schema" argument must be of Schema type.""",
-            schema.perfect_schema, {})
+            o_schema.perfect_schema, {})
