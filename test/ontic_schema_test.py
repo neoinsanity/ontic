@@ -27,7 +27,7 @@ class OnticSchemaTest(BaseTestCase):
             {
                 'max': None, 'regex': None, 'default': None, 'member_min': None,
                 'member_max': None, 'required': False, 'member_type': None,
-                'enum': None, 'type': None, 'min': None
+                'enum': None, 'type': None, 'min': None, 'name': 'prop1'
             },
             schema2['prop1'])
         self.assertIsInstance(schema2.prop2, OnticProperty)
@@ -35,7 +35,8 @@ class OnticSchemaTest(BaseTestCase):
             {
                 'default': None, 'min': None, 'max': None, 'enum': None,
                 'type': int, 'member_max': None, 'member_type': None,
-                'required': False, 'regex': None, 'member_min': None
+                'required': False, 'regex': None, 'member_min': None,
+                'name': 'prop2'
             },
             schema2.prop2)
 
@@ -47,7 +48,7 @@ class OnticSchemaTest(BaseTestCase):
             {
                 'min': None, 'type': None, 'regex': None, 'member_max': None,
                 'member_min': None, 'member_type': None, 'enum': None,
-                'max': None,
+                'max': None, 'name': 'prop1',
                 'required': False, 'default': None
             },
             schema3.prop1)
@@ -56,7 +57,7 @@ class OnticSchemaTest(BaseTestCase):
             {
                 'min': None, 'type': str, 'regex': None, 'member_max': None,
                 'member_min': None, 'member_type': None, 'enum': None,
-                'max': None,
+                'max': None, 'name': 'prop2',
                 'required': False, 'default': None
             },
             schema3['prop2'])
@@ -70,7 +71,7 @@ class OnticSchemaTest(BaseTestCase):
                 'member_max': None, 'member_min': None, 'enum': None,
                 'regex': None, 'required': False, 'min': None,
                 'max': None, 'default': None, 'type': None,
-                'member_type': None
+                'member_type': None, 'name': 'prop1'
             },
             schema4['prop1'])
         self.assertIsInstance(schema4.prop2, OnticProperty)
@@ -79,7 +80,7 @@ class OnticSchemaTest(BaseTestCase):
                 'member_max': None, 'member_min': None, 'enum': None,
                 'regex': None, 'required': False, 'min': None,
                 'max': None, 'default': None, 'type': bool,
-                'member_type': None
+                'member_type': None, 'name': 'prop2'
             },
             schema4.prop2)
 
@@ -92,17 +93,11 @@ class OnticSchemaTest(BaseTestCase):
         """Ensure that OnticCore supports copy operations."""
 
         # Create the test data.
-        some_schema = OnticSchema(
-            int_prop={'type': 'int'},
-            str_prop=[['type', str]],
-            list_prop=OnticProperty({'type': list}),
-            dict_prop={
-                'int_key': {'type': int},
-                'str_key': {'type': 'str'},
-                'list_key': [['type', 'list']],
-                'dict_key': OnticProperty(type=dict)
-            }
-        )
+        some_schema = OnticSchema([
+            {'name': 'int_prop', 'type': 'int'},
+            {'name': 'str_prop', 'type': str},
+            OnticProperty({'name': 'list_prop', 'type': list}),
+        ])
 
         # Execute the test.
         schema_copy = copy(some_schema)
@@ -114,23 +109,16 @@ class OnticSchemaTest(BaseTestCase):
         self.assertIs(schema_copy.int_prop, some_schema.int_prop)
         self.assertIs(schema_copy.str_prop, some_schema.str_prop)
         self.assertIs(schema_copy.list_prop, some_schema.list_prop)
-        self.assertIs(schema_copy.dict_prop, some_schema.dict_prop)
 
     def test_deepcopy(self):
         """Ensure that OnticCore supports deepcopy operation."""
 
         # Create the test data.
-        some_schema = OnticSchema(
-            int_prop={'type': 'int'},
-            str_prop=[['type', str]],
-            list_prop=OnticProperty({'type': list}),
-            dict_prop={
-                'int_key': {'type': int},
-                'str_key': {'type': 'str'},
-                'list_key': [['type', 'list']],
-                'dict_key': OnticProperty(type=dict)
-            }
-        )
+        some_schema = OnticSchema([
+            {'name': 'int_prop', 'type': 'int'},
+            {'name': 'str_prop', 'type': str},
+            OnticProperty({'name': 'list_prop', 'type': list}),
+        ])
 
         # Execute the test.
         schema_copy = deepcopy(some_schema)
@@ -142,7 +130,6 @@ class OnticSchemaTest(BaseTestCase):
         self.assertIsNot(schema_copy.int_prop, some_schema.int_prop)
         self.assertIsNot(schema_copy.str_prop, some_schema.str_prop)
         self.assertIsNot(schema_copy.list_prop, some_schema.list_prop)
-        self.assertIsNot(schema_copy.dict_prop, some_schema.dict_prop)
 
     def test_schema_definition(self):
         """OnticSchema instantiation testing to confirm dict behaviour."""
@@ -158,17 +145,18 @@ class OnticSchemaTest(BaseTestCase):
 
     def test_ontic_schema_perfect(self):
         """Test the OnticSchema.perfect method."""
-        some_schema = OnticSchema({
-            'prop1': OnticProperty(),
-            'prop2': OnticProperty({'type': 'str', 'min': 5})
-        })
+        some_schema = OnticSchema([
+            OnticProperty(name='prop1'),
+            OnticProperty({'name': 'prop2', 'type': 'str', 'min': 5})
+        ])
         self.assertEqual(2, len(some_schema))
-        self.assertEqual(10, len(some_schema.prop1))
-        self.assertEqual(10, len(some_schema.prop2))
+        self.assertEqual(11, len(some_schema.prop1))
+        self.assertEqual(11, len(some_schema.prop2))
         self.maxDiff = None
         self.assertDictEqual(
             {
                 'prop1': {
+                    'name': 'prop1',
                     'regex': None,
                     'member_max': None,
                     'enum': None,
@@ -181,6 +169,7 @@ class OnticSchemaTest(BaseTestCase):
                     'type': None
                 },
                 'prop2': {
+                    'name': 'prop2',
                     'regex': None,
                     'member_max': None,
                     'enum': None,
@@ -197,11 +186,12 @@ class OnticSchemaTest(BaseTestCase):
         some_schema.perfect()
 
         self.assertEqual(2, len(some_schema))
-        self.assertEqual(10, len(some_schema.prop1))
-        self.assertEqual(10, len(some_schema.prop2))
+        self.assertEqual(11, len(some_schema.prop1))
+        self.assertEqual(11, len(some_schema.prop2))
         self.assertDictEqual(
             {
                 'prop1': {
+                    'name': 'prop1',
                     'default': None,
                     'enum': None,
                     'member_max': None,
@@ -214,6 +204,7 @@ class OnticSchemaTest(BaseTestCase):
                     'type': None
                 },
                 'prop2': {
+                    'name': 'prop2',
                     'default': None,
                     'enum': None,
                     'member_max': None,
@@ -276,10 +267,10 @@ class ValidateSchemaTestCase(BaseTestCase):
 
     def test_validate_schema_exception_handling(self):
         """Ensure validate_schema covers basic exception reporting."""
-        property_schema = OnticProperty()
+        property_schema = OnticProperty(name='some_attr')
         property_schema.required = 'UNDEFINED'
         schema_instance = OnticSchema()
-        schema_instance.some_attr = property_schema
+        schema_instance.add(property_schema)
 
         self.assertRaisesRegexp(
             ValidationException,
@@ -307,17 +298,19 @@ class PerfectSchemaTestCase(BaseTestCase):
 
     def test_perfect_ontic_schema(self):
         """Validate 'perfect_schema' method usage."""
-        some_schema = OnticSchema({
-            'prop1': OnticProperty(),
-            'prop2': OnticProperty({'type': 'str', 'min': 5})
-        })
+        schema_def = [
+            OnticProperty(name='prop1'),
+            OnticProperty({'name': 'prop2', 'type': 'str', 'min': 5})
+        ]
+        some_schema = OnticSchema(schema_def)
         self.assertEqual(2, len(some_schema))
-        self.assertEqual(10, len(some_schema.prop1))
-        self.assertEqual(10, len(some_schema.prop2))
+        self.assertEqual(11, len(some_schema.prop1))
+        self.assertEqual(11, len(some_schema.prop2))
         self.maxDiff = None
         self.assertDictEqual(
             {
                 'prop1': {
+                    'name': 'prop1',
                     'regex': None,
                     'member_max': None,
                     'enum': None,
@@ -330,6 +323,7 @@ class PerfectSchemaTestCase(BaseTestCase):
                     'type': None
                 },
                 'prop2': {
+                    'name': 'prop2',
                     'regex': None,
                     'member_max': None,
                     'enum': None,
@@ -346,11 +340,12 @@ class PerfectSchemaTestCase(BaseTestCase):
         ontic_schema.perfect_schema(some_schema)
 
         self.assertEqual(2, len(some_schema))
-        self.assertEqual(10, len(some_schema.prop1))
-        self.assertEqual(10, len(some_schema.prop2))
+        self.assertEqual(11, len(some_schema.prop1))
+        self.assertEqual(11, len(some_schema.prop2))
         self.assertDictEqual(
             {
                 'prop1': {
+                    'name': 'prop1',
                     'default': None,
                     'enum': None,
                     'member_max': None,
@@ -363,6 +358,7 @@ class PerfectSchemaTestCase(BaseTestCase):
                     'type': None
                 },
                 'prop2': {
+                    'name': 'prop2',
                     'default': None,
                     'enum': None,
                     'member_max': None,

@@ -210,7 +210,6 @@ class PerfectObjectTestCase(BaseTestCase):
     def test_perfect_bad_collection_type(self):
         """Test for the handling of bad collection member type."""
 
-
     def test_perfect_collection_default_copy(self):
         """Ensure that collection default settings are handled correctly."""
         # Configure default collection.
@@ -293,7 +292,7 @@ class PerfectObjectTestCase(BaseTestCase):
 
     def test_perfect_schema_bad_member_type(self):
         """Test perfect for bad member type."""
-        invalid_property_schema = OnticProperty()
+        invalid_property_schema = OnticProperty(name='invalid_property')
         invalid_property_schema.type = list
         invalid_property_schema.member_type = 'UNKNOWN'
 
@@ -1031,26 +1030,33 @@ class ValidateValueTestCase(BaseTestCase):
 
 
 class ChildOnticType(OnticType):
-    ONTIC_SCHEMA = OnticSchema(
-        int_prop=OnticProperty(type=int),
-        str_prop=OnticProperty(type=str, required=True, default='A Value')
-    )
+    ONTIC_SCHEMA = OnticSchema([
+        OnticProperty(name='int_prop',
+                      type=int),
+        OnticProperty(name='str_prop',
+                      type=str,
+                      required=True,
+                      default='A Value')
+    ])
 
 
 class ParentOnticType(OnticType):
-    ONTIC_SCHEMA = OnticSchema(
-        child_prop=OnticProperty(type=ChildOnticType)
-    )
+    ONTIC_SCHEMA = OnticSchema([
+        OnticProperty(name='child_prop', type=ChildOnticType)
+    ])
 
 
 DEFAULT_CHILD_PROP = ChildOnticType(int_prop=99, str_prop='The Value')
 
 
 class RequiredOnticChildType(OnticType):
-    ONTIC_SCHEMA = OnticSchema(
-        child_prop=OnticProperty(
-            type=ChildOnticType, required=True, default=DEFAULT_CHILD_PROP)
-    )
+    ONTIC_SCHEMA = OnticSchema([
+        OnticProperty(
+            name='child_prop',
+            type=ChildOnticType,
+            required=True,
+            default=DEFAULT_CHILD_PROP),
+    ])
 
 
 class SettingOnticTypeTestCase(BaseTestCase):

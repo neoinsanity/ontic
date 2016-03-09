@@ -230,7 +230,21 @@ class OnticProperty(ontic_meta.OnticMeta):
     """A class to define a schema for a property."""
 
     ONTIC_SCHEMA = ontic_meta.OnticMeta({
+        'name': ontic_meta.OnticMeta({
+            'name': 'name',
+            'type': str,
+            'default': None,
+            'required' : True,
+            'enum': None,
+            'min': 1,
+            'max': None,
+            'regex': None,
+            'member_type': None,
+            'member_min': None,
+            'member_max': None,
+        }),
         'type': ontic_meta.OnticMeta({
+            'name': 'type',
             'type': (str, type),  # todo: raul - this could be restricted list
             'default': None,
             'required': False,
@@ -243,6 +257,7 @@ class OnticProperty(ontic_meta.OnticMeta):
             'member_max': None,
         }),
         'default': ontic_meta.OnticMeta({
+            'name': 'default',
             'type': None,
             'default': None,
             'required': False,
@@ -255,6 +270,7 @@ class OnticProperty(ontic_meta.OnticMeta):
             'member_max': None,
         }),
         'required': ontic_meta.OnticMeta({
+            'name': 'required',
             'type': bool,
             'default': False,
             'required': False,
@@ -267,6 +283,7 @@ class OnticProperty(ontic_meta.OnticMeta):
             'member_max': None,
         }),
         'enum': ontic_meta.OnticMeta({
+            'name': 'enum',
             'type': set,
             'default': None,
             'required': False,
@@ -279,6 +296,7 @@ class OnticProperty(ontic_meta.OnticMeta):
             'member_max': None,
         }),
         'min': ontic_meta.OnticMeta({
+            'name': 'min',
             'type': tuple(ontic_meta.COMPARABLE_TYPES),
             'default': None,
             'required': False,
@@ -291,6 +309,7 @@ class OnticProperty(ontic_meta.OnticMeta):
             'member_max': None,
         }),
         'max': ontic_meta.OnticMeta({
+            'name': 'max',
             'type': tuple(ontic_meta.COMPARABLE_TYPES),
             'default': None,
             'required': False,
@@ -303,6 +322,7 @@ class OnticProperty(ontic_meta.OnticMeta):
             'member_max': None,
         }),
         'regex': ontic_meta.OnticMeta({
+            'name': 'regex',
             'type': str,
             'default': None,
             'required': False,
@@ -315,6 +335,7 @@ class OnticProperty(ontic_meta.OnticMeta):
             'member_max': None,
         }),
         'member_type': ontic_meta.OnticMeta({
+            'name': 'member_type',
             'type': (str, type),  # todo: raul - this could be restricted list
             #  subclass testing.
             'default': None,
@@ -328,6 +349,7 @@ class OnticProperty(ontic_meta.OnticMeta):
             'member_max': None,
         }),
         'member_min': ontic_meta.OnticMeta({
+            'name': 'member_min',
             'type': tuple(ontic_meta.COMPARABLE_TYPES),
             'default': None,
             'required': False,
@@ -340,6 +362,7 @@ class OnticProperty(ontic_meta.OnticMeta):
             'member_max': None,
         }),
         'member_max': ontic_meta.OnticMeta({
+            'name': 'member_max',
             'type': tuple(ontic_meta.COMPARABLE_TYPES),
             'default': None,
             'required': False,

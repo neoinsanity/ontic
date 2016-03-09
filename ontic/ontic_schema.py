@@ -53,7 +53,7 @@ and :meth:`validate_schema`.
 
 """
 import logging
-from typing import List
+from typing import List, Union
 
 from ontic import ontic_core
 from ontic import ontic_property
@@ -80,15 +80,48 @@ class OnticSchema(ontic_core.OnticCore):
     """
 
     def __init__(self, *args, **kwargs):
+
+        # Detect if the list is a list of dicts or OnticProperty types.
+        schema_list = None
+        if len(args) == 1 and isinstance(args[0], list):
+            if len(args[0]) > 0 and isinstance(args[0][0], dict):
+                schema_list = args[0]
+
+        if schema_list:
+            super(OnticSchema, self).__init__()
+            for some_property in schema_list:
+                self.add(some_property)
+            return  # Initialization completed for a list.
+
         super(OnticSchema, self).__init__(*args, **kwargs)
+
         for key, value in self.items():
             if not isinstance(value, ontic_property.OnticProperty):
                 try:
+                    if isinstance(value, dict):
+                        value['name'] = key  # Set name for consistency.
                     self[key] = ontic_property.OnticProperty(value)
                 except Exception:
                     logging.exception(
                         'Exception while converting "%s" to OnticProperty', key)
                     raise
+
+    def add(self,
+            property_type: Union[dict, ontic_property.OnticProperty]) -> None:
+        """
+
+        :param property_type:
+        :type property_type: [dict, ontic_property.OnticProperty]
+        """
+        if not isinstance(property_type, (dict, ontic_property.OnticProperty)):
+            raise ValueError(
+                '"property_type" must be dict or OnticProperty type.')
+        if isinstance(property_type, ontic_property.OnticProperty):
+            self[property_type.name] = property_type
+
+        else:
+            ontic_prop = ontic_property.OnticProperty(property_type)
+            self[ontic_prop.name] = ontic_prop
 
     def perfect(self) -> None:
         """Method to clean and perfect a given schema.
