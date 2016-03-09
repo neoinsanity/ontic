@@ -79,7 +79,7 @@ class OnticPropertyTest(BaseTestCase):
         self.assertSetEqual(ontic_property.enum, property_copy.enum)
 
     def test_deepcopy(self):
-        """Ensure that OnticMeta supports deepcopy operation."""
+        """Ensure that Meta supports deepcopy operation."""
 
         # Create the test data.
         ontic_property = OnticProperty(

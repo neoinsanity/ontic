@@ -3,48 +3,48 @@ from copy import copy, deepcopy
 
 from test import utils
 
-from ontic.ontic_meta import OnticMeta
+from ontic.ontic_meta import Meta
 
 
-class SubType(OnticMeta):
-    """Sub-class of OnticMeta for testing purposes."""
+class SubType(Meta):
+    """Sub-class of Meta for testing purposes."""
     pass
 
 
 class OnticMetaTest(utils.BaseTestCase):
-    """OnticMeta test cases."""
+    """Meta test cases."""
 
     def test_ontic_meta_instantiation(self):
-        """OnticMeta instantiation testing to confirm dict behaviour."""
-        ontic_meta1 = OnticMeta()
+        """Meta instantiation testing to confirm dict behaviour."""
+        ontic_meta1 = Meta()
         self.assertIsNotNone(ontic_meta1)
 
         # Test dictionary initialization.
-        ontic_meta2 = OnticMeta({'prop1': 'val1', 'prop2': 'val2'})
+        ontic_meta2 = Meta({'prop1': 'val1', 'prop2': 'val2'})
         self.assertIsNotNone(ontic_meta2)
         self.assertEqual('val1', ontic_meta2['prop1'])
         self.assertEqual('val2', ontic_meta2.prop2)
 
         # Test initialization by property.
-        ontic_meta3 = OnticMeta(prop1='val1', prop2='val2')
+        ontic_meta3 = Meta(prop1='val1', prop2='val2')
         self.assertIsNotNone(ontic_meta3)
         self.assertEqual('val1', ontic_meta3.prop1)
         self.assertEqual('val2', ontic_meta3['prop2'])
 
         # Test initialization by list.
-        ontic_meta4 = OnticMeta([['prop1', 'val1'], ['prop2', 'val2']])
+        ontic_meta4 = Meta([['prop1', 'val1'], ['prop2', 'val2']])
         self.assertIsNotNone(ontic_meta4)
         self.assertEqual('val1', ontic_meta4['prop1'])
         self.assertEqual('val2', ontic_meta4.prop2)
 
     def test_dynamic_access(self):
-        """Ensure OnticMeta property access as dict and attribute."""
-        ontic_meta = OnticMeta()
+        """Ensure Meta property access as dict and attribute."""
+        ontic_meta = Meta()
         self.assert_dynamic_accessing(ontic_meta)
         # Create the test data.
 
     def test_copy(self):
-        """Ensure that OnticMeta supports copy operations."""
+        """Ensure that Meta supports copy operations."""
 
         # Create the test data.
         sub_object = SubType(
@@ -76,7 +76,7 @@ class OnticMetaTest(utils.BaseTestCase):
         self.assertIs(sub_copy.dict_prop, sub_object.dict_prop)
 
     def test_deepcopy(self):
-        """Ensure that OnticMeta supports deepcopy operation."""
+        """Ensure that Meta supports deepcopy operation."""
 
         sub_object = SubType(
             int_prop=1,

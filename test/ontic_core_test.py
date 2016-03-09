@@ -3,47 +3,47 @@ from copy import copy, deepcopy
 
 from test import utils
 
-from ontic.ontic_core import OnticCore
+from ontic.ontic_core import Core
 
 
-class SubType(OnticCore):
-    """Sub-class of OnticCore for testing purposes."""
+class SubType(Core):
+    """Sub-class of Core for testing purposes."""
     pass
 
 
 class OnticCoreTest(utils.BaseTestCase):
-    """OnticCore test cases."""
+    """Core test cases."""
 
     def test_ontic_core_instantiation(self):
-        """OnticCore instantiation to confirm dict behavior."""
-        ontic_core1 = OnticCore()
+        """Core instantiation to confirm dict behavior."""
+        ontic_core1 = Core()
         self.assertIsNotNone(ontic_core1)
 
         # Test dictionary initialization.
-        ontic_core2 = OnticCore({'prop1': 'val1', 'prop2': 'val2'})
+        ontic_core2 = Core({'prop1': 'val1', 'prop2': 'val2'})
         self.assertIsNotNone(ontic_core2)
         self.assertEqual('val1', ontic_core2['prop1'])
         self.assertEqual('val2', ontic_core2.prop2)
 
         # Test initialization by property.
-        ontic_core3 = OnticCore(prop1='val1', prop2='val2')
+        ontic_core3 = Core(prop1='val1', prop2='val2')
         self.assertIsNotNone(ontic_core3)
         self.assertEqual('val1', ontic_core3.prop1)
         self.assertEqual('val2', ontic_core3['prop2'])
 
         # Test initialization by list.
-        ontic_core4 = OnticCore([['prop1', 'val1'], ['prop2', 'val2']])
+        ontic_core4 = Core([['prop1', 'val1'], ['prop2', 'val2']])
         self.assertIsNotNone(ontic_core4)
         self.assertEqual('val1', ontic_core4['prop1'])
         self.assertEqual('val2', ontic_core4.prop2)
 
     def test_dynamic_access(self):
-        """OnticCore property access as a dict and as attribute."""
-        ontic_core = OnticCore()
+        """Core property access as a dict and as attribute."""
+        ontic_core = Core()
         self.assert_dynamic_accessing(ontic_core)
 
     def test_copy(self):
-        """Ensure that OnticCore supports copy operations."""
+        """Ensure that Core supports copy operations."""
 
         # Create the test data.
         sub_object = SubType(
@@ -75,7 +75,7 @@ class OnticCoreTest(utils.BaseTestCase):
         self.assertIs(sub_copy.dict_prop, sub_object.dict_prop)
 
     def test_deepcopy(self):
-        """Ensure that OnticCore supports deepcopy operation."""
+        """Ensure that Core supports deepcopy operation."""
 
         # Create the test data.
         sub_object = SubType(

@@ -8,42 +8,42 @@
 Usage
 ======
 
-The *schema_type* module contains the class :class:`SchemaType` and a set of
-functions to create and validate schema. *SchemaType* are used to validate
+The *schema_type* module contains the class :class:`Schema` and a set of
+functions to create and validate schema. *Schema* are used to validate
 :class:`ontic.ontic_type.OnticType` derived instances.
 
 Creating Schema
 ----------------
 
-A *SchemaType* is defined as a dictionary with the key entry being the name
+A *Schema* is defined as a dictionary with the key entry being the name
 of the property. The value portion of the dictionary is a
 :class:`ontic.meta_type.PropertySchema` instance::
 
-    >>> a_schema = SchemaType({
-    ...     'property_name': PropertyType({'type': 'str'})
-    ... })
+    >>> a_schema = Schema([
+    ...     ontic_property.OnticProperty(name='property_name', type= 'str')
+    ... ])
 
 While the example above give a strict definition of a schema, creation of a
-schema can omit the use of the *PropertySchema*, as the *SchemaType*
+schema can omit the use of the *PropertySchema*, as the *Schema*
 instantiation will convert a dict value to a *PropertySchema* object. The
 above example can be simplified to be::
 
-    >>> a_schema = SchemaType({
-    ...     'property_name': {'type': 'str'}
-    ... })
+    >>> a_schema = Schema([
+    ...     {'name': 'property_name', 'type': 'str'}
+    ... ])
 
-The *SchemaType* also supports the dict style of instantiation via parameter
+The *Schema* also supports the dict style of instantiation via parameter
 naming::
 
-    >>> a_schema = SchemaType(property_name={'type': 'str'})
+    >>> a_schema = Schema(property_name={'type': 'str'})
 
 Dynamic Schema
 -----------------
 
-In cases where necessary, a *SchemaType* can be created dynamically::
+In cases where necessary, a *Schema* can be created dynamically::
 
-    >>> a_schema = SchemaType()
-    >>> a_schema['property_name'] = PropertyType({'type': 'str'})
+    >>> a_schema = Schema()
+    >>> a_schema.add(ontic_property.OnticProperty({'name': 'a', 'type': 'str'}))
 
 To aid in the handling of dynamic models, utilize the :meth:`perfect_schema`
 and :meth:`validate_schema`.
@@ -60,16 +60,16 @@ from ontic import ontic_property
 from ontic.validation_exception import ValidationException
 
 
-class OnticSchema(ontic_core.OnticCore):
+class Schema(ontic_core.Core):
     """The type definition for a schema object.
 
-    The **OnticSchema** contains a dictionary of property field names and
+    The **Schema** contains a dictionary of property field names and
     the corresponding **OnticProperty** definition.
 
-    Example OnticSchema representation::
+    Example Schema representation::
 
-        OnticSchema({
-          'some_property': OnticSchema({
+        Schema({
+          'some_property': Schema({
                 'type': 'str',
                 'required': True
             })
@@ -88,12 +88,12 @@ class OnticSchema(ontic_core.OnticCore):
                 schema_list = args[0]
 
         if schema_list:
-            super(OnticSchema, self).__init__()
+            super(Schema, self).__init__()
             for some_property in schema_list:
                 self.add(some_property)
             return  # Initialization completed for a list.
 
-        super(OnticSchema, self).__init__(*args, **kwargs)
+        super(Schema, self).__init__(*args, **kwargs)
 
         for key, value in self.items():
             if not isinstance(value, ontic_property.OnticProperty):
@@ -135,7 +135,7 @@ class OnticSchema(ontic_core.OnticCore):
         perfect_schema(self)
 
     def validate(self, raise_validation_exception: bool = True) -> List[str]:
-        """Validate a given :class:`OnticSchema`.
+        """Validate a given :class:`Schema`.
 
         This method will iterate through all of the
         :class:`OnticProperty` and validate that each definition is valid.
@@ -151,14 +151,14 @@ class OnticSchema(ontic_core.OnticCore):
         :return: List of errors found. Empty of no errors found.
         :rtype: list<str>
         :raises ValueError: *candidate_schema* is None, or not of type
-            :class:`SchemaType`.
+            :class:`Schema`.
         :raises ValidationException: A property of *candidate_schema* does not
             meet schema requirements.
         """
         return validate_schema(self, raise_validation_exception)
 
 
-def perfect_schema(ontic_schema: OnticSchema) -> None:
+def perfect_schema(ontic_schema: Schema) -> None:
     """Method to clean and perfect a given schema.
 
     The *perfect_schema* will fill in any missing schema setting for each of
@@ -166,21 +166,21 @@ def perfect_schema(ontic_schema: OnticSchema) -> None:
     property schema completeness.
 
     :param ontic_schema: The schema that is to be perfected.
-    :type ontic_schema: :class:`OnticSchema`
+    :type ontic_schema: :class:`Schema`
     :rtype: None
     """
     if ontic_schema is None:
         raise ValueError('"ontic_schema" must be provided.')
-    if not isinstance(ontic_schema, OnticSchema):
-        raise ValueError('"ontic_schema" argument must be of OnticSchema type.')
+    if not isinstance(ontic_schema, Schema):
+        raise ValueError('"ontic_schema" argument must be of Schema type.')
 
     [property_schema.perfect() for property_schema in ontic_schema.values()]
 
 
 def validate_schema(
-        ontic_schema: OnticSchema,
+        ontic_schema: Schema,
         raise_validation_exception: bool = True) -> List[str]:
-    """Validate a given :class:`OnticSchema`.
+    """Validate a given :class:`Schema`.
 
     This method will iterate through all of the :class:`OnticProperty` and
     validate that each definition is valid.  The method will collect all of
@@ -189,7 +189,7 @@ def validate_schema(
     behavior is determined by the *raise_validation_exception*
 
     :param ontic_schema: The schema to be validated.
-    :type ontic_schema: :class:`OnticSchema`
+    :type ontic_schema: :class:`Schema`
     :param raise_validation_exception: If True, then *validate_schema* will
         throw a *ValidationException* upon validation failure. If False, then a
         list of validation errors is returned. Defaults to True.
@@ -197,14 +197,14 @@ def validate_schema(
     :return: List of errors found. Empty of no errors found.
     :rtype: list<str>
     :raises ValueError: *ontic_schema* is None, or not of type
-        :class:`OnticSchema`.
+        :class:`Schema`.
     :raises ValidationException: A property of *ontic_schema* does not
         meet schema requirements.
     """
     if ontic_schema is None:
         raise ValueError('"ontic_schema" argument must be provided.')
-    if not isinstance(ontic_schema, OnticSchema):
-        raise ValueError('"ontic_schema" argument must be of OnticSchema type.')
+    if not isinstance(ontic_schema, Schema):
+        raise ValueError('"ontic_schema" argument must be of Schema type.')
 
     value_errors = []
     for prop in ontic_schema.values():

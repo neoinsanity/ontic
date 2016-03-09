@@ -13,16 +13,16 @@ import ontic
 from ontic import ontic_core
 
 
-class OnticMeta(ontic_core.OnticCore):
-    ONTIC_SCHEMA = ontic_core.OnticCore()
+class Meta(ontic_core.Core):
+    ONTIC_SCHEMA = ontic_core.Core()
 
     @classmethod
-    def get_schema(cls) -> 'ontic.ontic_schema.OnticSchema':
+    def get_schema(cls) -> 'ontic.ontic_schema.Schema':
         return cls.ONTIC_SCHEMA
 
     @classmethod
     def __set_schema_for_ontic_schema__(
-            cls, ontic_schema: 'ontic.ontic_schema.OnticSchema') -> None:
+            cls, ontic_schema: 'ontic.ontic_schema.Schema') -> None:
         cls.ONTIC_SCHEMA = ontic_schema
 
 
@@ -55,7 +55,7 @@ TYPE_MAP = {
     list: list,
     'None': None,
     None: None,
-    OnticMeta: OnticMeta,
+    Meta: Meta,
     'set': set,
     set: set,
     'str': str,
@@ -200,7 +200,7 @@ def validate_collection_members(
 
 
 #: Signature definition of a validator function.
-ValidatorFunc = Callable[[str, Any, OnticMeta, List[str]], None]
+ValidatorFunc = Callable[[str, Any, Meta, List[str]], None]
 
 
 def execute_collection_validators(

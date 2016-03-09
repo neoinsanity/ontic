@@ -6,21 +6,21 @@ from test.utils import BaseTestCase
 
 from ontic.ontic_property import OnticProperty
 from ontic import ontic_schema
-from ontic.ontic_schema import OnticSchema
+from ontic.ontic_schema import Schema
 from ontic.validation_exception import ValidationException
 
 
 class OnticSchemaTest(BaseTestCase):
-    """OnticSchema test cases."""
+    """Schema test cases."""
 
     def test_ontic_schema_instantiation(self):
-        """OnticCore instantiation to confirm dict behavior."""
-        schema1 = OnticSchema()
+        """Core instantiation to confirm dict behavior."""
+        schema1 = Schema()
         self.assertIsNotNone(schema1)
         self.assertDictEqual({}, schema1)
 
         # Test dictionary initialization.
-        schema2 = OnticSchema({'prop1': {}, 'prop2': {'type': 'int'}})
+        schema2 = Schema({'prop1': {}, 'prop2': {'type': 'int'}})
         self.assertIsNotNone(schema2)
         self.assertIsInstance(schema2['prop1'], OnticProperty)
         self.assertEqual(
@@ -41,7 +41,7 @@ class OnticSchemaTest(BaseTestCase):
             schema2.prop2)
 
         # Test initialization by property.
-        schema3 = OnticSchema(prop1={}, prop2={'type': 'str'})
+        schema3 = Schema(prop1={}, prop2={'type': 'str'})
         self.assertIsNotNone(schema3)
         self.assertIsInstance(schema3.prop1, OnticProperty)
         self.assertDictEqual(
@@ -63,7 +63,7 @@ class OnticSchemaTest(BaseTestCase):
             schema3['prop2'])
 
         # Test initialization by list.
-        schema4 = OnticSchema([['prop1', {}], ['prop2', {'type': bool}]])
+        schema4 = Schema([['prop1', {}], ['prop2', {'type': bool}]])
         self.assertIsNotNone(schema4)
         self.assertIsInstance(schema4.prop1, OnticProperty)
         self.assertEqual(
@@ -85,15 +85,15 @@ class OnticSchemaTest(BaseTestCase):
             schema4.prop2)
 
     def test_dynamic_access(self):
-        """OnticCore property access as a dict and as attribute."""
-        schema = OnticSchema()
+        """Core property access as a dict and as attribute."""
+        schema = Schema()
         self.assert_dynamic_accessing(schema)
 
     def test_copy(self):
-        """Ensure that OnticCore supports copy operations."""
+        """Ensure that Core supports copy operations."""
 
         # Create the test data.
-        some_schema = OnticSchema([
+        some_schema = Schema([
             {'name': 'int_prop', 'type': 'int'},
             {'name': 'str_prop', 'type': str},
             OnticProperty({'name': 'list_prop', 'type': list}),
@@ -103,7 +103,7 @@ class OnticSchemaTest(BaseTestCase):
         schema_copy = copy(some_schema)
 
         # Validate the test results.
-        self.assertIsInstance(schema_copy, OnticSchema)
+        self.assertIsInstance(schema_copy, Schema)
         self.assertIsNot(schema_copy, some_schema)
         self.assertDictEqual(schema_copy, some_schema)
         self.assertIs(schema_copy.int_prop, some_schema.int_prop)
@@ -111,10 +111,10 @@ class OnticSchemaTest(BaseTestCase):
         self.assertIs(schema_copy.list_prop, some_schema.list_prop)
 
     def test_deepcopy(self):
-        """Ensure that OnticCore supports deepcopy operation."""
+        """Ensure that Core supports deepcopy operation."""
 
         # Create the test data.
-        some_schema = OnticSchema([
+        some_schema = Schema([
             {'name': 'int_prop', 'type': 'int'},
             {'name': 'str_prop', 'type': str},
             OnticProperty({'name': 'list_prop', 'type': list}),
@@ -124,7 +124,7 @@ class OnticSchemaTest(BaseTestCase):
         schema_copy = deepcopy(some_schema)
 
         # Validate the test results.
-        self.assertIsInstance(schema_copy, OnticSchema)
+        self.assertIsInstance(schema_copy, Schema)
         self.assertIsNot(schema_copy, some_schema)
         self.assertDictEqual(schema_copy, some_schema)
         self.assertIsNot(schema_copy.int_prop, some_schema.int_prop)
@@ -132,11 +132,11 @@ class OnticSchemaTest(BaseTestCase):
         self.assertIsNot(schema_copy.list_prop, some_schema.list_prop)
 
     def test_schema_definition(self):
-        """OnticSchema instantiation testing to confirm dict behaviour."""
-        schema_object = OnticSchema()
+        """Schema instantiation testing to confirm dict behaviour."""
+        schema_object = Schema()
         self.assertIsNotNone(schema_object)
 
-        schema_object = OnticSchema({
+        schema_object = Schema({
             'property1': {}
         })
         self.assertIsNotNone(schema_object)
@@ -144,8 +144,8 @@ class OnticSchemaTest(BaseTestCase):
         self.assertTrue('property1' in schema_object)
 
     def test_ontic_schema_perfect(self):
-        """Test the OnticSchema.perfect method."""
-        some_schema = OnticSchema([
+        """Test the Schema.perfect method."""
+        some_schema = Schema([
             OnticProperty(name='prop1'),
             OnticProperty({'name': 'prop2', 'type': 'str', 'min': 5})
         ])
@@ -221,18 +221,18 @@ class OnticSchemaTest(BaseTestCase):
         self.assertIsInstance(some_schema.prop2, OnticProperty)
 
     def test_ontic_schema_validate(self):
-        """Test the OnticSchema.validate method."""
-        schema = OnticSchema({'some_property': {'type': 'int'}})
+        """Test the Schema.validate method."""
+        schema = Schema({'some_property': {'type': 'int'}})
 
         # Dict test
         self.assertEqual([], schema.validate())
 
         # OnticType test
-        base_type_schema = OnticSchema(schema)
+        base_type_schema = Schema(schema)
         ontic_schema.validate_schema(base_type_schema)
 
-        # OnticSchema test
-        ontic_schema_schema = OnticSchema(schema)
+        # Schema test
+        ontic_schema_schema = Schema(schema)
         ontic_schema.validate_schema(ontic_schema_schema)
 
 
@@ -247,29 +247,29 @@ class ValidateSchemaTestCase(BaseTestCase):
             ontic_schema.validate_schema, None)
         self.assertRaisesRegexp(
             ValueError,
-            r""""ontic_schema" argument must be of OnticSchema type.""",
+            r""""ontic_schema" argument must be of Schema type.""",
             ontic_schema.validate_schema, "not a schema")
 
     def test_validate_schema(self):
         """Valid schema testing of validate_schema."""
-        schema = OnticSchema({'some_property': {'type': 'int'}})
+        schema = Schema({'some_property': {'type': 'int'}})
 
         # Dict test
         ontic_schema.validate_schema(schema)
 
         # OnticType test
-        base_type_schema = OnticSchema(schema)
+        base_type_schema = Schema(schema)
         ontic_schema.validate_schema(base_type_schema)
 
-        # OnticSchema test
-        ontic_schema_schema = OnticSchema(schema)
+        # Schema test
+        ontic_schema_schema = Schema(schema)
         ontic_schema.validate_schema(ontic_schema_schema)
 
     def test_validate_schema_exception_handling(self):
         """Ensure validate_schema covers basic exception reporting."""
         property_schema = OnticProperty(name='some_attr')
         property_schema.required = 'UNDEFINED'
-        schema_instance = OnticSchema()
+        schema_instance = Schema()
         schema_instance.add(property_schema)
 
         self.assertRaisesRegexp(
@@ -302,7 +302,7 @@ class PerfectSchemaTestCase(BaseTestCase):
             OnticProperty(name='prop1'),
             OnticProperty({'name': 'prop2', 'type': 'str', 'min': 5})
         ]
-        some_schema = OnticSchema(schema_def)
+        some_schema = Schema(schema_def)
         self.assertEqual(2, len(some_schema))
         self.assertEqual(11, len(some_schema.prop1))
         self.assertEqual(11, len(some_schema.prop2))
@@ -383,5 +383,5 @@ class PerfectSchemaTestCase(BaseTestCase):
 
         self.assertRaisesRegexp(
             ValueError,
-            r""""ontic_schema" argument must be of OnticSchema type.""",
+            r""""ontic_schema" argument must be of Schema type.""",
             ontic_schema.perfect_schema, {})

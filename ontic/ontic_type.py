@@ -18,7 +18,7 @@ functions to handle the creation and validation of *OnticType* instances.
 Construction of **Ontic** data types as a class definition::
 
     >>> class MyType(OnticType):
-    ...     ONTIC_SCHEMA = OnticSchema({
+    ...     ONTIC_SCHEMA = Schema({
     ...         'some_property': {
     ...             'type': 'int',
     ...             'required': True,
@@ -54,12 +54,12 @@ from copy import deepcopy
 from typing import List, Union
 
 from ontic import ontic_meta
-from ontic.ontic_meta import OnticMeta, COLLECTION_TYPES, TYPE_MAP
-from ontic.ontic_schema import OnticSchema
+from ontic.ontic_meta import Meta, COLLECTION_TYPES, TYPE_MAP
+from ontic.ontic_schema import Schema
 from ontic.validation_exception import ValidationException
 
 
-class OnticType(OnticMeta):
+class OnticType(Meta):
     """OnticType provides the **Ontic** schema interface.
 
     The **OnticType** provides the schema management functionality to a
@@ -116,7 +116,7 @@ class OnticType(OnticMeta):
         return validate_value(value_name, self, raise_validation_exception)
 
 
-def create_ontic_type(name: str, schema: Union[dict, OnticSchema]) -> type:
+def create_ontic_type(name: str, schema: Union[dict, Schema]) -> type:
     """Create an **Ontic** type to generate objects with a given schema.
 
     *create_ontic_type* function creates an :class:`OnticType` with a given
@@ -149,8 +149,8 @@ def create_ontic_type(name: str, schema: Union[dict, OnticSchema]) -> type:
 
     ontic_type = type(name, (OnticType,), dict())
 
-    if not isinstance(schema, OnticSchema):
-        schema = OnticSchema(schema)
+    if not isinstance(schema, Schema):
+        schema = Schema(schema)
 
     ontic_type.ONTIC_SCHEMA = schema
 
