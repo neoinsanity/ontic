@@ -287,7 +287,7 @@ def validate_value(property_name: str,
     value = ontic_object.get(property_name, None)
 
     value_errors.extend(
-        ontic_meta.validate_value(property_name, property_schema, value))
+        ontic_meta.validate_value(property_schema, value))
 
     # if a value is an OnticType, then have it self validate.
     is_ontic_type = (property_schema.type is not None and

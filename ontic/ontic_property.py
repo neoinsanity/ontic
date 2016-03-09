@@ -234,7 +234,7 @@ class OnticProperty(ontic_meta.OnticMeta):
             'name': 'name',
             'type': str,
             'default': None,
-            'required' : True,
+            'required': True,
             'enum': None,
             'min': 1,
             'max': None,
@@ -413,11 +413,11 @@ class OnticProperty(ontic_meta.OnticMeta):
         return validate_property(self, raise_validation_exception)
 
     def validate_value(self,
-                       name: str,
                        value: Any,
                        raise_validation_exception: bool = True) -> List[str]:
         """"""
-        return ontic_meta.validate_value(name, self, value, raise_validation_exception)
+        return ontic_meta.validate_value(self, value,
+                                         raise_validation_exception)
 
 
 def perfect_property(ontic_property: OnticProperty) -> None:
@@ -491,17 +491,17 @@ def validate_property(
 
     value_errors = []
 
-    for setting_name, setting_schema in ontic_property.get_schema().items():
-        setting_value = ontic_property.get(setting_name, None)
+    for property_schema in ontic_property.get_schema().values():
+        property_value = ontic_property.get(property_schema.name, None)
 
         # todo: raul - for now skip validating compound schemas.
-        if (isinstance(setting_value, type) and
-                issubclass(setting_value, ontic_meta.OnticMeta)):
+        if (isinstance(property_value, type) and
+                issubclass(property_value, ontic_meta.OnticMeta)):
             continue
 
         value_errors.extend(
             ontic_meta.validate_value(
-                setting_name, setting_schema, setting_value))
+                property_schema, property_value))
 
     if value_errors and raise_validation_exception:
         raise validation_exception.ValidationException(value_errors)
