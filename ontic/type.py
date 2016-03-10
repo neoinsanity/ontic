@@ -18,7 +18,7 @@ functions to handle the creation and validation of *OnticType* instances.
 Construction of **Ontic** data types as a class definition::
 
     >>> class MyType(OnticType):
-    ...     ONTIC_SCHEMA = OnticSchema({
+    ...     ONTIC_SCHEMA = Schema({
     ...         'some_property': {
     ...             'type': 'int',
     ...             'required': True,
@@ -53,13 +53,13 @@ with the use of the :meth:`create_ontic_type` function.
 from copy import deepcopy
 from typing import List, Union
 
-from ontic import ontic_meta
-from ontic.ontic_meta import OnticMeta, COLLECTION_TYPES, TYPE_MAP
-from ontic.ontic_schema import OnticSchema
+from ontic import meta
+from ontic.meta import Meta, COLLECTION_TYPES, TYPE_MAP
+from ontic.schema import Schema
 from ontic.validation_exception import ValidationException
 
 
-class OnticType(OnticMeta):
+class OnticType(Meta):
     """OnticType provides the **Ontic** schema interface.
 
     The **OnticType** provides the schema management functionality to a
@@ -116,7 +116,7 @@ class OnticType(OnticMeta):
         return validate_value(value_name, self, raise_validation_exception)
 
 
-def create_ontic_type(name: str, schema: Union[dict, OnticSchema]) -> type:
+def create_ontic_type(name: str, schema: Union[dict, Schema]) -> type:
     """Create an **Ontic** type to generate objects with a given schema.
 
     *create_ontic_type* function creates an :class:`OnticType` with a given
@@ -149,8 +149,8 @@ def create_ontic_type(name: str, schema: Union[dict, OnticSchema]) -> type:
 
     ontic_type = type(name, (OnticType,), dict())
 
-    if not isinstance(schema, OnticSchema):
-        schema = OnticSchema(schema)
+    if not isinstance(schema, Schema):
+        schema = Schema(schema)
 
     ontic_type.ONTIC_SCHEMA = schema
 
@@ -169,7 +169,7 @@ def perfect_object(the_object: OnticType) -> None:
     copied.
 
     :param the_object: Ab object instance that is to be perfected.
-    :type the_object: :class:`ontic.ontic_type.OnticType`
+    :type the_object: :class:`ontic.type.OnticType`
     :rtype: None
     """
     if the_object is None:
@@ -247,7 +247,7 @@ def validate_value(property_name: str,
         **PropertyType**.
     :type property_name: str
     :param ontic_object: Ontic defined object to be validated.
-    :type ontic_object: ontic_type.OnticType
+    :type ontic_object: type.OnticType
     :param raise_validation_exception: If True, then *validate_object* will
         throw a *ValueException* upon validation failure. If False, then a
         list of validation errors is returned. Defaults to True.
@@ -287,7 +287,7 @@ def validate_value(property_name: str,
     value = ontic_object.get(property_name, None)
 
     value_errors.extend(
-        ontic_meta.validate_value(property_name, property_schema, value))
+        meta.validate_value(property_schema, value))
 
     # if a value is an OnticType, then have it self validate.
     is_ontic_type = (property_schema.type is not None and

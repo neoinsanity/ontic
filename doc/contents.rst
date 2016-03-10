@@ -9,9 +9,9 @@ Table of Contents
   ontic
   advanced
 
-  ontic.core_type
-  ontic.meta_type
-  ontic.ontic_type
-  ontic.property_type
-  ontic.schema_type
+  ontic.core
+  ontic.meta
+  ontic.type
+  ontic.property
+  ontic.schema
   ontic.validation_exception

@@ -1,8 +1,8 @@
-==============================================
-MetaSchemaType Module
-==============================================
+============
+Meta Module
+============
 
-.. automodule:: ontic.meta_schema_type
+.. automodule:: ontic.meta
 
 Classes
 ========
@@ -10,7 +10,7 @@ Classes
 MetaSchemaType
 ---------------
 
-.. autoclass:: MetaSchemaType
+.. autoclass:: Meta
     :special-members: __init__
     :members:
 

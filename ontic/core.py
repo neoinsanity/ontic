@@ -9,34 +9,34 @@
 from copy import copy, deepcopy
 
 
-class OnticCore(dict):
+class Core(dict):
     """The root type of *Ontic* types.
     
-    **OnticCore** provides for *Ontic* object properties to be accessible as
-    either dict key-value pairs or as object attributes. OnticCore also supports
-    dict style intialization.
+    **Core** provides for *Ontic* object properties to be accessible as
+    either dict key-value pairs or as object attributes. Core also supports
+    dict style initialization.
 
     Dict Style Initialization
-        OnticCore() -> new empty OnticCore
+        Core() -> new empty Core
 
-        OnticCore(mapping) -> new OnticCore initialized from a mapping
+        Core(mapping) -> new Core initialized from a mapping
         object's (key, value) pairs
 
-        OnticCore(iterable) -> new OnticCore initialized as if via::
+        Core(iterable) -> new Core initialized as if via::
 
-            d = OnticCore()
+            d = Core()
             for k, v in iterable:
                 d[k] = v
 
-        OnticCore(\*\*kwargs) -> new OnticCore initialized with the
+        Core(\*\*kwargs) -> new Core initialized with the
         name=value pairs in the keyword argument list.  For example::
 
-            OnticCore(one=1, two=2)
+            Core(one=1, two=2)
     
     Example dict style and object style initialization::
 
-    >>> some_object = OnticCore({'key1': 'value1'}) # Dict style initialization
-    >>> other_object = OnticCore(key1='value1') # Object style initialization
+    >>> some_object = Core({'key1': 'value1'}) # Dict style initialization
+    >>> other_object = Core(key1='value1') # Object style initialization
 
     Example dict style and object style property access::
 
@@ -54,7 +54,7 @@ class OnticCore(dict):
     """
 
     def __init__(self, *args, **kwargs):
-        super(OnticCore, self).__init__(*args, **kwargs)
+        super(Core, self).__init__(*args, **kwargs)
 
         self.__dict__ = self
 
