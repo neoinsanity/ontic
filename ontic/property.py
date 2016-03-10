@@ -1,7 +1,7 @@
 """The base class for deriving types that require schema support.
 
 
-.. image:: images/property_type.jpg
+.. image:: images/ontic_property.jpg
 
 .. contents::
 
@@ -485,7 +485,7 @@ def validate_property(
     :rtype: list<str>, None
     :raises ValueError: *the_candidate_schema_property* is not an
         :class:`~ontic.ontic_type.OnticType`.
-    :raises ValidationException: A property of *candidate_property_type*
+    :raises ValidationException: A property of *ontic_property*
         does not meet schema requirements.
     """
     if ontic_property is None:

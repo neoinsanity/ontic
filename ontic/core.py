@@ -14,7 +14,7 @@ class Core(dict):
     
     **Core** provides for *Ontic* object properties to be accessible as
     either dict key-value pairs or as object attributes. Core also supports
-    dict style intialization.
+    dict style initialization.
 
     Dict Style Initialization
         Core() -> new empty Core

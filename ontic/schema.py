@@ -1,6 +1,6 @@
 """The classes utilized to construct schemas for object definitions.
 
-.. image:: images/schema_type.jpg
+.. image:: images/ontic_schema.jpg
 
 .. contents::
 
