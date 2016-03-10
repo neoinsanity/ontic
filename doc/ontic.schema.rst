@@ -1,8 +1,8 @@
-====================
-SchemaType Module
-====================
+==============
+Schema Module
+==============
 
-.. automodule:: ontic.schema_type
+.. automodule:: ontic.schema
 
 Classes
 ========
@@ -10,7 +10,7 @@ Classes
 SchemaType
 -----------
 
-.. autoclass:: SchemaType
+.. autoclass:: Schema
     :special-members: __init__
     :members:
 
