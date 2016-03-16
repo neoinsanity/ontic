@@ -302,7 +302,8 @@ class PerfectObjectTestCase(BaseTestCase):
             r"""\[<class 'bool'>, <class 'complex'>, <class 'datetime.date'>"""
             r""", <class 'datetime.datetime'>, <class 'dict'>, """
             r"""<class 'float'>, <class 'int'>, <class 'list'>, <class 'set'>"""
-            r""", <class 'str'>, <class 'datetime.time'>, None\].""",
+            r""", <class 'str'>, <class 'datetime.time'>, <class 'tuple'>, """
+            r"""None\].""",
             property.validate_property, invalid_property_schema)
 
         value_errors = property.validate_property(
@@ -315,7 +316,7 @@ class PerfectObjectTestCase(BaseTestCase):
             """[<class 'bool'>, <class 'complex'>, <class 'datetime.date'>"""
             """, <class 'datetime.datetime'>, <class 'dict'>, <class 'float'>"""
             """, <class 'int'>, <class 'list'>, <class 'set'>, <class 'str'>"""
-            """, <class 'datetime.time'>, None].""")
+            """, <class 'datetime.time'>, <class 'tuple'>, None].""")
 
 
 class ValidateObjectTestCase(BaseTestCase):
