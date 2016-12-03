@@ -53,6 +53,42 @@ class OnticPropertyTest(BaseTestCase):
         self.assertEqual(1, ontic_property4.default)
         self.assertEqual(True, ontic_property4['required'])
 
+
+    def test_validate_value_wo_validation_exception(self):
+        """Ensure OnticProperty property validate_value function returns a list of validation errors."""
+        ontic_property = OnticProperty(
+            {
+                'name': 'dudete',
+                'type': int,
+                'default': 1,
+                'required': True
+            }
+        )
+
+        result = ontic_property.validate_value('some string', raise_validation_exception=False)
+
+        self.assertIsNotNone(result)
+        expected_list = ['The value for "dudete" is not of type "<class \'int\'>": some string']
+        self.assertListEqual(expected_list, result)
+
+    def test_validate_value_w_validation_exception(self):
+        """Ensure OnticProperty property validate_value function raises exception on validation errors."""
+        ontic_property = OnticProperty(
+            {
+                'name': 'dudete',
+                'type': int,
+                'default': 1,
+                'required': True
+            }
+        )
+
+        self.assertRaisesRegex(
+            ValidationException,
+            r'The value for "dudete" is not of type "<class \'int\'>": some string',
+            ontic_property.validate_value,
+            'some string',
+            raise_validation_exception=True)
+
     def test_dynamic_access(self):
         """Ensure OnticProperty property access as dict and attribute."""
         the_property = OnticProperty(name='bill')
