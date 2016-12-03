@@ -47,10 +47,10 @@ class Meta(core.Core):
 
 
 #: The set of supported collection types.
-COLLECTION_TYPES = {dict, list, set}
+COLLECTION_TYPES = {dict, list, set, tuple}
 
 #: The set of types that can be compared with inequality operators.
-COMPARABLE_TYPES = {complex, date, datetime, float, int, time}
+COMPARABLE_TYPES = {complex, date, datetime, float, int, time, tuple}
 
 #: The set of types that may be limited in size.
 BOUNDABLE_TYPES = {str, list, dict, set}
@@ -82,6 +82,8 @@ TYPE_MAP = {
     str: str,
     'time': time,
     time: time,
+    'tuple': tuple,
+    tuple: tuple,
 }
 
 TYPE_SET = (
@@ -96,6 +98,7 @@ TYPE_SET = (
     set,
     str,
     time,
+    tuple,
 )
 
 
