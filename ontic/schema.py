@@ -53,6 +53,7 @@ and :meth:`validate_schema`.
 
 """
 import logging
+from typing import List, Union
 
 from ontic import core
 from ontic import property
@@ -81,14 +82,13 @@ class Schema(core.Core):
     def __init__(self, *args, **kwargs):
 
         # Detect if the list is a list of dicts or OnticProperty types.
-        schema_list = []
+        schema_list = None
         if len(args) == 1 and isinstance(args[0], list):
             if len(args[0]) > 0 and isinstance(args[0][0], dict):
                 schema_list = args[0]
 
         if schema_list:
             super(Schema, self).__init__()
-            # noinspection PyTypeChecker
             for some_property in schema_list:
                 self.add(some_property)
             return  # Initialization completed for a list.
@@ -106,10 +106,9 @@ class Schema(core.Core):
                         'Exception while converting "%s" to OnticProperty', key)
                     raise
 
-    def add(self, property_type):
-        """Method that adds a property type to a schema.
-
-        The method will operate on a valid OnticProperty or dict instance.
+    def add(self,
+            property_type: Union[dict, property.OnticProperty]) -> None:
+        """
 
         :param property_type:
         :type property_type: [dict, ontic_property.OnticProperty]
@@ -124,7 +123,7 @@ class Schema(core.Core):
             ontic_prop = property.OnticProperty(property_type)
             self[ontic_prop.name] = ontic_prop
 
-    def perfect(self):
+    def perfect(self) -> None:
         """Method to clean and perfect a given schema.
 
         The *perfect* will fill in any missing schema settings for each of
@@ -135,7 +134,7 @@ class Schema(core.Core):
         """
         perfect_schema(self)
 
-    def validate(self, raise_validation_exception=True):
+    def validate(self, raise_validation_exception: bool = True) -> List[str]:
         """Validate a given :class:`Schema`.
 
         This method will iterate through all of the
@@ -159,7 +158,7 @@ class Schema(core.Core):
         return validate_schema(self, raise_validation_exception)
 
 
-def perfect_schema(ontic_schema):
+def perfect_schema(ontic_schema: Schema) -> None:
     """Method to clean and perfect a given schema.
 
     The *perfect_schema* will fill in any missing schema setting for each of
@@ -178,7 +177,9 @@ def perfect_schema(ontic_schema):
     [property_schema.perfect() for property_schema in ontic_schema.values()]
 
 
-def validate_schema(ontic_schema, raise_validation_exception=True):
+def validate_schema(
+        ontic_schema: Schema,
+        raise_validation_exception: bool = True) -> List[str]:
     """Validate a given :class:`Schema`.
 
     This method will iterate through all of the :class:`OnticProperty` and

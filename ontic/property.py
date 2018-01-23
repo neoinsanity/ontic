@@ -183,7 +183,7 @@ after the table.
     (numeric and chronological) the *min* setting will test that the
     value is not less than the minimum.
 *max*
-    The *max* setting has differing behavior, based on the *type* setting. If
+    The *max setting has differing behavior, based on the *type* setting. If
     no *type* setting is provided, the *max* test will not occur. For the
     boundable types (strings and collections) the *max* setting will test that
     the value length is not more than the maximum. For the comparable types
@@ -220,6 +220,8 @@ after the table.
     that the value is not more than the maximum.
 
 """
+from typing import List, Any, Union
+
 from ontic import meta
 from ontic import validation_exception
 
@@ -380,7 +382,7 @@ class OnticProperty(meta.Meta):
         self.perfect()
         self.validate()
 
-    def perfect(self):
+    def perfect(self) -> None:
         """Method to ensure the completeness of a given schema property.
 
         :rtype: None
@@ -389,7 +391,9 @@ class OnticProperty(meta.Meta):
         """
         perfect_property(self)
 
-    def validate(self, raise_validation_exception=True):
+    def validate(
+            self,
+            raise_validation_exception: bool = True) -> List[str]:
         """Method to validate a property schema definition.
 
         :param raise_validation_exception: If True, then
@@ -408,7 +412,9 @@ class OnticProperty(meta.Meta):
         """
         return validate_property(self, raise_validation_exception)
 
-    def validate_value(self, value, raise_validation_exception=False):
+    def validate_value(self,
+                       value: Any,
+                       raise_validation_exception: bool = False) -> List[str]:
         """"""
         value_errors = meta.validate_value(self, value)
 
@@ -418,7 +424,7 @@ class OnticProperty(meta.Meta):
         return value_errors
 
 
-def perfect_property(ontic_property):
+def perfect_property(ontic_property: OnticProperty) -> None:
     """Method to ensure the completeness of a given schema property.
 
     This method ensures completeness by stripping out any properties that
@@ -427,7 +433,7 @@ def perfect_property(ontic_property):
     properties to the default value.
 
     :param ontic_property: The OnticProperty that is to be clean and restricted.
-    :type ontic_property: OnticProperty
+    :type ontic_property: :class:`OnticProperty`
     :rtype: None
     :raises ValueError: If the ontic_property is None, or not of type
         *OnticProperty*.
@@ -462,7 +468,9 @@ def perfect_property(ontic_property):
             ontic_property[property_name] = property_schema.default
 
 
-def validate_property(ontic_property, raise_validation_exception=True):
+def validate_property(
+        ontic_property: OnticProperty,
+        raise_validation_exception: bool = True) -> List[str]:
     """Method to validate a property schema definition.
 
     :param ontic_property: The schema property to be validated.
@@ -505,12 +513,8 @@ def validate_property(ontic_property, raise_validation_exception=True):
     return value_errors
 
 
-def _perfect_type_setting(ontic_property):
-    """Perfect the type setting for a given candidate property schema.
-
-    :param ontic_property: The candidate ontic property for perfecting.
-    :type ontic_property: OnticProperty
-    """
+def _perfect_type_setting(ontic_property: OnticProperty) -> None:
+    """Perfect the type setting for a given candidate property schema."""
     if ontic_property.type is None:
         return
 
@@ -531,12 +535,8 @@ def _perfect_type_setting(ontic_property):
         raise ValueError('Illegal type declaration: %s' % str(candidate_type))
 
 
-def _perfect_member_type_setting(ontic_property):
-    """Perfect the member_type setting for a given candidate property schema.
-
-    :param ontic_property: The candidate ontic property for perfecting.
-    :type ontic_property: OnticProperty
-    """
+def _perfect_member_type_setting(ontic_property: OnticProperty) -> None:
+    """Perfect the member_type setting for a given candidate property schema."""
     if ontic_property.member_type is None:
         return
 
