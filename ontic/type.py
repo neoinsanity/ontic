@@ -51,10 +51,9 @@ with the use of the :meth:`create_ontic_type` function.
 
 """
 from copy import deepcopy
-from typing import List, Union
 
-from ontic import meta
-from ontic.meta import Meta, COLLECTION_TYPES, TYPE_MAP
+import meta
+from ontic.meta import Meta, TYPE_MAP, COLLECTION_TYPES
 from ontic.schema import Schema
 from ontic.validation_exception import ValidationException
 
@@ -66,7 +65,7 @@ class OnticType(Meta):
     derived **Ontic** type instance.
     """
 
-    def perfect(self) -> None:
+    def perfect(self):
         """Function to ensure complete attribute settings for a given object.
 
         Perfecting an object instance will strip out any properties not
@@ -83,7 +82,7 @@ class OnticType(Meta):
         """
         perfect_object(self)
 
-    def validate(self, raise_validation_exception: bool = True) -> List[str]:
+    def validate(self, raise_validation_exception=True):
         """Validate the given OnticType instance against it's defined schema.
 
         :param raise_validation_exception: If True, then *validate_object* will
@@ -97,9 +96,7 @@ class OnticType(Meta):
         """
         return validate_object(self, raise_validation_exception)
 
-    def validate_value(self,
-                       value_name: str,
-                       raise_validation_exception: bool = True) -> List[str]:
+    def validate_value(self, value_name, raise_validation_exception=True):
         """Validate a target value of a given ontic object.
 
         :param value_name: The value name to validate.
@@ -116,7 +113,7 @@ class OnticType(Meta):
         return validate_value(value_name, self, raise_validation_exception)
 
 
-def create_ontic_type(name: str, schema: Union[dict, Schema]) -> type:
+def create_ontic_type(name, schema):
     """Create an **Ontic** type to generate objects with a given schema.
 
     *create_ontic_type* function creates an :class:`OnticType` with a given
@@ -157,7 +154,7 @@ def create_ontic_type(name: str, schema: Union[dict, Schema]) -> type:
     return ontic_type
 
 
-def perfect_object(the_object: OnticType) -> None:
+def perfect_object(the_object):
     """Function to ensure complete attribute settings for a given object.
 
     Perfecting an object instance will strip out any properties not defined in
@@ -202,9 +199,7 @@ def perfect_object(the_object: OnticType) -> None:
             value.perfect()
 
 
-def validate_object(
-        the_object: OnticType,
-        raise_validation_exception: bool = True) -> List[str]:
+def validate_object(the_object, raise_validation_exception=True):
     """Function that will validate if an object meets the schema requirements.
 
     :param the_object: An object instant to be validity tested.
@@ -238,9 +233,7 @@ def validate_object(
     return value_errors
 
 
-def validate_value(property_name: str,
-                   ontic_object: OnticType,
-                   raise_validation_exception: bool = True) -> List[str]:
+def validate_value(property_name, ontic_object, raise_validation_exception=True):
     """Validate a specific value of a given :class:`OnticType` instance.
 
     :param property_name: The value to be validated against the given

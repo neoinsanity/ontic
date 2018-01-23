@@ -346,12 +346,12 @@ class ValidateObjectTestCase(BaseTestCase):
         self.assertRaisesRegexp(
             ValidationException,
             r"""The value for "some_attr" is """
-            r"""not of type "<class 'int'>": WRONG""",
+            r"""not of type "<type 'int'>": WRONG""",
             o_type.validate_object, ontic_object)
 
         expected_errors = [
             r"""The value for "some_attr" is not """
-            r"""of type "<class 'int'>": WRONG"""]
+            r"""of type "<type 'int'>": WRONG"""]
 
         try:
             o_type.validate_object(ontic_object)
@@ -408,7 +408,7 @@ class ValidateObjectTestCase(BaseTestCase):
         self.assertRaisesRegexp(
             ValidationException,
             r"""The value for "bool_property" is not """
-            r"""of type "<class 'bool'>": Dog""",
+            r"""of type "<type 'bool'>": Dog""",
             o_type.validate_object, ontic_object)
         ontic_object.bool_property = True
 
@@ -417,7 +417,7 @@ class ValidateObjectTestCase(BaseTestCase):
         self.assertRaisesRegexp(
             ValidationException,
             r"""The value for "list_property" is not """
-            r"""of type "<class 'list'>": some_string""",
+            r"""of type "<type 'list'>": some_string""",
             o_type.validate_object, ontic_object)
 
     def test_type_bad_setting(self):
@@ -802,7 +802,7 @@ class ValidateObjectTestCase(BaseTestCase):
         self.assertRaisesRegexp(
             ValidationException,
             r'''The value "99" for "list_property" is not of type '''
-            r'''"<class 'str'>".''',
+            r'''"<type 'str'>".''',
             o_type.validate_object, ontic_object)
 
     def test_collection_regex_setting(self):
@@ -1001,7 +1001,7 @@ class ValidateValueTestCase(BaseTestCase):
 
         self.assertRaisesRegexp(
             ValidationException,
-            r"""The value for "some_attr" is not of type "<class 'int'>":"""
+            r"""The value for "some_attr" is not of type "<type 'int'>":"""
             r""" WRONG""",
             o_type.validate_value, 'some_attr', ontic_object)
 
@@ -1009,7 +1009,7 @@ class ValidateValueTestCase(BaseTestCase):
             o_type.validate_value('some_attr', ontic_object)
         expected_errors = [
             r"""The value for "some_attr" is not """
-            r"""of type "<class 'int'>": WRONG"""
+            r"""of type "<type 'int'>": WRONG"""
         ]
         self.assertListEqual(expected_errors, ve.exception.validation_errors)
 

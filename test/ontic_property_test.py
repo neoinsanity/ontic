@@ -82,7 +82,7 @@ class OnticPropertyTest(BaseTestCase):
             }
         )
 
-        self.assertRaisesRegex(
+        self.assertRaisesRegexp(
             ValidationException,
             r'The value for "dudete" is not of type "<class \'int\'>": some string',
             ontic_property.validate_value,

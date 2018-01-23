@@ -1,4 +1,3 @@
-from typing import Union
 
 from ontic import (core,
                    property,
@@ -10,8 +9,3 @@ from ontic.type import OnticType
 
 __all__ = ['OnticProperty', 'Schema', 'OnticType',
            'core', 'property', 'schema', 'type']
-
-# Type declaration for all ontic types. Used for type hinting.
-OnticTypes = Union[OnticProperty,
-                   Schema,
-                   OnticType]
