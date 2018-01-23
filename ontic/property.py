@@ -220,7 +220,6 @@ after the table.
     that the value is not more than the maximum.
 
 """
-from typing import List, Any, Union
 
 from ontic import meta
 from ontic import validation_exception
@@ -382,7 +381,7 @@ class OnticProperty(meta.Meta):
         self.perfect()
         self.validate()
 
-    def perfect(self) -> None:
+    def perfect(self):
         """Method to ensure the completeness of a given schema property.
 
         :rtype: None
@@ -393,7 +392,7 @@ class OnticProperty(meta.Meta):
 
     def validate(
             self,
-            raise_validation_exception: bool = True) -> List[str]:
+            raise_validation_exception=True):
         """Method to validate a property schema definition.
 
         :param raise_validation_exception: If True, then
@@ -413,8 +412,8 @@ class OnticProperty(meta.Meta):
         return validate_property(self, raise_validation_exception)
 
     def validate_value(self,
-                       value: Any,
-                       raise_validation_exception: bool = False) -> List[str]:
+                       value,
+                       raise_validation_exception=False):
         """"""
         value_errors = meta.validate_value(self, value)
 
@@ -424,7 +423,7 @@ class OnticProperty(meta.Meta):
         return value_errors
 
 
-def perfect_property(ontic_property: OnticProperty) -> None:
+def perfect_property(ontic_property):
     """Method to ensure the completeness of a given schema property.
 
     This method ensures completeness by stripping out any properties that
@@ -469,8 +468,8 @@ def perfect_property(ontic_property: OnticProperty) -> None:
 
 
 def validate_property(
-        ontic_property: OnticProperty,
-        raise_validation_exception: bool = True) -> List[str]:
+        ontic_property,
+        raise_validation_exception=True):
     """Method to validate a property schema definition.
 
     :param ontic_property: The schema property to be validated.
@@ -513,7 +512,7 @@ def validate_property(
     return value_errors
 
 
-def _perfect_type_setting(ontic_property: OnticProperty) -> None:
+def _perfect_type_setting(ontic_property):
     """Perfect the type setting for a given candidate property schema."""
     if ontic_property.type is None:
         return
@@ -535,7 +534,7 @@ def _perfect_type_setting(ontic_property: OnticProperty) -> None:
         raise ValueError('Illegal type declaration: %s' % str(candidate_type))
 
 
-def _perfect_member_type_setting(ontic_property: OnticProperty) -> None:
+def _perfect_member_type_setting(ontic_property):
     """Perfect the member_type setting for a given candidate property schema."""
     if ontic_property.member_type is None:
         return

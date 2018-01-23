@@ -4,7 +4,6 @@ from copy import copy, deepcopy
 from ontic import OnticProperty
 from ontic.property import perfect_property, validate_property
 from ontic.validation_exception import ValidationException
-
 from test.utils import BaseTestCase
 
 
@@ -53,7 +52,6 @@ class OnticPropertyTest(BaseTestCase):
         self.assertEqual(1, ontic_property4.default)
         self.assertEqual(True, ontic_property4['required'])
 
-
     def test_validate_value_wo_validation_exception(self):
         """Ensure OnticProperty property validate_value function returns a list of validation errors."""
         ontic_property = OnticProperty(
@@ -65,10 +63,12 @@ class OnticPropertyTest(BaseTestCase):
             }
         )
 
-        result = ontic_property.validate_value('some string', raise_validation_exception=False)
+        result = ontic_property.validate_value('some string',
+                                               raise_validation_exception=False)
 
         self.assertIsNotNone(result)
-        expected_list = ['The value for "dudete" is not of type "<class \'int\'>": some string']
+        expected_list = [
+            'The value for "dudete" is not of type "<type \'int\'>": some string']
         self.assertListEqual(expected_list, result)
 
     def test_validate_value_w_validation_exception(self):
@@ -82,9 +82,9 @@ class OnticPropertyTest(BaseTestCase):
             }
         )
 
-        self.assertRaisesRegex(
+        self.assertRaisesRegexp(
             ValidationException,
-            r'The value for "dudete" is not of type "<class \'int\'>": some string',
+            r'The value for "dudete" is not of type "<type \'int\'>": some string',
             ontic_property.validate_value,
             'some string',
             raise_validation_exception=True)
@@ -406,11 +406,10 @@ class ValidateSchemaProperty(BaseTestCase):
         self.assertRaisesRegexp(
             ValidationException,
             r"""The value \"UNKNOWN\" for \"member_type\" not in enumeration """
-            r"""\[<class 'bool'>, <class 'complex'>, <class 'datetime.date'>"""
-            r""", <class 'datetime.datetime'>, <class 'dict'>, """
-            r"""<class 'float'>, <class 'int'>, <class 'list'>, <class 'set'>"""
-            r""", <class 'str'>, <class 'datetime.time'>, <class 'tuple'>, """
-            r"""None\].""",
+            r"""\[None, <type 'datetime.date'>, <type 'datetime.datetime'>, """
+            r"""<type 'datetime.time'>, <type 'bool'>, <type 'complex'>, """
+            r"""<type 'float'>, <type 'int'>, <type 'list'>, <type 'dict'>, """
+            r"""<type 'set'>, <type 'str'>, <type 'tuple'>\].""",
             validate_property, invalid_property_schema)
 
         value_errors = validate_property(
@@ -420,7 +419,7 @@ class ValidateSchemaProperty(BaseTestCase):
         self.assertEqual(
             value_errors[0],
             """The value "UNKNOWN" for "member_type" not in enumeration """
-            """[<class 'bool'>, <class 'complex'>, <class 'datetime.date'>"""
-            """, <class 'datetime.datetime'>, <class 'dict'>, <class 'float'>"""
-            """, <class 'int'>, <class 'list'>, <class 'set'>, <class 'str'>"""
-            """, <class 'datetime.time'>, <class 'tuple'>, None].""")
+            """[None, <type \'datetime.date\'>, <type \'datetime.datetime\'>,"""
+            """ <type \'datetime.time\'>, <type \'bool\'>, <type \'complex\'>"""
+            """, <type \'float\'>, <type \'int\'>, <type \'list\'>, <type """
+            """\'dict\'>, <type \'set\'>, <type \'str\'>, <type \'tuple\'>].""")

@@ -1,15 +1,14 @@
 """Test the basic functionality of the base and core data types."""
 from datetime import date, time, datetime
 
-from test.utils import BaseTestCase
-
-from ontic.meta import Meta
-from ontic import type as o_type
 from ontic import OnticType
 from ontic import property
+from ontic import type as o_type
+from ontic.meta import Meta
 from ontic.property import OnticProperty
 from ontic.schema import Schema
 from ontic.validation_exception import ValidationException
+from test.utils import BaseTestCase
 
 
 class OnticTypeTest(BaseTestCase):
@@ -299,11 +298,7 @@ class PerfectObjectTestCase(BaseTestCase):
         self.assertRaisesRegexp(
             ValidationException,
             r"""The value \"UNKNOWN\" for \"member_type\" not in enumeration """
-            r"""\[<class 'bool'>, <class 'complex'>, <class 'datetime.date'>"""
-            r""", <class 'datetime.datetime'>, <class 'dict'>, """
-            r"""<class 'float'>, <class 'int'>, <class 'list'>, <class 'set'>"""
-            r""", <class 'str'>, <class 'datetime.time'>, <class 'tuple'>, """
-            r"""None\].""",
+            r"""\[None, <type 'datetime.date'>, <type 'datetime.datetime'>, <type 'datetime.time'>, <type 'bool'>, <type 'complex'>, <type 'float'>, <type 'int'>, <type 'list'>, <type 'dict'>, <type 'set'>, <type 'str'>, <type 'tuple'>\].""",
             property.validate_property, invalid_property_schema)
 
         value_errors = property.validate_property(
@@ -312,11 +307,7 @@ class PerfectObjectTestCase(BaseTestCase):
         self.assertEqual(1, len(value_errors))
         self.assertEqual(
             value_errors[0],
-            """The value "UNKNOWN" for "member_type" not in enumeration """
-            """[<class 'bool'>, <class 'complex'>, <class 'datetime.date'>"""
-            """, <class 'datetime.datetime'>, <class 'dict'>, <class 'float'>"""
-            """, <class 'int'>, <class 'list'>, <class 'set'>, <class 'str'>"""
-            """, <class 'datetime.time'>, <class 'tuple'>, None].""")
+            """The value "UNKNOWN" for "member_type" not in enumeration [None, <type \'datetime.date\'>, <type \'datetime.datetime\'>, <type \'datetime.time\'>, <type \'bool\'>, <type \'complex\'>, <type \'float\'>, <type \'int\'>, <type \'list\'>, <type \'dict\'>, <type \'set\'>, <type \'str\'>, <type \'tuple\'>].""")
 
 
 class ValidateObjectTestCase(BaseTestCase):
@@ -346,12 +337,12 @@ class ValidateObjectTestCase(BaseTestCase):
         self.assertRaisesRegexp(
             ValidationException,
             r"""The value for "some_attr" is """
-            r"""not of type "<class 'int'>": WRONG""",
+            r"""not of type "<type 'int'>": WRONG""",
             o_type.validate_object, ontic_object)
 
         expected_errors = [
             r"""The value for "some_attr" is not """
-            r"""of type "<class 'int'>": WRONG"""]
+            r"""of type "<type 'int'>": WRONG"""]
 
         try:
             o_type.validate_object(ontic_object)
@@ -408,7 +399,7 @@ class ValidateObjectTestCase(BaseTestCase):
         self.assertRaisesRegexp(
             ValidationException,
             r"""The value for "bool_property" is not """
-            r"""of type "<class 'bool'>": Dog""",
+            r"""of type "<type 'bool'>": Dog""",
             o_type.validate_object, ontic_object)
         ontic_object.bool_property = True
 
@@ -417,7 +408,7 @@ class ValidateObjectTestCase(BaseTestCase):
         self.assertRaisesRegexp(
             ValidationException,
             r"""The value for "list_property" is not """
-            r"""of type "<class 'list'>": some_string""",
+            r"""of type "<type 'list'>": some_string""",
             o_type.validate_object, ontic_object)
 
     def test_type_bad_setting(self):
@@ -589,8 +580,7 @@ class ValidateObjectTestCase(BaseTestCase):
         ontic_object.set_min_property = set()
         self.assertRaisesRegexp(
             ValidationException,
-            r"""The value of \"set\(\)\" """
-            r"""for "set_min_property" fails min of 1.""",
+            r"""The value of "set\(\[\]\)" for "set_min_property" fails min of 1.""",
             o_type.validate_object, ontic_object)
         ontic_object.set_min_property = {'one item'}
 
@@ -701,15 +691,12 @@ class ValidateObjectTestCase(BaseTestCase):
         # Set failure
         ontic_object.set_max_property = {'one item', 'two item'}
         expected_error = (
-            r"""The value of """
-            r"""("\{'two item', 'one item'\}"|"\{'one item', 'two item'\}") """
-            r"""for "set_max_property" fails max of 1\.""")
+            r"""The value of "set\(\[\'one item\', \'two item\'\]\)" for "set_max_property" fails max of 1.""")
 
         self.assertRaisesRegexp(
             ValidationException,
             expected_error,
             o_type.validate_object, ontic_object)
-        ontic_object.set_max_property = {'one item'}
 
         # Dict failure
         ontic_object.dict_max_property = {'some_key': 'one_item',
@@ -802,7 +789,7 @@ class ValidateObjectTestCase(BaseTestCase):
         self.assertRaisesRegexp(
             ValidationException,
             r'''The value "99" for "list_property" is not of type '''
-            r'''"<class 'str'>".''',
+            r'''"<type 'str'>".''',
             o_type.validate_object, ontic_object)
 
     def test_collection_regex_setting(self):
@@ -1001,15 +988,15 @@ class ValidateValueTestCase(BaseTestCase):
 
         self.assertRaisesRegexp(
             ValidationException,
-            r"""The value for "some_attr" is not of type "<class 'int'>":"""
+            r"""The value for "some_attr" is not of type "<type 'int'>":"""
             r""" WRONG""",
-            o_type.validate_value, 'some_attr', ontic_object)
+            ontic_object.validate_value, 'some_attr')
 
         with self.assertRaises(ValidationException) as ve:
-            o_type.validate_value('some_attr', ontic_object)
+            ontic_object.validate_value('some_attr')
         expected_errors = [
             r"""The value for "some_attr" is not """
-            r"""of type "<class 'int'>": WRONG"""
+            r"""of type "<type 'int'>": WRONG"""
         ]
         self.assertListEqual(expected_errors, ve.exception.validation_errors)
 
