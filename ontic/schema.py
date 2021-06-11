@@ -94,7 +94,7 @@ class Schema(core.Core):
 
         super(Schema, self).__init__(*args, **kwargs)
 
-        for key, value in self.items():
+        for key, value in list(self.items()):
             if not isinstance(value, property.OnticProperty):
                 try:
                     if isinstance(value, dict):
@@ -172,7 +172,7 @@ def perfect_schema(ontic_schema):
     if not isinstance(ontic_schema, Schema):
         raise ValueError('"ontic_schema" argument must be of Schema type.')
 
-    [property_schema.perfect() for property_schema in ontic_schema.values()]
+    [property_schema.perfect() for property_schema in list(ontic_schema.values())]
 
 
 def validate_schema(ontic_schema, raise_validation_exception=True):
@@ -203,7 +203,7 @@ def validate_schema(ontic_schema, raise_validation_exception=True):
         raise ValueError('"ontic_schema" argument must be of Schema type.')
 
     value_errors = []
-    for prop in ontic_schema.values():
+    for prop in list(ontic_schema.values()):
         value_errors.extend(
             prop.validate(raise_validation_exception=False))
 

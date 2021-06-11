@@ -180,7 +180,7 @@ def perfect_object(the_object):
     for property_name in extra_properties:
         del the_object[property_name]
 
-    for property_name, property_schema in schema.items():
+    for property_name, property_schema in list(schema.items()):
         if property_name not in the_object:
             the_object[property_name] = None
         value = the_object[property_name]
@@ -224,7 +224,7 @@ def validate_object(the_object, raise_validation_exception=True):
 
     value_errors = []
 
-    for property_name in the_object.get_schema().keys():
+    for property_name in list(the_object.get_schema().keys()):
         value_errors.extend(validate_value(property_name, the_object, False))
 
     if value_errors and raise_validation_exception:

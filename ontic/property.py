@@ -460,7 +460,7 @@ def perfect_property(ontic_property):
         ontic_property.member_type = None
 
     # set the default for the given property.
-    for property_name, property_schema in property_schema.items():
+    for property_name, property_schema in list(property_schema.items()):
         if property_name not in ontic_property:
             ontic_property[property_name] = None
         if ontic_property[property_name] is None:
@@ -494,7 +494,7 @@ def validate_property(
 
     value_errors = []
 
-    for property_schema in ontic_property.get_schema().values():
+    for property_schema in list(ontic_property.get_schema().values()):
         property_value = ontic_property.get(property_schema.name, None)
 
         # todo: raul - for now skip validating compound schemas.
