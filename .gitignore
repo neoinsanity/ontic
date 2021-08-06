@@ -3,10 +3,11 @@
 
 # Dev environment cruft.
 .idea/
-venv/
+.venv/
 BUILD/
 .coverage
 ontic.egg-info/
+htmlcov/
 
 # Deployment cruft.
 dist/

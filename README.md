@@ -1,6 +1,5 @@
-============
-Ontic 0.0.5
-============
+Ontic
+======
 
 Welcome to **Ontic**, a package designed with making it easy to handle data 
 objects. **Ontic** provides a pure data object representations that support 

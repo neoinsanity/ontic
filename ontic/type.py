@@ -52,6 +52,7 @@ with the use of the :meth:`create_ontic_type` function.
 """
 from copy import deepcopy
 
+import ontic
 from ontic import meta
 from ontic.meta import Meta, COLLECTION_TYPES, TYPE_MAP
 from ontic.schema import Schema
@@ -113,7 +114,7 @@ class OnticType(Meta):
         return validate_value(value_name, self, raise_validation_exception)
 
 
-def create_ontic_type(name, schema):
+def create_ontic_type(name: str, schema: (dict, Schema)) -> OnticType:
     """Create an **Ontic** type to generate objects with a given schema.
 
     *create_ontic_type* function creates an :class:`OnticType` with a given
@@ -124,7 +125,7 @@ def create_ontic_type(name, schema):
 
         MyType = create_ontic_type('MyType', {'prop':{'type':'int'}})
 
-        schema_instance = SchemaType(prop={'type':'int'})
+        schema_instance = Schema(prop={'type':'int'})
         MyType = create_ontic_type('MyType', schema_instance)
 
     :param name: The name to apply to the created class, with
@@ -135,9 +136,9 @@ def create_ontic_type(name, schema):
     :return: A class whose base is :class:`OnticType`.
     :rtype: ClassType
     :raises ValueError: String name required. Dict or
-        :class:`ontic.schema_type.SchemaType` schema required.
+        :class:`ontic.Schema` schema required.
     """
-    if name is None or name is '':
+    if name is None or name == '':
         raise ValueError('The string "name" argument is required.')
     if schema is None:
         raise ValueError('The schema dictionary is required.')

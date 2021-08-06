@@ -27,7 +27,7 @@ class Meta(core.Core):
             for k, v in iterable:
                 d[k] = v
 
-        Meta(\*\*kwargs) -> new Meta initialized with the name=value
+        Meta(**kwargs) -> new Meta initialized with the name=value
         pairs in the keyword argument list.  For example::
 
             Meta(one=1, two=2)
@@ -446,7 +446,7 @@ def non_none_singular_validation(property_schema, value, value_errors):
 
     # regex validation
     if property_schema.regex:
-        if property_schema.type is str and value is not '':
+        if property_schema.type is str and value != '':
             if not re.match(property_schema.regex, value):
                 value_errors.append(
                     'Value "%s" for %s does not meet regex: %s' %
@@ -459,7 +459,8 @@ def _generate_sorted_list(some_collection):
     :param some_collection: A collection that will attempt to be sorted.
     :return: The sorted collection if possible, else return original collection.
     """
-    try:
-        return sorted(some_collection)
-    except TypeError:
-        return list(some_collection)
+    return sorted(some_collection, key=lambda x: (x is None, str(x)))
+
+
+def _generate_sorted_type_list(some_type_collection):
+    return sorted(some_type_collection, key=lambda x: (x is None, str(x)))

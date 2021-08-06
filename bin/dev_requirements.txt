@@ -3,10 +3,10 @@
 ##################################################
 
 ### These dependencies are test dependencies.
-coverage==4.0.3
-nose==1.3.7
+coverage==5.5
+pytest==6.2.4
 
 ### These are the documentation dependencies
-Sphinx==1.3.5
+Sphinx==4.1.1
 # The Sphinx pygment style used
-cloud-sptheme==1.7.1
+cloud-sptheme==1.10.1.post20200504175005

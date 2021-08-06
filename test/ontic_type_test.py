@@ -1,5 +1,6 @@
 """Test the basic functionality of the base and core data types."""
 from datetime import date, time, datetime
+from typing import NoReturn
 
 from ontic import OnticType
 from ontic import property
@@ -14,7 +15,7 @@ from test.utils import BaseTestCase
 class OnticTypeTest(BaseTestCase):
     """OnticType test cases."""
 
-    def test_object_type_instantiation(self):
+    def test_object_type_instantiation(self) -> NoReturn:
         """OnticType instantiation to confirm dict behavior"""
         schema = {'prop': {'type': 'int'}}
         my_type = o_type.create_ontic_type('MyType', schema)
@@ -25,12 +26,12 @@ class OnticTypeTest(BaseTestCase):
         my_object.prop = 3
         self.assertDictEqual(expected_dict, my_object)
 
-    def test_dynamic_access(self):
+    def test_dynamic_access(self) -> NoReturn:
         """OnticType property access as a Dict and an Attribute."""
         some_type = o_type.OnticType()
         self.assert_dynamic_accessing(some_type)
 
-    def test_ontic_type_perfect(self):
+    def test_ontic_type_perfect(self) -> NoReturn:
         """Test the OnticType.perfect method."""
         schema_def = Schema({
             'prop_1': {'type': 'int'},
@@ -55,7 +56,7 @@ class OnticTypeTest(BaseTestCase):
         ontic_object.perfect()
         self.assertDictEqual(expected_dict, ontic_object)
 
-    def test_ontic_type_validate(self):
+    def test_ontic_type_validate(self) -> NoReturn:
         """Test the OnticType.validate method."""
         schema = {
             'some_property': {'required': True},
@@ -80,7 +81,7 @@ class OnticTypeTest(BaseTestCase):
         ontic_object.other_property = 'Other'
         o_type.validate_object(ontic_object)
 
-    def test_object_type_validate_value(self):
+    def test_object_type_validate_value(self) -> NoReturn:
         """Test ObjectType.validate_value method."""
         # Test that scalar property is valid.
         single_property_schema = {
@@ -107,7 +108,7 @@ class CreateOnticTypeTestCase(BaseTestCase):
             ValueError, 'The schema must be a dict.',
             o_type.create_ontic_type, name='SomeName', schema=list())
 
-    def test_create_ontic_type(self):
+    def test_create_ontic_type(self) -> NoReturn:
         """The most simple and basic dynamic Ontic."""
         # Test creation from raw dictionary.
         my_type = o_type.create_ontic_type('Simple', dict())
@@ -131,7 +132,7 @@ class CreateOnticTypeTestCase(BaseTestCase):
 class PerfectObjectTestCase(BaseTestCase):
     """Test ontic_type.perfect_object method."""
 
-    def test_bad_perfect_usage(self):
+    def test_bad_perfect_usage(self) -> NoReturn:
         """Ensure handling of bad arguments to perfect)_object method."""
         self.assertRaisesRegexp(
             ValueError,
@@ -143,7 +144,7 @@ class PerfectObjectTestCase(BaseTestCase):
             r'"the_object" must be OnticType type.',
             o_type.perfect_object, {})
 
-    def test_valid_perfect_usage(self):
+    def test_valid_perfect_usage(self) -> NoReturn:
         """Ensure that the perfect behavior is correct."""
         schema_def = Schema({
             'prop_1': {'type': 'int'},
@@ -168,7 +169,7 @@ class PerfectObjectTestCase(BaseTestCase):
         o_type.perfect_object(ontic_object)
         self.assertDictEqual(expected_dict, ontic_object)
 
-    def test_perfect_collection_types(self):
+    def test_perfect_collection_types(self) -> NoReturn:
         """Ensure that collection defaults are handled correctly."""
         schema_def = Schema({
             'dict_prop': {
@@ -205,10 +206,10 @@ class PerfectObjectTestCase(BaseTestCase):
         self.assertIsNot(schema_def.set_prop.default,
                          ontic_object.set_prop)
 
-    def test_perfect_bad_collection_type(self):
+    def test_perfect_bad_collection_type(self) -> NoReturn:
         """Test for the handling of bad collection member o_type."""
 
-    def test_perfect_collection_default_copy(self):
+    def test_perfect_collection_default_copy(self) -> NoReturn:
         """Ensure that collection default settings are handled correctly."""
         # Configure default collection.
         default_dict = {'key': 'value'}
@@ -288,7 +289,7 @@ class PerfectObjectTestCase(BaseTestCase):
         self.assertSetEqual(default_deep_set, my_object.set_deep_default)
         self.assertIsNot(default_deep_set, my_object.set_deep_default)
 
-    def test_perfect_schema_bad_member_type(self):
+    def test_perfect_schema_bad_member_type(self) -> NoReturn:
         """Test perfect for bad member o_type."""
         invalid_property_schema = OnticProperty(name='invalid_property')
         invalid_property_schema.o_type = list
@@ -297,8 +298,9 @@ class PerfectObjectTestCase(BaseTestCase):
         self.maxDiff = None
         self.assertRaisesRegexp(
             ValidationException,
-            r"""The value \"UNKNOWN\" for \"member_type\" not in enumeration """
-            r"""\[None, <type 'datetime.date'>, <type 'datetime.datetime'>, <type 'datetime.time'>, <type 'bool'>, <type 'complex'>, <type 'float'>, <type 'int'>, <type 'list'>, <type 'dict'>, <type 'set'>, <type 'str'>, <type 'tuple'>\].""",
+            r"""The value "UNKNOWN" for "member_type" not in enumeration \[<class 'bool'>, <class 'complex'>, """
+            r"""<class 'datetime.date'>, <class 'datetime.datetime'>, <class 'datetime.time'>, <class 'dict'>, """
+            r"""<class 'float'>, <class 'int'>, <class 'list'>, <class 'set'>, <class 'str'>, <class 'tuple'>, None\].""",
             property.validate_property, invalid_property_schema)
 
         value_errors = property.validate_property(
@@ -306,14 +308,16 @@ class PerfectObjectTestCase(BaseTestCase):
             raise_validation_exception=False)
         self.assertEqual(1, len(value_errors))
         self.assertEqual(
-            value_errors[0],
-            """The value "UNKNOWN" for "member_type" not in enumeration [None, <type \'datetime.date\'>, <type \'datetime.datetime\'>, <type \'datetime.time\'>, <type \'bool\'>, <type \'complex\'>, <type \'float\'>, <type \'int\'>, <type \'list\'>, <type \'dict\'>, <type \'set\'>, <type \'str\'>, <type \'tuple\'>].""")
+            """The value "UNKNOWN" for "member_type" not in enumeration [<class 'bool'>, <class 'complex'>, """
+            """<class 'datetime.date'>, <class 'datetime.datetime'>, <class 'datetime.time'>, <class 'dict'>, """
+            """<class 'float'>, <class 'int'>, <class 'list'>, <class 'set'>, <class 'str'>, <class 'tuple'>, None].""",
+            value_errors[0])
 
 
 class ValidateObjectTestCase(BaseTestCase):
     """Test ontic_types.validate_object method basics."""
 
-    def test_bad_validate_object(self):
+    def test_bad_validate_object(self) -> NoReturn:
         """ValueError testing of validate_object."""
         self.assertRaisesRegexp(
             ValueError,
@@ -326,7 +330,7 @@ class ValidateObjectTestCase(BaseTestCase):
             'ontic.ontic_type.OnticType.',
             o_type.validate_object, 'Not a OnticType')
 
-    def test_validation_exception_handling(self):
+    def test_validation_exception_handling(self) -> NoReturn:
         """Ensure that validate_object handles error reporting."""
         schema_instance = Schema(some_attr={'type': 'int'})
         my_type = o_type.create_ontic_type('ValidateCheck',
@@ -337,12 +341,12 @@ class ValidateObjectTestCase(BaseTestCase):
         self.assertRaisesRegexp(
             ValidationException,
             r"""The value for "some_attr" is """
-            r"""not of type "<type 'int'>": WRONG""",
+            r"""not of type "<class 'int'>": WRONG""",
             o_type.validate_object, ontic_object)
 
         expected_errors = [
             r"""The value for "some_attr" is not """
-            r"""of type "<type 'int'>": WRONG"""]
+            r"""of type "<class 'int'>": WRONG"""]
 
         try:
             o_type.validate_object(ontic_object)
@@ -354,7 +358,7 @@ class ValidateObjectTestCase(BaseTestCase):
                                         raise_validation_exception=False)
         self.assertListEqual(expected_errors, errors)
 
-    def test_type_setting(self):
+    def test_type_setting(self) -> NoReturn:
         """Validate 'type' schema setting."""
         schema = {
             'bool_property': {'type': 'bool'},
@@ -399,7 +403,7 @@ class ValidateObjectTestCase(BaseTestCase):
         self.assertRaisesRegexp(
             ValidationException,
             r"""The value for "bool_property" is not """
-            r"""of type "<type 'bool'>": Dog""",
+            r"""of type "<class 'bool'>": Dog""",
             o_type.validate_object, ontic_object)
         ontic_object.bool_property = True
 
@@ -408,10 +412,10 @@ class ValidateObjectTestCase(BaseTestCase):
         self.assertRaisesRegexp(
             ValidationException,
             r"""The value for "list_property" is not """
-            r"""of type "<type 'list'>": some_string""",
+            r"""of type "<class 'list'>": some_string""",
             o_type.validate_object, ontic_object)
 
-    def test_type_bad_setting(self):
+    def test_type_bad_setting(self) -> NoReturn:
         """ValueError for bad 'type' setting."""
         schema = {
             'some_property': {'type': 'Unknown'}
@@ -422,7 +426,7 @@ class ValidateObjectTestCase(BaseTestCase):
             r"""Illegal type declaration: Unknown""",
             o_type.create_ontic_type, 'Dummy', schema)
 
-    def test_required_setting(self):
+    def test_required_setting(self) -> NoReturn:
         """Validate 'required' schema setting."""
         schema = {
             'some_property': {'required': True},
@@ -447,7 +451,7 @@ class ValidateObjectTestCase(BaseTestCase):
         ontic_object.other_property = 'Other'
         o_type.validate_object(ontic_object)
 
-    def test_enum_setting(self):
+    def test_enum_setting(self) -> NoReturn:
         """Validate 'enum' schema setting."""
         # Scalar testing
         # ###############
@@ -477,7 +481,7 @@ class ValidateObjectTestCase(BaseTestCase):
             r"""enumeration (\['some_value', 99\]|\[99, 'some_value'\])\.""",
             o_type.validate_object, ontic_object)
 
-    def test_collection_enum_setting(self):
+    def test_collection_enum_setting(self) -> NoReturn:
         """Validate 'enum' schema setting on collections."""
         schema = {
             'enum_property': {'type': 'list', 'enum': {'dog', 'cat'}}
@@ -505,7 +509,7 @@ class ValidateObjectTestCase(BaseTestCase):
             r''' enumeration \['cat', 'dog'\].''',
             o_type.validate_object, ontic_object)
 
-    def test_min_setting(self):
+    def test_min_setting(self) -> NoReturn:
         """Validate 'min' schema setting."""
         schema = {
             'str_min_property': {'type': 'str', 'min': 5},
@@ -580,7 +584,7 @@ class ValidateObjectTestCase(BaseTestCase):
         ontic_object.set_min_property = set()
         self.assertRaisesRegexp(
             ValidationException,
-            r"""The value of "set\(\[\]\)" for "set_min_property" fails min of 1.""",
+            r"""set\(\)" for "set_min_property" fails min of 1.""",
             o_type.validate_object, ontic_object)
         ontic_object.set_min_property = {'one item'}
 
@@ -691,7 +695,7 @@ class ValidateObjectTestCase(BaseTestCase):
         # Set failure
         ontic_object.set_max_property = {'one item', 'two item'}
         expected_error = (
-            r"""The value of "set\(\[\'one item\', \'two item\'\]\)" for "set_max_property" fails max of 1.""")
+            r"""The value of "{'two item', 'one item'}" for "set_max_property" fails max of 1.""")
 
         self.assertRaisesRegexp(
             ValidationException,
@@ -760,11 +764,11 @@ class ValidateObjectTestCase(BaseTestCase):
         ontic_object.b_only_property = 'a'
         self.assertRaisesRegexp(
             ValidationException,
-            'Value \"a\" for b_only_property does not '
-            'meet regex: \^b\+',
+            r'Value \"a\" for b_only_property does not '
+            r'meet regex: \^b\+',
             o_type.validate_object, ontic_object)
 
-    def test_member_type_setting(self):
+    def test_member_type_setting(self) -> NoReturn:
         """Validate 'member_type' setting."""
         schema = {
             'list_property': {'type': 'list', 'member_type': 'str'}
@@ -789,10 +793,10 @@ class ValidateObjectTestCase(BaseTestCase):
         self.assertRaisesRegexp(
             ValidationException,
             r'''The value "99" for "list_property" is not of type '''
-            r'''"<type 'str'>".''',
+            r'''"<class 'str'>".''',
             o_type.validate_object, ontic_object)
 
-    def test_collection_regex_setting(self):
+    def test_collection_regex_setting(self) -> NoReturn:
         """Validate string collection with 'regex' setting."""
         schema = {
             'set_property': {'type': set, 'member_type': str, 'regex': 'b+'}
@@ -820,7 +824,7 @@ class ValidateObjectTestCase(BaseTestCase):
             r'''Value "xxxxxx" for "set_property" does not meet regex: b+''',
             o_type.validate_object, ontic_object)
 
-    def test_member_min_setting(self):
+    def test_member_min_setting(self) -> NoReturn:
         """Validate 'member_min' setting."""
         # Test the item min setting for string items.
         schema = {
@@ -877,7 +881,7 @@ class ValidateObjectTestCase(BaseTestCase):
             r'''The value of "1" for "list_property" fails min size of 4.''',
             o_type.validate_object, ontic_object)
 
-    def test_member_max_setting(self):
+    def test_member_max_setting(self) -> NoReturn:
         """Validate 'member_max' setting."""
         # Test the item max setting for string items.
         schema = {
@@ -938,7 +942,7 @@ class ValidateObjectTestCase(BaseTestCase):
 class ValidateValueTestCase(BaseTestCase):
     """Test ontic_types.validate_value method."""
 
-    def test_bad_validate_value(self):
+    def test_bad_validate_value(self) -> NoReturn:
         """ValueError testing of validate_value."""
         self.assertRaisesRegexp(
             ValueError,
@@ -978,7 +982,7 @@ class ValidateValueTestCase(BaseTestCase):
             '"illegal property name" is not a recognized property.',
             o_type.validate_value, 'illegal property name', ontic_object)
 
-    def test_validate_value_exception_handling(self):
+    def test_validate_value_exception_handling(self) -> NoReturn:
         """Ensure validation exception handling by validation_object method."""
         schema_instance = Schema(some_attr={'type': 'int'})
         my_type = o_type.create_ontic_type('ValidateCheck',
@@ -988,7 +992,7 @@ class ValidateValueTestCase(BaseTestCase):
 
         self.assertRaisesRegexp(
             ValidationException,
-            r"""The value for "some_attr" is not of type "<type 'int'>":"""
+            r"""The value for "some_attr" is not of type "<class 'int'>":"""
             r""" WRONG""",
             ontic_object.validate_value, 'some_attr')
 
@@ -996,7 +1000,7 @@ class ValidateValueTestCase(BaseTestCase):
             ontic_object.validate_value('some_attr')
         expected_errors = [
             r"""The value for "some_attr" is not """
-            r"""of type "<type 'int'>": WRONG"""
+            r"""of type "<class 'int'>": WRONG"""
         ]
         self.assertListEqual(expected_errors, ve.exception.validation_errors)
 
@@ -1004,7 +1008,7 @@ class ValidateValueTestCase(BaseTestCase):
                                        raise_validation_exception=False)
         self.assertListEqual(expected_errors, errors)
 
-    def test_validate_value_value_arg(self):
+    def test_validate_value_value_arg(self) -> NoReturn:
         """Valid value argument testing of validate_value."""
         # Test that scalar property is valid.
         single_property_schema = {
@@ -1049,7 +1053,7 @@ class RequiredOnticChildType(OnticType):
 class SettingOnticTypeTestCase(BaseTestCase):
     """Test case the setting of an OnticType as a OnticProperty.type setting."""
 
-    def test_ontic_type_perfect(self):
+    def test_ontic_type_perfect(self) -> NoReturn:
         """Test that Ontic child properties are perfected with parent."""
         parent = ParentOnticType()
         parent.child_prop = ChildOnticType()
@@ -1063,7 +1067,7 @@ class SettingOnticTypeTestCase(BaseTestCase):
         res = parent.validate()
         self.assertListEqual([], res)
 
-    def test_ontic_type_success(self):
+    def test_ontic_type_success(self) -> NoReturn:
         """Test validation of an OnticType property."""
         parent = ParentOnticType()
         parent.child_prop = ChildOnticType(str_prop='Some Value')
@@ -1072,7 +1076,7 @@ class SettingOnticTypeTestCase(BaseTestCase):
         res = parent.validate(raise_validation_exception=True)
         self.assertListEqual(res, [])
 
-    def test_non_ontic_type_failure(self):
+    def test_non_ontic_type_failure(self) -> NoReturn:
         """Test validation of an incorrect OnticType property."""
         parent = ParentOnticType()
         parent.child_prop = ChildOnticType()
@@ -1086,7 +1090,7 @@ class SettingOnticTypeTestCase(BaseTestCase):
             parent.validate,
             raise_validation_exception=True)
 
-    def test_ontic_type_default_setting(self):
+    def test_ontic_type_default_setting(self) -> NoReturn:
         """Ensure that an OnticType property default is copied upon perfect."""
         parent = RequiredOnticChildType()
 

@@ -68,7 +68,7 @@ class OnticPropertyTest(BaseTestCase):
 
         self.assertIsNotNone(result)
         expected_list = [
-            'The value for "dudete" is not of type "<type \'int\'>": some string']
+            'The value for "dudete" is not of type "<class \'int\'>": some string']
         self.assertListEqual(expected_list, result)
 
     def test_validate_value_w_validation_exception(self):
@@ -84,7 +84,7 @@ class OnticPropertyTest(BaseTestCase):
 
         self.assertRaisesRegexp(
             ValidationException,
-            r'The value for "dudete" is not of type "<type \'int\'>": some string',
+            r'The value for "dudete" is not of type "<class \'int\'>": some string',
             ontic_property.validate_value,
             'some string',
             raise_validation_exception=True)
@@ -405,11 +405,9 @@ class ValidateSchemaProperty(BaseTestCase):
         self.maxDiff = None
         self.assertRaisesRegexp(
             ValidationException,
-            r"""The value \"UNKNOWN\" for \"member_type\" not in enumeration """
-            r"""\[None, <type 'datetime.date'>, <type 'datetime.datetime'>, """
-            r"""<type 'datetime.time'>, <type 'bool'>, <type 'complex'>, """
-            r"""<type 'float'>, <type 'int'>, <type 'list'>, <type 'dict'>, """
-            r"""<type 'set'>, <type 'str'>, <type 'tuple'>\].""",
+            r"""The value "UNKNOWN" for "member_type" not in enumeration \[<class 'bool'>, <class 'complex'>, """
+            r"""<class 'datetime.date'>, <class 'datetime.datetime'>, <class 'datetime.time'>, <class 'dict'>"""
+            r""", <class 'float'>, <class 'int'>, <class 'list'>, <class 'set'>, <class 'str'>, <class 'tuple'>, None\].""",
             validate_property, invalid_property_schema)
 
         value_errors = validate_property(
@@ -417,9 +415,7 @@ class ValidateSchemaProperty(BaseTestCase):
             raise_validation_exception=False)
         self.assertEqual(1, len(value_errors))
         self.assertEqual(
-            value_errors[0],
-            """The value "UNKNOWN" for "member_type" not in enumeration """
-            """[None, <type \'datetime.date\'>, <type \'datetime.datetime\'>,"""
-            """ <type \'datetime.time\'>, <type \'bool\'>, <type \'complex\'>"""
-            """, <type \'float\'>, <type \'int\'>, <type \'list\'>, <type """
-            """\'dict\'>, <type \'set\'>, <type \'str\'>, <type \'tuple\'>].""")
+            """The value "UNKNOWN" for "member_type" not in enumeration [<class 'bool'>, <class 'complex'>, """
+            """<class 'datetime.date'>, <class 'datetime.datetime'>, <class 'datetime.time'>, <class 'dict'>, """
+            """<class 'float'>, <class 'int'>, <class 'list'>, <class 'set'>, <class 'str'>, <class 'tuple'>, None].""",
+        value_errors[0])
