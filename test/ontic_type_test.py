@@ -71,7 +71,7 @@ class OnticTypeTest(BaseTestCase):
         ontic_object = my_type()
 
         # Validate an empty object, which should cause ValueError
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValidationException,
             'The value for "some_property" is required.',
             ontic_object.validate)
@@ -98,13 +98,13 @@ class CreateOnticTypeTestCase(BaseTestCase):
 
     def test_create_ontic_type_arg_errors(self):
         """Assert the create ontic o_type arg errors."""
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValueError, 'The string "name" argument is required.',
             o_type.create_ontic_type, name=None, schema=dict())
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValueError, 'The schema dictionary is required.',
             o_type.create_ontic_type, name='SomeName', schema=None)
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValueError, 'The schema must be a dict.',
             o_type.create_ontic_type, name='SomeName', schema=list())
 
@@ -134,12 +134,12 @@ class PerfectObjectTestCase(BaseTestCase):
 
     def test_bad_perfect_usage(self) -> NoReturn:
         """Ensure handling of bad arguments to perfect)_object method."""
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValueError,
             r'"the_object" must be provided.',
             o_type.perfect_object, None)
 
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValueError,
             r'"the_object" must be OnticType type.',
             o_type.perfect_object, {})
@@ -296,7 +296,7 @@ class PerfectObjectTestCase(BaseTestCase):
         invalid_property_schema.member_type = 'UNKNOWN'
 
         self.maxDiff = None
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValidationException,
             r"""The value "UNKNOWN" for "member_type" not in enumeration \[<class 'bool'>, <class 'complex'>, """
             r"""<class 'datetime.date'>, <class 'datetime.datetime'>, <class 'datetime.time'>, <class 'dict'>, """
@@ -319,12 +319,12 @@ class ValidateObjectTestCase(BaseTestCase):
 
     def test_bad_validate_object(self) -> NoReturn:
         """ValueError testing of validate_object."""
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValueError,
             'Validation can only support validation of objects derived from '
             'ontic.ontic_type.OnticType.',
             o_type.validate_object, None)
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValueError,
             'Validation can only support validation of objects derived from '
             'ontic.ontic_type.OnticType.',
@@ -338,7 +338,7 @@ class ValidateObjectTestCase(BaseTestCase):
         ontic_object = my_type()
         ontic_object.some_attr = 'WRONG'
 
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValidationException,
             r"""The value for "some_attr" is """
             r"""not of type "<class 'int'>": WRONG""",
@@ -400,7 +400,7 @@ class ValidateObjectTestCase(BaseTestCase):
 
         # Validate with known bad data.
         ontic_object.bool_property = 'Dog'
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValidationException,
             r"""The value for "bool_property" is not """
             r"""of type "<class 'bool'>": Dog""",
@@ -409,7 +409,7 @@ class ValidateObjectTestCase(BaseTestCase):
 
         # Validate a string vs a list o_type
         ontic_object.list_property = 'some_string'
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValidationException,
             r"""The value for "list_property" is not """
             r"""of type "<class 'list'>": some_string""",
@@ -421,7 +421,7 @@ class ValidateObjectTestCase(BaseTestCase):
             'some_property': {'type': 'Unknown'}
         }
 
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValueError,
             r"""Illegal type declaration: Unknown""",
             o_type.create_ontic_type, 'Dummy', schema)
@@ -441,7 +441,7 @@ class ValidateObjectTestCase(BaseTestCase):
         ontic_object = my_type()
 
         # Validate an empty object, which should cause ValueError
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValidationException,
             'The value for "some_property" is required.',
             o_type.validate_object, ontic_object)
@@ -475,7 +475,7 @@ class ValidateObjectTestCase(BaseTestCase):
 
         # Validate a bad setting
         ontic_object.enum_property = 'bad, bad, bad'
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValidationException,
             r"""The value "bad, bad, bad" for "enum_property" not in """
             r"""enumeration (\['some_value', 99\]|\[99, 'some_value'\])\.""",
@@ -503,7 +503,7 @@ class ValidateObjectTestCase(BaseTestCase):
 
         # Validate a bad setting
         ontic_object.enum_property = ['fish']
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValidationException,
             r'''The value "fish" for "enum_property" not in'''
             r''' enumeration \['cat', 'dog'\].''',
@@ -546,7 +546,7 @@ class ValidateObjectTestCase(BaseTestCase):
 
         # Str failure
         ontic_object.str_min_property = '1'
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValidationException,
             'The value of "1" for "str_min_property" '
             'fails min of 5.',
@@ -555,7 +555,7 @@ class ValidateObjectTestCase(BaseTestCase):
 
         # Int failure
         ontic_object.int_min_property = 5
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValidationException,
             'The value of "5" for "int_min_property" '
             'fails min of 10.',
@@ -564,7 +564,7 @@ class ValidateObjectTestCase(BaseTestCase):
 
         # Float failure
         ontic_object.float_min_property = 15.0
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValidationException,
             'The value of "15.0" for "float_min_property" '
             'fails min of 20.',
@@ -573,16 +573,16 @@ class ValidateObjectTestCase(BaseTestCase):
 
         # List failure
         ontic_object.list_min_property = list()
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValidationException,
-            'The value of "\[]" for "list_min_property" '
-            'fails min of 1.',
+            r"""The value of "\[\]" for "list_min_property" """
+            r"""fails min of 1.""",
             o_type.validate_object, ontic_object)
         ontic_object.list_min_property = ['one item']
 
         # Set failure
         ontic_object.set_min_property = set()
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValidationException,
             r"""set\(\)" for "set_min_property" fails min of 1.""",
             o_type.validate_object, ontic_object)
@@ -590,7 +590,7 @@ class ValidateObjectTestCase(BaseTestCase):
 
         # Dict failure
         ontic_object.dict_min_property = dict()
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValidationException,
             'The value of "{}" for "dict_min_property" '
             'fails min of 1.',
@@ -599,7 +599,7 @@ class ValidateObjectTestCase(BaseTestCase):
 
         # Date failure
         ontic_object.date_min_property = date(1999, 1, 1)
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValidationException,
             'date_min_property" fails min of 2000-01-01.',
             o_type.validate_object, ontic_object)
@@ -607,7 +607,7 @@ class ValidateObjectTestCase(BaseTestCase):
 
         # Time failure
         ontic_object.time_min_property = time(11, 30, 30)
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValidationException,
             'The value of "11:30:30" for "time_min_property" '
             'fails min of 12:30:30.',
@@ -616,7 +616,7 @@ class ValidateObjectTestCase(BaseTestCase):
 
         # Datetime failure
         ontic_object.datetime_min_property = datetime(1999, 1, 1, 11, 30, 30)
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValidationException,
             'The value of "1999-01-01 11:30:30" for "datetime_min_property" '
             'fails min of 2000-01-01 12:30:30.',
@@ -659,7 +659,7 @@ class ValidateObjectTestCase(BaseTestCase):
 
         # Str failure
         ontic_object.str_max_property = '8 letters'
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValidationException,
             'The value of "8 letters" for '
             '"str_max_property" fails max of 5.',
@@ -668,7 +668,7 @@ class ValidateObjectTestCase(BaseTestCase):
 
         # Int failure
         ontic_object.int_max_property = 20
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValidationException,
             'The value of "20" for "int_max_property" '
             'fails max of 10.',
@@ -677,7 +677,7 @@ class ValidateObjectTestCase(BaseTestCase):
 
         # Float failure
         ontic_object.float_max_property = 30.0
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValidationException,
             'The value of "30.0" for "float_max_property" fails max of 20.',
             o_type.validate_object, ontic_object)
@@ -685,19 +685,18 @@ class ValidateObjectTestCase(BaseTestCase):
 
         # List failure
         ontic_object.list_max_property = ['one item', 'two item']
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValidationException,
-            'The value of "\[\'one item\', \'two item\'\]" '
-            'for "list_max_property" fails max of 1.',
+            r"""The value of "\['(one|two) item', '(one|two) item'\]" """
+            r"""for "list_max_property" fails max of 1.""",
             o_type.validate_object, ontic_object)
         ontic_object.list_max_property = ['one item']
 
         # Set failure
         ontic_object.set_max_property = {'one item', 'two item'}
-        expected_error = (
-            r"""The value of "{'two item', 'one item'}" for "set_max_property" fails max of 1.""")
+        expected_error = r"""The value of "{'(one|two) item', '(two|one) item'}" for "set_max_property" fails max of 1."""
 
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValidationException,
             expected_error,
             o_type.validate_object, ontic_object)
@@ -705,7 +704,7 @@ class ValidateObjectTestCase(BaseTestCase):
         # Dict failure
         ontic_object.dict_max_property = {'some_key': 'one_item',
                                           'another_key': 'two_item'}
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValidationException,
             r"""The value of """
             r"""("{'some_key': 'one_item', 'another_key': 'two_item'}"|"""
@@ -716,7 +715,7 @@ class ValidateObjectTestCase(BaseTestCase):
 
         # Date failure
         ontic_object.date_max_property = date(2001, 1, 1)
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValidationException,
             'The value of "2001-01-01" for '
             '"date_max_property" fails max of 2000-01-01.',
@@ -725,7 +724,7 @@ class ValidateObjectTestCase(BaseTestCase):
 
         # Time failure
         ontic_object.time_max_property = time(13, 30, 30)
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValidationException,
             'The value of "13:30:30" for "time_max_property" '
             'fails max of 12:30:30.',
@@ -734,7 +733,7 @@ class ValidateObjectTestCase(BaseTestCase):
 
         # Datetime failure
         ontic_object.datetime_max_property = datetime(2001, 1, 1, 11, 30, 30)
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValidationException,
             'The value of "2001-01-01 11:30:30" for "datetime_max_property" '
             'fails max of 2000-01-01 12:30:30.',
@@ -762,7 +761,7 @@ class ValidateObjectTestCase(BaseTestCase):
 
         # Bad test
         ontic_object.b_only_property = 'a'
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValidationException,
             r'Value \"a\" for b_only_property does not '
             r'meet regex: \^b\+',
@@ -790,7 +789,7 @@ class ValidateObjectTestCase(BaseTestCase):
 
         # Bad test
         ontic_object.list_property.append(99)
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValidationException,
             r'''The value "99" for "list_property" is not of type '''
             r'''"<class 'str'>".''',
@@ -819,7 +818,7 @@ class ValidateObjectTestCase(BaseTestCase):
 
         # Bad test
         ontic_object.set_property.add('xxxxxx')
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValidationException,
             r'''Value "xxxxxx" for "set_property" does not meet regex: b+''',
             o_type.validate_object, ontic_object)
@@ -848,7 +847,7 @@ class ValidateObjectTestCase(BaseTestCase):
 
         # Bad Test
         ontic_object.list_property.append('one')
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValidationException,
             r'''The value of "one" for "list_property" '''
             r'''fails min length of 4.''',
@@ -876,7 +875,7 @@ class ValidateObjectTestCase(BaseTestCase):
 
         # Bad Test
         ontic_object.list_property.append(1)
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValidationException,
             r'''The value of "1" for "list_property" fails min size of 4.''',
             o_type.validate_object, ontic_object)
@@ -905,7 +904,7 @@ class ValidateObjectTestCase(BaseTestCase):
 
         # Bad Test
         ontic_object.list_property.append('seven')
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValidationException,
             r'''The value of "seven" for "list_property" '''
             r'''fails max length of 4.''',
@@ -933,7 +932,7 @@ class ValidateObjectTestCase(BaseTestCase):
 
         # Bad Test
         ontic_object.list_property.append(7)
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValidationException,
             r'''The value of "7" for "list_property" fails max size of 4.''',
             o_type.validate_object, ontic_object)
@@ -944,12 +943,12 @@ class ValidateValueTestCase(BaseTestCase):
 
     def test_bad_validate_value(self) -> NoReturn:
         """ValueError testing of validate_value."""
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValueError,
             '"ontic_object" is required, cannot be None.',
             o_type.validate_value, 'some_value', None)
 
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValueError,
             '"ontic_object" must be OnticType or child type of OnticType',
             o_type.validate_value, 'some_value', "can't be string")
@@ -962,22 +961,22 @@ class ValidateValueTestCase(BaseTestCase):
         ontic_object = my_type()
         ontic_object.prop1 = 1
 
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValueError,
             '"property_name" is required, cannot be None.',
             o_type.validate_value, None, ontic_object)
 
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValueError,
             r'"property_name" is not a valid string.',
             o_type.validate_value, '', ontic_object)
 
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValueError,
             '"property_name" is not a valid string.',
             o_type.validate_value, 5, ontic_object)
 
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValueError,
             '"illegal property name" is not a recognized property.',
             o_type.validate_value, 'illegal property name', ontic_object)
@@ -990,7 +989,7 @@ class ValidateValueTestCase(BaseTestCase):
         ontic_object = my_type()
         ontic_object.some_attr = 'WRONG'
 
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValidationException,
             r"""The value for "some_attr" is not of type "<class 'int'>":"""
             r""" WRONG""",
@@ -1082,7 +1081,7 @@ class SettingOnticTypeTestCase(BaseTestCase):
         parent.child_prop = ChildOnticType()
         parent.child_prop.int_prop = '1'
 
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValidationException,
             r"""The child property child_prop, has errors:: """
             r"""The value for "int_prop" is not of o_type "<class 'int'>": 1"""
