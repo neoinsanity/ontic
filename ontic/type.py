@@ -5,7 +5,6 @@ classes.
 
 .. contents::
 
-======
 Usage
 ======
 

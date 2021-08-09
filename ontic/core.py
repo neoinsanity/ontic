@@ -63,4 +63,4 @@ class Core(dict):
 
     def __deepcopy__(self, memo) -> 'Core':
         the_copy = dict(self.__dict__)
-        return type(self)(deepcopy(the_copy, memo))
+        return type(self)(deepcopy(the_copy))
