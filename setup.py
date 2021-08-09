@@ -19,6 +19,7 @@ setup(
     license='Apache License 2.0',
     description='Qualities and Quantities are the stuff of Objects.',
     long_description=long_description,
+    long_description_content_type="text/markdown",
     packages=['ontic', ],
     install_requires=[],
     include_package_data=True,
