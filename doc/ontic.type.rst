@@ -1,16 +1,16 @@
-====================
-Ontic Type Module
-====================
+============
+Type Module
+============
 
-.. automodule:: ontic.ontic_type
+.. automodule:: ontic.type
 
 Classes
 ========
 
 OnticType
------------
+----------
 
-.. autoclass:: ontic.ontic_type.OnticType
+.. autoclass:: ontic.OnticType
     :special-members: __init__
     :members:
 

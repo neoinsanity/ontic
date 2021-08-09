@@ -18,4 +18,5 @@ rm -f .coverage
 rm -rf BUILD/COVERAGE_REPORT
 
 # Execute the tests as per the given config.
-nosetests -c bin/nose.cfg
+coverage run --rcfile=bin/coverage.cfg
+coverage report

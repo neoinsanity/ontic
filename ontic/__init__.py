@@ -1,4 +1,17 @@
-"""Package for creating objects and corresponding schema."""
-from ontic import meta_type, ontic_type, schema_type, validation_exception
+from ontic import (core,
+                   property,
+                   schema,
+                   type)
+from ontic.property import OnticProperty
+from ontic.schema import Schema
+from ontic.type import OnticType
 
-__all__ = ['meta_type', 'ontic_type', 'schema_type', 'validation_exception']
+__all__ = [
+    'core',
+    'property',
+    'schema',
+    'type',
+    'OnticProperty',
+    'Schema',
+    'OnticType',
+]

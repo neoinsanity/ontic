@@ -1,15 +1,18 @@
-"""Utility test cases for testing Ontic."""
+"""Utilities for testing."""
 import unittest
+
+import ontic
 
 
 class BaseTestCase(unittest.TestCase):
     """BaseTest case has methods to test Ontic features and functionality."""
 
-    def assert_dynamic_accessing(self, ontic_object):
+    def assert_dynamic_accessing(
+            self, ontic_object):
         """Assert that ontic_object exhibits dynamic property accessing.
 
         :param ontic_object: Ontic object to validate for dynamic access.
-        :type ontic_object: ontic.meta_type.CoreType
+        :type ontic_object: core_type.CoreType
         """
         # Assignment by attribute
         ontic_object.attr1 = 1
