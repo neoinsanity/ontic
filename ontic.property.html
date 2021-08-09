@@ -1,0 +1,608 @@
+
+
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Property Module &#8212; Ontic 1.0.0 Documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/cloud.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
+    
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+
+    
+    
+     
+        <script src="_static/jquery.cookie.js"></script>
+    
+
+    
+     
+        <script src="_static/cloud.base.js"></script>
+    
+
+    
+     
+        <script src="_static/cloud.js"></script>
+    
+
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Schema Module" href="ontic.schema.html" />
+    <link rel="prev" title="Type Module" href="ontic.type.html" /> 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head><body>
+    <div class="relbar-top">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="contents.html" title="Table Of Contents"
+             accesskey="C">toc</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="ontic.schema.html" title="Schema Module"
+             accesskey="N">next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="ontic.type.html" title="Type Module"
+             accesskey="P">previous</a> &nbsp; &nbsp;</li>
+    <li><a href="index.html">Ontic 1.0.0 Documentation</a> &#187;</li>
+
+        <li class="nav-item nav-item-this"><a href="">Property Module</a></li> 
+      </ul>
+    </div>
+    </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-ontic.property">
+<span id="property-module"></span><h1><a class="toc-backref" href="#id2">Property Module</a><a class="headerlink" href="#module-ontic.property" title="Permalink to this headline">¶</a></h1>
+<p>The base class for deriving types that require schema support.</p>
+<img alt="_images/ontic_property.jpg" src="_images/ontic_property.jpg" />
+<div class="contents topic" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#module-ontic.property" id="id2">Property Module</a></p>
+<ul>
+<li><p><a class="reference internal" href="#usage" id="id3">Usage</a></p>
+<ul>
+<li><p><a class="reference internal" href="#creating-property-schema" id="id4">Creating Property Schema</a></p></li>
+<li><p><a class="reference internal" href="#utilizing-property-schema" id="id5">Utilizing Property Schema</a></p></li>
+<li><p><a class="reference internal" href="#available-property-schema-settings" id="id6">Available Property Schema Settings</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#classes" id="id7">Classes</a></p>
+<ul>
+<li><p><a class="reference internal" href="#onticproperty" id="id8">OnticProperty</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#functions" id="id9">Functions</a></p>
+<ul>
+<li><p><a class="reference internal" href="#perfect-property" id="id10">perfect_property</a></p></li>
+<li><p><a class="reference internal" href="#validate-property" id="id11">validate_property</a></p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<section id="usage">
+<h2><a class="toc-backref" href="#id3">Usage</a><a class="headerlink" href="#usage" title="Permalink to this headline">¶</a></h2>
+<p>The <strong>meta_type</strong> module contains three classes that are used in the
+definition and instantiation of object instances.  The root class is
+<code class="xref py py-class docutils literal notranslate"><span class="pre">CoreType</span></code>, which is derived from the Python <code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code>. The
+primary feature of the <code class="xref py py-class docutils literal notranslate"><span class="pre">CoreType</span></code> is provide the means to access
+properties of an object as a <em>dict</em> key or as object attribute.</p>
+<p>Derived from <code class="xref py py-class docutils literal notranslate"><span class="pre">CoreType</span></code> is <code class="xref py py-class docutils literal notranslate"><span class="pre">MetaType</span></code>, which provides the
+interface for retrieving a schema from an object schema definition via the
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">MetaType.get_schema()</span></code>.</p>
+<p>The <code class="xref py py-class docutils literal notranslate"><span class="pre">PropertySchema</span></code> is utilized to define a schema for a single
+property. This includes setting data type, required, and other such common
+schema definition conventions. See <a class="reference internal" href="#property-schema-settings-table"><span class="std std-ref">Available Property Schema Settings</span></a> for
+details on the <code class="xref py py-class docutils literal notranslate"><span class="pre">PropertySchema</span></code> settings available.</p>
+<p>It would be a rare case that requires the use of <code class="xref py py-class docutils literal notranslate"><span class="pre">CoreType</span></code> or
+<code class="xref py py-class docutils literal notranslate"><span class="pre">MetaType</span></code>. For the majority of cases, the use of
+<code class="xref py py-class docutils literal notranslate"><span class="pre">PropertySchema</span></code> is sufficient. With that in mind, the remainder of
+this section will focus on the use of <code class="xref py py-class docutils literal notranslate"><span class="pre">PropertySchema</span></code></p>
+<section id="creating-property-schema">
+<h3><a class="toc-backref" href="#id4">Creating Property Schema</a><a class="headerlink" href="#creating-property-schema" title="Permalink to this headline">¶</a></h3>
+<p>For general purposes, consider utilizing <code class="xref py py-class docutils literal notranslate"><span class="pre">ontic.schema_type.SchemaType</span></code>,
+for defining complete models. However, if you need validators for individual
+properties, then direct use of <code class="xref py py-class docutils literal notranslate"><span class="pre">PropertySchema</span></code> is a solution.</p>
+<p>There are a number of ways to create a <code class="xref py py-class docutils literal notranslate"><span class="pre">PropertySchema</span></code>. Take a look
+at <code class="xref py py-class docutils literal notranslate"><span class="pre">PropertySchema</span></code> class documentation for a complete exposition on
+the means of instantiating an instance.</p>
+<p>The most straight forward way to create an instance of a
+<code class="xref py py-class docutils literal notranslate"><span class="pre">PropertySchema</span></code>:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">prop_schema</span> <span class="o">=</span> <span class="n">OnticProperty</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;str&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">prop_schema</span> <span class="o">==</span> <span class="p">{</span><span class="s1">&#39;regex&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;enum&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s1">&#39;default&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;max&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;required&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;member_type&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;member_min&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="s1">&#39;member_max&#39;</span><span class="p">:</span> <span class="kc">None</span><span class="p">,</span> <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;x&#39;</span><span class="p">}</span>
+</pre></div>
+</div>
+<p>Demonstrated above is the creation of a property schema of type string. In
+addition the property schema forces the value of the property to required and
+of minimum length of 3.</p>
+<p>Along with the schema settings explicitly set in the constructor, there are a
+number of other property schema settings that may be utilized. These
+additional settings can be viewed in the output of the <em>prop_schema</em> object.
+For the details on the property schema settings, see
+<a class="reference internal" href="#property-schema-settings-table"><span class="std std-ref">Available Property Schema Settings</span></a>.</p>
+<p>A <code class="xref py py-class docutils literal notranslate"><span class="pre">PropertySchema</span></code> can be created or modified dynamically. If done so,
+then the final schema instance should be validated with the use of the method
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">validate_property_schema()</span></code>.</p>
+</section>
+<section id="utilizing-property-schema">
+<h3><a class="toc-backref" href="#id5">Utilizing Property Schema</a><a class="headerlink" href="#utilizing-property-schema" title="Permalink to this headline">¶</a></h3>
+<p>Validation of a value utilizing the <em>prop_schema</em> created, is done with the
+<code class="xref py py-meth docutils literal notranslate"><span class="pre">validate_value()</span></code> method.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">prop_schema</span> <span class="o">=</span> <span class="n">OnticProperty</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;some_prop&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;str&#39;</span><span class="p">,</span> <span class="n">required</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">some_value</span> <span class="o">=</span> <span class="s1">&#39;The cat is on the roof.&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">prop_schema</span><span class="o">.</span><span class="n">validate_value</span><span class="p">(</span><span class="n">value</span><span class="o">=</span><span class="n">some_value</span><span class="p">)</span>
+<span class="go">[]</span>
+</pre></div>
+</div>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">validate_value</span></code> returns an empty list if there are no errors.</p>
+<p>The <em>name</em> parameter of the <code class="xref py py-meth docutils literal notranslate"><span class="pre">validate_value()</span></code>, is used to construct
+friendly error messages. For example:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">meta</span><span class="o">.</span><span class="n">validate_value</span><span class="p">(</span><span class="n">prop_schema</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+<span class="go">[&#39;The value for &quot;some_prop&quot; is required.&#39;]</span>
+</pre></div>
+</div>
+<p>The following example demonstrates how a <code class="xref py py-class docutils literal notranslate"><span class="pre">PropertySchema</span></code> being
+instantiated with a dictionary. Subsequently a bad value is passed with
+multiple validation errors.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">other_schema</span> <span class="o">=</span> <span class="n">OnticProperty</span><span class="p">({</span>
+<span class="gp">... </span>    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="s1">&#39;other_prop&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;str&#39;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;max&#39;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="s1">&#39;enum&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;fish&#39;</span><span class="p">,</span> <span class="s1">&#39;dog&#39;</span><span class="p">,</span> <span class="s1">&#39;cat&#39;</span><span class="p">}</span>
+<span class="gp">... </span><span class="p">})</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ret</span> <span class="o">=</span> <span class="n">other_schema</span><span class="o">.</span><span class="n">validate_value</span><span class="p">(</span><span class="s1">&#39;frog&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">ret</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">ret</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;&#39;&#39;The value &quot;frog&quot; for &quot;other_prop&quot; not in enumeration [&#39;cat&#39;, &#39;dog&#39;, &#39;fish&#39;].&#39;&#39;&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">ret</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;&#39;&#39;The value of &quot;frog&quot; for &quot;other_prop&quot; fails max of 3.&#39;&#39;&#39;</span>
+</pre></div>
+</div>
+</section>
+<section id="available-property-schema-settings">
+<span id="property-schema-settings-table"></span><h3><a class="toc-backref" href="#id6">Available Property Schema Settings</a><a class="headerlink" href="#available-property-schema-settings" title="Permalink to this headline">¶</a></h3>
+<p>The following table gives a listing of the property schema settings that can
+be used to define properties. Details on the schema settings are provided
+after the table.</p>
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-text">Property Schema Settings</span><a class="headerlink" href="#id1" title="Permalink to this table">¶</a></caption>
+<colgroup>
+<col style="width: 17%" />
+<col style="width: 13%" />
+<col style="width: 11%" />
+<col style="width: 11%" />
+<col style="width: 47%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Required</p></th>
+<th class="head"><p>Enumeration</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>type</p></td>
+<td><p>str
+type</p></td>
+<td><p>None</p></td>
+<td><p>False</p></td>
+<td><p>bool, complex, date,
+datetime, dict, float, int, list,
+None, set, str, time</p></td>
+</tr>
+<tr class="row-odd"><td><p>default</p></td>
+<td><p>None</p></td>
+<td><p>None</p></td>
+<td><p>False</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>required</p></td>
+<td><p>bool</p></td>
+<td><p>False</p></td>
+<td><p>False</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>enum</p></td>
+<td><p>set</p></td>
+<td><p>None</p></td>
+<td><p>False</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>min</p></td>
+<td><p>complex
+date
+datetime
+float
+int
+time</p></td>
+<td><p>None</p></td>
+<td><p>False</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>max</p></td>
+<td><p>complex
+date
+datetime
+float
+int
+time</p></td>
+<td><p>None</p></td>
+<td><p>False</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>regex</p></td>
+<td><p>str</p></td>
+<td><p>None</p></td>
+<td><p>False</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>member_type</p></td>
+<td><p>str
+type</p></td>
+<td><p>None</p></td>
+<td><p>False</p></td>
+<td><p>bool, complex, date,
+datetime, dict, float, int, list,
+None, set, str, time</p></td>
+</tr>
+<tr class="row-even"><td><p>member_min</p></td>
+<td><p>complex
+date
+datetime
+float
+int
+time</p></td>
+<td><p>None</p></td>
+<td><p>False</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>member_max</p></td>
+<td><p>complex
+date
+datetime
+float
+int
+time</p></td>
+<td><p>None</p></td>
+<td><p>False</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<dl>
+<dt><em>type</em></dt><dd><p>The <em>type</em> settings restricts a property to a known type. If no type is
+defined, then any value type may be assigned to the property.</p>
+<p>The type definition can be by type or by string name. Both <code class="docutils literal notranslate"><span class="pre">{type=int}</span></code>
+and <code class="docutils literal notranslate"><span class="pre">{type='int'}</span></code> are valid examples of type declaration.</p>
+</dd>
+<dt><em>default</em></dt><dd><p>If no default is applied, then the default value will be <code class="docutils literal notranslate"><span class="pre">None</span></code>. If a
+default value is supplied, it will only be applied under two conditions.
+A default value is applied during instantiation of an object of type
+<code class="xref py py-class docutils literal notranslate"><span class="pre">PropertySchema</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">SchemaType</span></code>,
+or <code class="xref py py-class docutils literal notranslate"><span class="pre">OnticType</span></code>. The other case is when an
+instance of on of the given types is perfected via the methods
+<code class="xref py py-func docutils literal notranslate"><span class="pre">perfect_property_schema()</span></code>, <code class="xref py py-func docutils literal notranslate"><span class="pre">perfect_schema()</span></code>,
+or <code class="xref py py-func docutils literal notranslate"><span class="pre">perfect_object()</span></code>.</p>
+<p>The default is not applied during validation.</p>
+<p>For the collection types (dict, list, and set), the default value is deep
+copied. This is done to ensure that there is no sharing of collection
+instances or values.</p>
+</dd>
+<dt><em>required</em></dt><dd><p>A <em>PropertySchema</em> with a required setting of <em>True</em>, will fail
+validation if the property value is <em>None</em>.</p>
+</dd>
+<dt><em>enum</em></dt><dd><p>An <em>enum</em> setting is a set of values that the property value must adhere
+to. If the <em>type</em> setting is provided, then the choices provided by
+<em>enum</em> must be of that type. If no <em>type</em> is provided, then the choices
+in the <em>enum</em> set may be of any type, even mixed type.</p>
+</dd>
+<dt><em>min</em></dt><dd><p>The <em>min</em> setting has differing behavior, based on the <em>type</em> setting. If
+no <em>type</em> setting is provided, then <em>min</em> test will not occur. For the
+boundable types (strings and collections) the <em>min</em> setting will test that
+the value length is not less than the minimum. For the comparable types
+(numeric and chronological) the <em>min</em> setting will test that the
+value is not less than the minimum.</p>
+</dd>
+<dt><em>max</em></dt><dd><p>The <em>max setting has differing behavior, based on the *type</em> setting. If
+no <em>type</em> setting is provided, the <em>max</em> test will not occur. For the
+boundable types (strings and collections) the <em>max</em> setting will test that
+the value length is not more than the maximum. For the comparable types
+(numeric and chronological) the <em>max</em> setting will test that the
+value is not more than the maximum.</p>
+</dd>
+<dt><em>regex</em></dt><dd><p>The <em>regex</em> setting is only tested if the <em>type</em> or <em>member_type</em> setting
+is ‘str’ and the <em>regex</em> setting is not None. When active, the <em>regex</em>
+setting will be used to test the given string value.  If the property
+value is ‘None’, then no regex testing will be done.</p>
+</dd>
+<dt><em>member_type</em></dt><dd><p>The <em>member_type</em> setting is used to restrict the value type for property
+<em>type</em> ‘list’ or ‘set’. It does so ensuring that each member of the
+collection is of the type designated by <em>member_type</em>.</p>
+<p>The type definition can be by type or by string name. Both
+<code class="docutils literal notranslate"><span class="pre">{member_type=int}</span></code> and <code class="docutils literal notranslate"><span class="pre">{member_type='int'}</span></code> are valid examples of
+type declaration.</p>
+</dd>
+<dt><em>member_min</em></dt><dd><p>The <em>member_min</em> setting has differing behavior, based on the
+<em>member_type</em> setting. If no <em>member_type</em> setting is provided, then
+<em>member_min</em> test will not occur. For the boundable types
+(strings and collections), the <em>member_min</em> setting will test that the
+value length is not less than the minimum. For the comparable types
+(numeric and chronological) the <em>member_minimum</em> setting will test
+that the value is not less than the minimum.</p>
+</dd>
+<dt><em>member_max</em></dt><dd><p>The <em>member_max</em> setting has differing behavior, based on the
+<em>member_max</em> setting. If no <em>member_type</em> setting is provided,
+then <em>member_max</em> test will not occur. For the boundable types
+(strings and collections), the <em>member_max</em> setting will test that the
+value length is not more than the maximum. For the comparable types
+(numeric and chronological) the <em>member_max</em> setting will test
+that the value is not more than the maximum.</p>
+</dd>
+</dl>
+</section>
+</section>
+<section id="classes">
+<h2><a class="toc-backref" href="#id7">Classes</a><a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
+<section id="onticproperty">
+<h3><a class="toc-backref" href="#id8">OnticProperty</a><a class="headerlink" href="#onticproperty" title="Permalink to this headline">¶</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="ontic.property.OnticProperty">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">ontic.property.</span></span><span class="sig-name descname"><span class="pre">OnticProperty</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ontic.property.OnticProperty" title="Permalink to this definition">¶</a></dt>
+<dd><p>A class to define a schema for a property.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ontic.property.OnticProperty.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ontic.property.OnticProperty.__init__" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ontic.property.OnticProperty.perfect">
+<span class="sig-name descname"><span class="pre">perfect</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">NoReturn</span></span></span><a class="headerlink" href="#ontic.property.OnticProperty.perfect" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to ensure the completeness of a given schema property.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+<dt class="field-even">Raises</dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If the candidate_property_type is None, or not
+of type <em>OnticProperty</em>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ontic.property.OnticProperty.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">raise_validation_exception</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ontic.property.OnticProperty.validate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to validate a property schema definition.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>raise_validation_exception</strong> – If True, then
+<em>validate_property_type</em> will throw a <em>ValueException</em> upon
+validation failure. If False, then a list of validation errors is
+returned. Defaults to True.</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>If no validation errors are found, then <em>None</em> is returned.
+If validation fails, then a list of the errors is returned if the
+<em>raise_validation_exception</em> is set to True.</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ValueError</strong> – <em>the_candidate_schema_property</em> is not an
+<a class="reference internal" href="#ontic.property.OnticProperty" title="ontic.property.OnticProperty"><code class="xref py py-class docutils literal notranslate"><span class="pre">OnticProperty</span></code></a>.</p></li>
+<li><p><a class="reference internal" href="ontic.validation_exception.html#ontic.validation_exception.ValidationException" title="ontic.validation_exception.ValidationException"><strong>ValidationException</strong></a> – A property of <em>candidate_property_type</em>
+does not meet schema requirements.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ontic.property.OnticProperty.validate_value">
+<span class="sig-name descname"><span class="pre">validate_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">raise_validation_exception</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">NoReturn</span></span></span><a class="headerlink" href="#ontic.property.OnticProperty.validate_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method that validates a value against the current schema.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+<section id="functions">
+<h2><a class="toc-backref" href="#id9">Functions</a><a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<section id="perfect-property">
+<h3><a class="toc-backref" href="#id10">perfect_property</a><a class="headerlink" href="#perfect-property" title="Permalink to this headline">¶</a></h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="ontic.property.perfect_property">
+<span class="sig-prename descclassname"><span class="pre">ontic.property.</span></span><span class="sig-name descname"><span class="pre">perfect_property</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ontic_property</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#ontic.property.OnticProperty" title="ontic.property.OnticProperty"><span class="pre">ontic.property.OnticProperty</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">NoReturn</span></span></span><a class="headerlink" href="#ontic.property.perfect_property" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to ensure the completeness of a given schema property.</p>
+<p>This method ensures completeness by stripping out any properties that
+are not defined by the schema definition. In addition, for any schema
+properties that are not included, the method will add those
+properties to the default value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>ontic_property</strong> (<a class="reference internal" href="#ontic.property.OnticProperty" title="ontic.property.OnticProperty"><code class="xref py py-class docutils literal notranslate"><span class="pre">OnticProperty</span></code></a>) – The OnticProperty that is to be clean and restricted.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If the ontic_property is None, or not of type
+<em>OnticProperty</em>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<hr class="docutils" />
+<section id="validate-property">
+<h3><a class="toc-backref" href="#id11">validate_property</a><a class="headerlink" href="#validate-property" title="Permalink to this headline">¶</a></h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="ontic.property.validate_property">
+<span class="sig-prename descclassname"><span class="pre">ontic.property.</span></span><span class="sig-name descname"><span class="pre">validate_property</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ontic_property</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><a class="reference internal" href="#ontic.property.OnticProperty" title="ontic.property.OnticProperty"><span class="pre">ontic.property.OnticProperty</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">raise_validation_exception</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">bool</span></span> <span class="o"><span class="pre">=</span></span> <span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ontic.property.validate_property" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to validate a property schema definition.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ontic_property</strong> – The schema property to be validated.</p></li>
+<li><p><strong>raise_validation_exception</strong> – If True, then <em>validate_property_type</em>
+will throw a <em>ValueException</em> upon validation failure. If False,
+then a list of validation errors is returned. Defaults to True.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>If no validation errors are found, then <em>None</em> is
+returned. If validation fails, then a list of the errors is returned
+if the <em>raise_validation_exception</em> is set to True.</p>
+</dd>
+<dt class="field-odd">Raises</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>ValueError</strong> – <em>the_candidate_schema_property</em> is not an
+<code class="xref py py-class docutils literal notranslate"><span class="pre">OnticType</span></code>.</p></li>
+<li><p><a class="reference internal" href="ontic.validation_exception.html#ontic.validation_exception.ValidationException" title="ontic.validation_exception.ValidationException"><strong>ValidationException</strong></a> – A property of <em>ontic_property</em>
+does not meet schema requirements.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="sphinx-toc sphinxlocaltoc">
+    <h3><a href="contents.html">Page contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Property Module</a><ul>
+<li><a class="reference internal" href="#usage">Usage</a><ul>
+<li><a class="reference internal" href="#creating-property-schema">Creating Property Schema</a></li>
+<li><a class="reference internal" href="#utilizing-property-schema">Utilizing Property Schema</a></li>
+<li><a class="reference internal" href="#available-property-schema-settings">Available Property Schema Settings</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#classes">Classes</a><ul>
+<li><a class="reference internal" href="#onticproperty">OnticProperty</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#functions">Functions</a><ul>
+<li><a class="reference internal" href="#perfect-property">perfect_property</a></li>
+<li><a class="reference internal" href="#validate-property">validate_property</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div class="sphinxprev">
+    <h4>Previous page</h4>
+    <p class="topless"><a href="ontic.type.html"
+                          title="Previous page">&larr; Type Module</a></p>
+  </div>
+  <div class="sphinxnext">
+    <h4>Next page</h4>
+    <p class="topless"><a href="ontic.schema.html"
+                          title="Next page">&rarr; Schema Module</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/ontic.property.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+    
+    
+        <div class="sidebar-toggle-group no-js">
+            
+            <button class="sidebar-toggle" id="sidebar-hide" title="Hide the sidebar menu">
+                 «
+                <span class="show-for-small">hide menu</span>
+                
+            </button>
+            <button class="sidebar-toggle" id="sidebar-show" title="Show the sidebar menu">
+                
+                <span class="show-for-small">menu</span>
+                <span class="hide-for-small">sidebar</span>
+                 »
+            </button>
+        </div>
+    
+      <div class="clearer"></div>
+    </div>
+    <div class="relbar-bottom">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="contents.html" title="Table Of Contents"
+             >toc</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="ontic.schema.html" title="Schema Module"
+             >next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="ontic.type.html" title="Type Module"
+             >previous</a> &nbsp; &nbsp;</li>
+    <li><a href="index.html">Ontic 1.0.0 Documentation</a> &#187;</li>
+
+        <li class="nav-item nav-item-this"><a href="">Property Module</a></li> 
+      </ul>
+    </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2015, Raul Gonzalez.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.1.1.
+    </div>
+    <!-- cloud_sptheme 1.4 -->
+  </body>
+</html>

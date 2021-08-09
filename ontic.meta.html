@@ -1,0 +1,572 @@
+
+
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Meta Module &#8212; Ontic 1.0.0 Documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/cloud.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
+    
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+
+    
+    
+     
+        <script src="_static/jquery.cookie.js"></script>
+    
+
+    
+     
+        <script src="_static/cloud.base.js"></script>
+    
+
+    
+     
+        <script src="_static/cloud.js"></script>
+    
+
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Type Module" href="ontic.type.html" />
+    <link rel="prev" title="Core Module" href="ontic.core.html" /> 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head><body>
+    <div class="relbar-top">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="contents.html" title="Table Of Contents"
+             accesskey="C">toc</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="ontic.type.html" title="Type Module"
+             accesskey="N">next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="ontic.core.html" title="Core Module"
+             accesskey="P">previous</a> &nbsp; &nbsp;</li>
+    <li><a href="index.html">Ontic 1.0.0 Documentation</a> &#187;</li>
+
+        <li class="nav-item nav-item-this"><a href="">Meta Module</a></li> 
+      </ul>
+    </div>
+    </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-ontic.meta">
+<span id="meta-module"></span><h1><a class="toc-backref" href="#id3">Meta Module</a><a class="headerlink" href="#module-ontic.meta" title="Permalink to this headline">¶</a></h1>
+<p>Module containing definition for schemata type and base validation functions.</p>
+<img alt="_images/ontic_meta.jpg" src="_images/ontic_meta.jpg" />
+<div class="contents topic" id="contents">
+<p class="topic-title">Contents</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#module-ontic.meta" id="id3">Meta Module</a></p>
+<ul>
+<li><p><a class="reference internal" href="#classes" id="id4">Classes</a></p>
+<ul>
+<li><p><a class="reference internal" href="#metaschematype" id="id5">MetaSchemaType</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#functions" id="id6">Functions</a></p>
+<ul>
+<li><p><a class="reference internal" href="#enum-validation" id="id7">enum_validation</a></p></li>
+<li><p><a class="reference internal" href="#execute-collection-validators" id="id8">execute_collection_validators</a></p></li>
+<li><p><a class="reference internal" href="#max-validation" id="id9">max_validation</a></p></li>
+<li><p><a class="reference internal" href="#min-validation" id="id10">min_validation</a></p></li>
+<li><p><a class="reference internal" href="#non-none-singular-validation" id="id11">non_none_singular_validation</a></p></li>
+<li><p><a class="reference internal" href="#validate-collection-members" id="id12">validate_collection_members</a></p></li>
+<li><p><a class="reference internal" href="#validate-member-enum" id="id13">validate_member_enum</a></p></li>
+<li><p><a class="reference internal" href="#validate-member-max" id="id14">validate_member_max</a></p></li>
+<li><p><a class="reference internal" href="#validate-member-min" id="id15">validate_member_min</a></p></li>
+<li><p><a class="reference internal" href="#validate-member-regex" id="id16">validate_member_regex</a></p></li>
+<li><p><a class="reference internal" href="#validate-member-type" id="id17">validate_member_type</a></p></li>
+<li><p><a class="reference internal" href="#validate-non-none-value" id="id18">validate_non_none_value</a></p></li>
+<li><p><a class="reference internal" href="#validate-value" id="id19">validate_value</a></p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</div>
+<section id="classes">
+<h2><a class="toc-backref" href="#id4">Classes</a><a class="headerlink" href="#classes" title="Permalink to this headline">¶</a></h2>
+<section id="metaschematype">
+<h3><a class="toc-backref" href="#id5">MetaSchemaType</a><a class="headerlink" href="#metaschematype" title="Permalink to this headline">¶</a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="ontic.meta.Meta">
+<em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">ontic.meta.</span></span><span class="sig-name descname"><span class="pre">Meta</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#ontic.meta.Meta" title="Permalink to this definition">¶</a></dt>
+<dd><p>Interface for type definition of <strong>Ontic</strong> schema defined classes.</p>
+<dl>
+<dt>Dict Style Initialization</dt><dd><p>Meta() -&gt; new empty Meta</p>
+<dl class="simple">
+<dt>Meta(mapping) -&gt; new Meta initialized from a mapping object’s</dt><dd><p>(key, value) pairs</p>
+</dd>
+</dl>
+<p>Meta(iterable) -&gt; new Meta initialized as if via:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="o">=</span> <span class="n">Meta</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">iterable</span><span class="p">:</span>
+    <span class="n">d</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+</pre></div>
+</div>
+<p>Meta(<a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs) -&gt; new Meta initialized with the name=value
+pairs in the keyword argument list.  For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Meta</span><span class="p">(</span><span class="n">one</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">two</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="ontic.meta.Meta.get_schema">
+<em class="property"><span class="pre">classmethod</span> </em><span class="sig-name descname"><span class="pre">get_schema</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="ontic.schema.html#ontic.schema.Schema" title="ontic.schema.Schema"><span class="pre">ontic.schema.Schema</span></a></span></span><a class="headerlink" href="#ontic.meta.Meta.get_schema" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the schema object for the a given type definition.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>The schema metadata definition for a <code class="xref py py-class docutils literal notranslate"><span class="pre">PropertySchema</span></code>
+or a <a class="reference internal" href="ontic.type.html#ontic.OnticType" title="ontic.OnticType"><code class="xref py py-class docutils literal notranslate"><span class="pre">ontic.OnticType</span></code></a> derived child class.</p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><code class="xref py py-class docutils literal notranslate"><span class="pre">ontic.Schema</span></code></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+<section id="functions">
+<h2><a class="toc-backref" href="#id6">Functions</a><a class="headerlink" href="#functions" title="Permalink to this headline">¶</a></h2>
+<section id="enum-validation">
+<h3><a class="toc-backref" href="#id7">enum_validation</a><a class="headerlink" href="#enum-validation" title="Permalink to this headline">¶</a></h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="ontic.meta.enum_validation">
+<span class="sig-prename descclassname"><span class="pre">ontic.meta.</span></span><span class="sig-name descname"><span class="pre">enum_validation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ontic.meta.enum_validation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate a non-collection property for value in an enumeration set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>property_schema</strong> – The property schema to utilize for validation.</p></li>
+<li><p><strong>value</strong> – The value of the property to be validated.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if the validation is successful, else False.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<hr class="docutils" />
+<section id="execute-collection-validators">
+<h3><a class="toc-backref" href="#id8">execute_collection_validators</a><a class="headerlink" href="#execute-collection-validators" title="Permalink to this headline">¶</a></h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="ontic.meta.execute_collection_validators">
+<span class="sig-prename descclassname"><span class="pre">ontic.meta.</span></span><span class="sig-name descname"><span class="pre">execute_collection_validators</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ontic.meta.execute_collection_validators" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to execute a list of validators on a given collection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>member_value</strong> – The member of the collection property to validate.</p></li>
+<li><p><strong>property_schema</strong> – The property schema to utilize for validation.</p></li>
+<li><p><strong>validators</strong> – A list of validation methods to execute.</p></li>
+<li><p><strong>value_errors</strong> – A list of errors found for a given value. If any
+given validator method fails, it will append it error message to
+the value_errors list.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<hr class="docutils" />
+<section id="max-validation">
+<h3><a class="toc-backref" href="#id9">max_validation</a><a class="headerlink" href="#max-validation" title="Permalink to this headline">¶</a></h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="ontic.meta.max_validation">
+<span class="sig-prename descclassname"><span class="pre">ontic.meta.</span></span><span class="sig-name descname"><span class="pre">max_validation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ontic.meta.max_validation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates a non-collection property for maximum allowable value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>property_schema</strong> – The property schema to utilize for validation.</p></li>
+<li><p><strong>value</strong> – The value of the property to be validated.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if the validation is successful, else False.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<hr class="docutils" />
+<section id="min-validation">
+<h3><a class="toc-backref" href="#id10">min_validation</a><a class="headerlink" href="#min-validation" title="Permalink to this headline">¶</a></h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="ontic.meta.min_validation">
+<span class="sig-prename descclassname"><span class="pre">ontic.meta.</span></span><span class="sig-name descname"><span class="pre">min_validation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ontic.meta.min_validation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate a non-collection property for minimum allowable value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>property_schema</strong> – The property schema to utilize for validation.</p></li>
+<li><p><strong>value</strong> – The value of the property to be validated.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>True if the validation is successful, else False.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<hr class="docutils" />
+<section id="non-none-singular-validation">
+<h3><a class="toc-backref" href="#id11">non_none_singular_validation</a><a class="headerlink" href="#non-none-singular-validation" title="Permalink to this headline">¶</a></h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="ontic.meta.non_none_singular_validation">
+<span class="sig-prename descclassname"><span class="pre">ontic.meta.</span></span><span class="sig-name descname"><span class="pre">non_none_singular_validation</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ontic.meta.non_none_singular_validation" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to validate an object value meets schema requirements.</p>
+<p>This method validates non-collection properties. The method should
+only be used for non-None values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>property_schema</strong> – The schema definition for the target property.</p></li>
+<li><p><strong>value</strong> – The value to be tested against the given schema.</p></li>
+<li><p><strong>value_errors</strong> – A list of the validation errors discovered. The
+value errors will be added to if the given value fails validation.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<hr class="docutils" />
+<section id="validate-collection-members">
+<h3><a class="toc-backref" href="#id12">validate_collection_members</a><a class="headerlink" href="#validate-collection-members" title="Permalink to this headline">¶</a></h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="ontic.meta.validate_collection_members">
+<span class="sig-prename descclassname"><span class="pre">ontic.meta.</span></span><span class="sig-name descname"><span class="pre">validate_collection_members</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">property_schema</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">OnticProperty</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_errors</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">NoReturn</span></span></span><a class="headerlink" href="#ontic.meta.validate_collection_members" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to validate the members of a collection.</p>
+<p>This method only operates on <em>list</em> and <em>set</em> collection types.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>property_schema</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ontic.OnticProperty</span></code>) – The property schema to utilize for validation.</p></li>
+<li><p><strong>value</strong> (<em>list</em><em>, </em><em>set</em>) – The collection whose members will be validated.</p></li>
+<li><p><strong>value_errors</strong> (<em>list&lt;str&gt;</em>) – A list of errors found for a given collection.
+If any members fail validation, the error condition will be
+listed in value_errors list.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<hr class="docutils" />
+<section id="validate-member-enum">
+<h3><a class="toc-backref" href="#id13">validate_member_enum</a><a class="headerlink" href="#validate-member-enum" title="Permalink to this headline">¶</a></h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="ontic.meta.validate_member_enum">
+<span class="sig-prename descclassname"><span class="pre">ontic.meta.</span></span><span class="sig-name descname"><span class="pre">validate_member_enum</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ontic.meta.validate_member_enum" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate a member of a collection is within a defined enumeration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>member_value</strong> – The member of the collection property to
+validate.</p></li>
+<li><p><strong>property_schema</strong> – The property schema to utilize for validation.</p></li>
+<li><p><strong>value_errors</strong> – A list of errors found for a given value. If the
+validate fails, then an error message is added to the
+value_errors list.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<hr class="docutils" />
+<section id="validate-member-max">
+<h3><a class="toc-backref" href="#id14">validate_member_max</a><a class="headerlink" href="#validate-member-max" title="Permalink to this headline">¶</a></h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="ontic.meta.validate_member_max">
+<span class="sig-prename descclassname"><span class="pre">ontic.meta.</span></span><span class="sig-name descname"><span class="pre">validate_member_max</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ontic.meta.validate_member_max" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate a member of a collection for maximum allowable value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>member_value</strong> – The member value of the collection property to
+validate.</p></li>
+<li><p><strong>property_schema</strong> – The property schema to utilize for validation.</p></li>
+<li><p><strong>value_errors</strong> – A list of errors found for a given value. If the
+validation fails, then an error message is added to the
+value_errors list.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<hr class="docutils" />
+<section id="validate-member-min">
+<h3><a class="toc-backref" href="#id15">validate_member_min</a><a class="headerlink" href="#validate-member-min" title="Permalink to this headline">¶</a></h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="ontic.meta.validate_member_min">
+<span class="sig-prename descclassname"><span class="pre">ontic.meta.</span></span><span class="sig-name descname"><span class="pre">validate_member_min</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ontic.meta.validate_member_min" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate a member of a collection for minimum allowable value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>member_value</strong> – The member value of the collection property to
+validate.</p></li>
+<li><p><strong>property_schema</strong> – The property schema to utilize for validation.</p></li>
+<li><p><strong>value_errors</strong> – A list of errors found for a given value. If the
+validation fails, then an error message is added to the
+value_errors list.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<hr class="docutils" />
+<section id="validate-member-regex">
+<h3><a class="toc-backref" href="#id16">validate_member_regex</a><a class="headerlink" href="#validate-member-regex" title="Permalink to this headline">¶</a></h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="ontic.meta.validate_member_regex">
+<span class="sig-prename descclassname"><span class="pre">ontic.meta.</span></span><span class="sig-name descname"><span class="pre">validate_member_regex</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ontic.meta.validate_member_regex" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate a member of a collection against a defined regex.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>member_value</strong> – The member value of the collection property to
+validate.</p></li>
+<li><p><strong>property_schema</strong> – The property schema to utilize for validation.</p></li>
+<li><p><strong>value_errors</strong> – A list of errors found for a given value. If the
+validation fails, then an error message is added to the
+value_errors list.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<hr class="docutils" />
+<section id="validate-member-type">
+<h3><a class="toc-backref" href="#id17">validate_member_type</a><a class="headerlink" href="#validate-member-type" title="Permalink to this headline">¶</a></h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="ontic.meta.validate_member_type">
+<span class="sig-prename descclassname"><span class="pre">ontic.meta.</span></span><span class="sig-name descname"><span class="pre">validate_member_type</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#ontic.meta.validate_member_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validate a member of a collection is of a given type.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>member_value</strong> (<em>object</em>) – The member value of the collection property to
+validate.</p></li>
+<li><p><strong>property_schema</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ontic.OnticProperty</span></code>) – The property schema to utilize for validation.</p></li>
+<li><p><strong>value_errors</strong> (<em>list&lt;str&gt;</em>) – A list of errors found for a given value. If the
+validation fails, then an error message is added to the
+value_errors list.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<hr class="docutils" />
+<section id="validate-non-none-value">
+<h3><a class="toc-backref" href="#id18">validate_non_none_value</a><a class="headerlink" href="#validate-non-none-value" title="Permalink to this headline">¶</a></h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="ontic.meta.validate_non_none_value">
+<span class="sig-prename descclassname"><span class="pre">ontic.meta.</span></span><span class="sig-name descname"><span class="pre">validate_non_none_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">property_schema</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">OnticProperty</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value_errors</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">NoReturn</span></span></span><a class="headerlink" href="#ontic.meta.validate_non_none_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Validates an <strong>Ontic</strong> object value that is not None.</p>
+<p>This method validates singular and collection values. This method
+does not perform <em>Required</em> validation, as it is assumed that the
+value is not None.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>property_schema</strong> (<code class="xref py py-class docutils literal notranslate"><span class="pre">ontic.OnticProperty</span></code>) – The property schema to utilize for validation.</p></li>
+<li><p><strong>value</strong> (<em>object</em>) – The non-None value to be validated.</p></li>
+<li><p><strong>value_errors</strong> (<em>list&lt;str&gt;</em>) – A list of errors found for a given value. If any
+given validator method fails, it will append it error message to
+the value_errors list.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<hr class="docutils" />
+<section id="validate-value">
+<h3><a class="toc-backref" href="#id19">validate_value</a><a class="headerlink" href="#validate-value" title="Permalink to this headline">¶</a></h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="ontic.meta.validate_value">
+<span class="sig-prename descclassname"><span class="pre">ontic.meta.</span></span><span class="sig-name descname"><span class="pre">validate_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">property_schema</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">OnticProperty</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span> <span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span></span></span><a class="headerlink" href="#ontic.meta.validate_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Method to validate a given value against a given property schema.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>property_schema</strong> – The property schema that contains the validation
+rules.</p></li>
+<li><p><strong>value</strong> – The value that is to be validated.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>A list that is utilized to collect the errors found
+during schema validation.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="sphinx-toc sphinxlocaltoc">
+    <h3><a href="contents.html">Page contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">Meta Module</a><ul>
+<li><a class="reference internal" href="#classes">Classes</a><ul>
+<li><a class="reference internal" href="#metaschematype">MetaSchemaType</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#functions">Functions</a><ul>
+<li><a class="reference internal" href="#enum-validation">enum_validation</a></li>
+<li><a class="reference internal" href="#execute-collection-validators">execute_collection_validators</a></li>
+<li><a class="reference internal" href="#max-validation">max_validation</a></li>
+<li><a class="reference internal" href="#min-validation">min_validation</a></li>
+<li><a class="reference internal" href="#non-none-singular-validation">non_none_singular_validation</a></li>
+<li><a class="reference internal" href="#validate-collection-members">validate_collection_members</a></li>
+<li><a class="reference internal" href="#validate-member-enum">validate_member_enum</a></li>
+<li><a class="reference internal" href="#validate-member-max">validate_member_max</a></li>
+<li><a class="reference internal" href="#validate-member-min">validate_member_min</a></li>
+<li><a class="reference internal" href="#validate-member-regex">validate_member_regex</a></li>
+<li><a class="reference internal" href="#validate-member-type">validate_member_type</a></li>
+<li><a class="reference internal" href="#validate-non-none-value">validate_non_none_value</a></li>
+<li><a class="reference internal" href="#validate-value">validate_value</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div class="sphinxprev">
+    <h4>Previous page</h4>
+    <p class="topless"><a href="ontic.core.html"
+                          title="Previous page">&larr; Core Module</a></p>
+  </div>
+  <div class="sphinxnext">
+    <h4>Next page</h4>
+    <p class="topless"><a href="ontic.type.html"
+                          title="Next page">&rarr; Type Module</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/ontic.meta.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+    
+    
+        <div class="sidebar-toggle-group no-js">
+            
+            <button class="sidebar-toggle" id="sidebar-hide" title="Hide the sidebar menu">
+                 «
+                <span class="show-for-small">hide menu</span>
+                
+            </button>
+            <button class="sidebar-toggle" id="sidebar-show" title="Show the sidebar menu">
+                
+                <span class="show-for-small">menu</span>
+                <span class="hide-for-small">sidebar</span>
+                 »
+            </button>
+        </div>
+    
+      <div class="clearer"></div>
+    </div>
+    <div class="relbar-bottom">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="contents.html" title="Table Of Contents"
+             >toc</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="ontic.type.html" title="Type Module"
+             >next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="ontic.core.html" title="Core Module"
+             >previous</a> &nbsp; &nbsp;</li>
+    <li><a href="index.html">Ontic 1.0.0 Documentation</a> &#187;</li>
+
+        <li class="nav-item nav-item-this"><a href="">Meta Module</a></li> 
+      </ul>
+    </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2015, Raul Gonzalez.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.1.1.
+    </div>
+    <!-- cloud_sptheme 1.4 -->
+  </body>
+</html>

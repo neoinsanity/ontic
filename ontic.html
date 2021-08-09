@@ -1,35 +1,48 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+
+<!DOCTYPE html>
+
+<html>
   <head>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Getting Started with Ontic &#8212; Ontic 1.0.0 Documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/cloud.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
     
-    <title>Getting Started with Ontic &mdash; Ontic 0.0.4 Documentation</title>
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+
     
-    <link rel="stylesheet" href="_static/default.css" type="text/css" />
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     
-    <script type="text/javascript">
-      var DOCUMENTATION_OPTIONS = {
-        URL_ROOT:    './',
-        VERSION:     '0.0.4',
-        COLLAPSE_INDEX: false,
-        FILE_SUFFIX: '.html',
-        HAS_SOURCE:  true
-      };
-    </script>
-    <script type="text/javascript" src="_static/jquery.js"></script>
-    <script type="text/javascript" src="_static/underscore.js"></script>
-    <script type="text/javascript" src="_static/doctools.js"></script>
-    <script type="text/javascript" src="_static/sidebar.js"></script>
-    <link rel="top" title="Ontic 0.0.4 Documentation" href="index.html" />
-    <link rel="next" title="CoreType, MetaType, and PropertySchema Module" href="ontic.meta_type.html" />
-    <link rel="prev" title="Ontic - of or relating to entities and the facts about them" href="index.html" /> 
-  </head>
-  <body>
-    <div class="related">
+     
+        <script src="_static/jquery.cookie.js"></script>
+    
+
+    
+     
+        <script src="_static/cloud.base.js"></script>
+    
+
+    
+     
+        <script src="_static/cloud.js"></script>
+    
+
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Advanced Ontic" href="advanced.html" />
+    <link rel="prev" title="Ontic - Of or Relating to Entities and the Facts about Them" href="index.html" /> 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head><body>
+    <div class="relbar-top">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -37,99 +50,117 @@
              accesskey="I">index</a></li>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
+             >modules</a> &nbsp; &nbsp;</li>
         <li class="right" >
-          <a href="ontic.meta_type.html" title="CoreType, MetaType, and PropertySchema Module"
-             accesskey="N">next</a> |</li>
+          <a href="contents.html" title="Table Of Contents"
+             accesskey="C">toc</a> &nbsp; &nbsp;</li>
         <li class="right" >
-          <a href="index.html" title="Ontic - of or relating to entities and the facts about them"
-             accesskey="P">previous</a> |</li>
-        <li><a href="index.html">Ontic 0.0.4 Documentation</a> &raquo;</li> 
+          <a href="advanced.html" title="Advanced Ontic"
+             accesskey="N">next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="index.html" title="Ontic - Of or Relating to Entities and the Facts about Them"
+             accesskey="P">previous</a> &nbsp; &nbsp;</li>
+    <li><a href="index.html">Ontic 1.0.0 Documentation</a> &#187;</li>
+
+        <li class="nav-item nav-item-this"><a href="">Getting Started with Ontic</a></li> 
       </ul>
-    </div>  
+    </div>
+    </div>
+  
 
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          <div class="body">
+          <div class="body" role="main">
             
-  <div class="section" id="getting-started-with-ontic">
-<span id="id1"></span><h1><a class="toc-backref" href="#id2">Getting Started with Ontic</a><a class="headerlink" href="#getting-started-with-ontic" title="Permalink to this headline">¶</a></h1>
+  <section id="getting-started-with-ontic">
+<span id="id1"></span><h1><a class="toc-backref" href="#id3">Getting Started with Ontic</a><a class="headerlink" href="#getting-started-with-ontic" title="Permalink to this headline">¶</a></h1>
 <img alt="_images/ontic.jpg" src="_images/ontic.jpg" />
 <div class="contents topic" id="contents">
-<p class="topic-title first">Contents</p>
+<p class="topic-title">Contents</p>
 <ul class="simple">
-<li><a class="reference internal" href="#getting-started-with-ontic" id="id2">Getting Started with Ontic</a><ul>
-<li><a class="reference internal" href="#creating-a-simple-ontictype-object" id="id3">Creating a Simple OnticType Object</a><ul>
-<li><a class="reference internal" href="#dict-style-initialization" id="id4">Dict Style Initialization</a></li>
+<li><p><a class="reference internal" href="#getting-started-with-ontic" id="id3">Getting Started with Ontic</a></p>
+<ul>
+<li><p><a class="reference internal" href="#creating-a-simple-ontictype-object" id="id4">Creating a Simple OnticType Object</a></p>
+<ul>
+<li><p><a class="reference internal" href="#dict-style-initialization" id="id5">Dict Style Initialization</a></p></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#creation-of-ontic-types" id="id5">Creation of Ontic Types</a><ul>
-<li><a class="reference internal" href="#creation-of-schema-definitions" id="id6">Creation of Schema Definitions</a></li>
-<li><a class="reference internal" href="#class-style-type-definitions" id="id7">Class-style Type Definitions</a></li>
-<li><a class="reference internal" href="#dynamic-type-definitions" id="id8">Dynamic Type Definitions</a></li>
+<li><p><a class="reference internal" href="#ontic-type-schema-definition" id="id6">Ontic Type Schema Definition</a></p>
+<ul>
+<li><p><a class="reference internal" href="#creation-of-schema-definitions" id="id7">Creation of Schema Definitions</a></p></li>
+<li><p><a class="reference internal" href="#class-style-type-definitions" id="id8">Class-style Type Definitions</a></p></li>
+<li><p><a class="reference internal" href="#dynamic-type-definitions" id="id9">Dynamic Type Definitions</a></p></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#working-with-ontic-objects" id="id9">Working with Ontic Objects</a><ul>
-<li><a class="reference internal" href="#perfect" id="id10">Perfect</a></li>
-<li><a class="reference internal" href="#validate" id="id11">Validate</a></li>
+<li><p><a class="reference internal" href="#working-with-ontic-objects" id="id10">Working with Ontic Objects</a></p>
+<ul>
+<li><p><a class="reference internal" href="#perfect" id="id11">Perfect</a></p></li>
+<li><p><a class="reference internal" href="#validate" id="id12">Validate</a></p></li>
 </ul>
 </li>
 </ul>
 </li>
 </ul>
 </div>
-<div class="section" id="creating-a-simple-ontictype-object">
-<h2><a class="toc-backref" href="#id3">Creating a Simple OnticType Object</a><a class="headerlink" href="#creating-a-simple-ontictype-object" title="Permalink to this headline">¶</a></h2>
+<section id="creating-a-simple-ontictype-object">
+<h2><a class="toc-backref" href="#id4">Creating a Simple OnticType Object</a><a class="headerlink" href="#creating-a-simple-ontictype-object" title="Permalink to this headline">¶</a></h2>
 <p><strong>Ontic</strong> objects strive to provide all the benefits of utilizing a Python dict
 object, with the benefits of having class-like attributes for data access.
-The default behavior of an <strong>Ontic</strong> object to to be a schema-less dictionary.
+The default behavior of an <strong>Ontic</strong> object to be a schema-less dictionary.
 The example for the simplest <strong>Ontic</strong> object is:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ontic.ontic_type</span> <span class="kn">import</span> <span class="n">OnticType</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ontic.ontic_type</span> <span class="kn">import</span> <span class="n">OnticType</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_object</span> <span class="o">=</span> <span class="n">OnticType</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">my_object</span><span class="p">[</span><span class="s">&#39;some_property&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;Some value&#39;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">my_object</span><span class="o">.</span><span class="n">other_property</span> <span class="o">=</span> <span class="mi">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_object</span><span class="p">[</span><span class="s1">&#39;some_property&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;Some value&#39;</span>  <span class="c1"># Set value by key</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_object</span><span class="o">.</span><span class="n">other_property</span> <span class="o">=</span> <span class="mi">3</span>  <span class="c1"># Set value by attribute</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">my_object</span>
 <span class="go">{&#39;other_property&#39;: 3, &#39;some_property&#39;: &#39;Some value&#39;}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_object</span><span class="p">[</span><span class="s1">&#39;other_property&#39;</span><span class="p">]</span>  <span class="c1"># Get value by key</span>
+<span class="go">3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_object</span><span class="o">.</span><span class="n">some_property</span>  <span class="c1"># Get value by attribute</span>
+<span class="go">&#39;Some value&#39;</span>
 </pre></div>
 </div>
+<p>It should be noted in the example above, that the values assigned to the
+<em>OnticType</em> object are accessible by key and as an attribute.</p>
 <p>The ability to use <em>OnticType</em> objects as dict, makes it easy to utilize with
 most common interfaces. Here is an <em>OnticType</em> object with pymongo:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ontic.ontic_type</span> <span class="kn">import</span> <span class="n">OnticType</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ontic.ontic_type</span> <span class="kn">import</span> <span class="n">OnticType</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">pymongo</span> <span class="kn">import</span> <span class="n">MongoClient</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">client</span> <span class="o">=</span> <span class="n">MongoClient</span><span class="p">()</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">persons</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">a_database</span><span class="o">.</span><span class="n">persons</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">person</span> <span class="o">=</span> <span class="n">OnticType</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">person</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;My Name&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">person</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;My Name&#39;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">person</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="mi">32</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">person</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="n">persons</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="n">person</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="section" id="dict-style-initialization">
-<h3><a class="toc-backref" href="#id4">Dict Style Initialization</a><a class="headerlink" href="#dict-style-initialization" title="Permalink to this headline">¶</a></h3>
-<p><em>OnticType</em> objects can be instantiated in the same fashion as a <em>dict</em> type.</p>
+<section id="dict-style-initialization">
+<h3><a class="toc-backref" href="#id5">Dict Style Initialization</a><a class="headerlink" href="#dict-style-initialization" title="Permalink to this headline">¶</a></h3>
+<p><em>OnticType</em> objects can be initialized in the same fashion as a <em>dict</em> type.</p>
 <blockquote>
 <div><p>OnticType() -&gt; new empty OnticType</p>
 <p>OnticType(mapping) -&gt; new OnticType initialized from a mapping
-object&#8217;s (key, value) pairs. For example, a dict object:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">o</span> <span class="o">=</span> <span class="n">OnticType</span><span class="p">({</span><span class="s">&#39;p&#39;</span><span class="p">:</span><span class="s">&#39;v&#39;</span><span class="p">})</span>
+object’s (key, value) pairs. For example, a dict object:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">o</span> <span class="o">=</span> <span class="n">OnticType</span><span class="p">({</span><span class="s1">&#39;p&#39;</span><span class="p">:</span><span class="s1">&#39;v&#39;</span><span class="p">})</span>
 </pre></div>
 </div>
 <p>OnticType(iterable) -&gt; new OnticType initialized as if via:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">d</span> <span class="o">=</span> <span class="n">OnticType</span><span class="p">()</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">d</span> <span class="o">=</span> <span class="n">OnticType</span><span class="p">()</span>
 <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">iterable</span><span class="p">:</span>
   <span class="n">d</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
 </pre></div>
 </div>
 <p>OnticType(**kwargs) -&gt; new OnticType initialized with the
 name=value pairs in the keyword argument list.  For example:</p>
-<div class="highlight-python"><pre>OnticType(one={. . .}, two={. . .})</pre>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">OnticType</span><span class="p">(</span><span class="n">one</span><span class="o">=</span><span class="p">{</span><span class="o">.</span> <span class="o">.</span> <span class="o">.</span><span class="p">},</span> <span class="n">two</span><span class="o">=</span><span class="p">{</span><span class="o">.</span> <span class="o">.</span> <span class="o">.</span><span class="p">})</span>
+</pre></div>
 </div>
 </div></blockquote>
-</div>
-</div>
-<div class="section" id="creation-of-ontic-types">
-<h2><a class="toc-backref" href="#id5">Creation of Ontic Types</a><a class="headerlink" href="#creation-of-ontic-types" title="Permalink to this headline">¶</a></h2>
+</section>
+</section>
+<section id="ontic-type-schema-definition">
+<h2><a class="toc-backref" href="#id6">Ontic Type Schema Definition</a><a class="headerlink" href="#ontic-type-schema-definition" title="Permalink to this headline">¶</a></h2>
 <p>The steps for creating an <em>OnticType</em>, beyond the simplistic use case,
 begins with <em>SchemaType</em> definition. <em>SchemaType</em> definitions are used to
 create <em>OnticType</em> instances that can be perfected and validated.
@@ -137,138 +168,138 @@ create <em>OnticType</em> instances that can be perfected and validated.
 instances that have a <em>SchemaType</em> definition.</p>
 <p>The following sections will demonstrate how to create <em>SchemaType</em> defined
 <em>OnticType</em> instances.</p>
-<div class="section" id="creation-of-schema-definitions">
-<h3><a class="toc-backref" href="#id6">Creation of Schema Definitions</a><a class="headerlink" href="#creation-of-schema-definitions" title="Permalink to this headline">¶</a></h3>
+<section id="creation-of-schema-definitions">
+<h3><a class="toc-backref" href="#id7">Creation of Schema Definitions</a><a class="headerlink" href="#creation-of-schema-definitions" title="Permalink to this headline">¶</a></h3>
 <p>Here is the list of schema definition properties provided by <strong>Ontic</strong>.</p>
-<table border="1" class="docutils">
-<caption>Property Schema Settings</caption>
+<table class="docutils align-default" id="id2">
+<caption><span class="caption-text">Property Schema Settings</span><a class="headerlink" href="#id2" title="Permalink to this table">¶</a></caption>
 <colgroup>
-<col width="19%" />
-<col width="24%" />
-<col width="57%" />
+<col style="width: 19%" />
+<col style="width: 24%" />
+<col style="width: 57%" />
 </colgroup>
-<thead valign="bottom">
-<tr class="row-odd"><th class="head">Name</th>
-<th class="head">Type</th>
-<th class="head">Enumeration</th>
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>Type</p></th>
+<th class="head"><p>Enumeration</p></th>
 </tr>
 </thead>
-<tbody valign="top">
-<tr class="row-even"><td>type</td>
-<td>str
-type</td>
-<td>basestring, bool, complex, date,
+<tbody>
+<tr class="row-even"><td><p>type</p></td>
+<td><p>str
+type</p></td>
+<td><p>bool, complex, date,
 datetime, dict, float, int, list,
-long, None, set, str, time, unicode</td>
+None, set, str, time</p></td>
 </tr>
-<tr class="row-odd"><td>default</td>
-<td>None</td>
-<td>&nbsp;</td>
+<tr class="row-odd"><td><p>default</p></td>
+<td><p>None</p></td>
+<td></td>
 </tr>
-<tr class="row-even"><td>required</td>
-<td>bool</td>
-<td>&nbsp;</td>
+<tr class="row-even"><td><p>required</p></td>
+<td><p>bool</p></td>
+<td></td>
 </tr>
-<tr class="row-odd"><td>enum</td>
-<td>set</td>
-<td>&nbsp;</td>
+<tr class="row-odd"><td><p>enum</p></td>
+<td><p>set</p></td>
+<td></td>
 </tr>
-<tr class="row-even"><td>min</td>
-<td>complex, date,
+<tr class="row-even"><td><p>min</p></td>
+<td><p>complex, date,
 datetime,
 float, int,
-long, time</td>
-<td>&nbsp;</td>
+time</p></td>
+<td></td>
 </tr>
-<tr class="row-odd"><td>max</td>
-<td>complex, date,
+<tr class="row-odd"><td><p>max</p></td>
+<td><p>complex, date,
 datetime,
 float, int,
-long, time</td>
-<td>&nbsp;</td>
+time</p></td>
+<td></td>
 </tr>
-<tr class="row-even"><td>regex</td>
-<td>str</td>
-<td>&nbsp;</td>
+<tr class="row-even"><td><p>regex</p></td>
+<td><p>str</p></td>
+<td></td>
 </tr>
-<tr class="row-odd"><td>member_type</td>
-<td>str
-type</td>
-<td>basestring, bool, complex, date,
+<tr class="row-odd"><td><p>member_type</p></td>
+<td><p>str
+type</p></td>
+<td><p>bool, complex, date,
 datetime, dict, float, int, list,
-long, None, set, str, time, unicode</td>
+None, set, str, time</p></td>
 </tr>
-<tr class="row-even"><td>member_min</td>
-<td>complex, date,
+<tr class="row-even"><td><p>member_min</p></td>
+<td><p>complex, date,
 datetime,
 float, int,
-long, time</td>
-<td>&nbsp;</td>
+time</p></td>
+<td></td>
 </tr>
-<tr class="row-odd"><td>member_max</td>
-<td>complex, date,
+<tr class="row-odd"><td><p>member_max</p></td>
+<td><p>complex, date,
 datetime,
 float, int,
-long, time</td>
-<td>&nbsp;</td>
+time</p></td>
+<td></td>
 </tr>
 </tbody>
 </table>
 <p>The schema type settings are utilized to create a <em>SchemaType</em>:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ontic.schema_type</span> <span class="kn">import</span> <span class="n">SchemaType</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">my_schema</span> <span class="o">=</span> <span class="n">SchemaType</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="p">{</span><span class="s">&#39;type&#39;</span><span class="o">=</span><span class="s">&#39;str&#39;</span><span class="p">,</span> <span class="s">&#39;default&#39;</span><span class="o">=</span><span class="s">&#39;NotAssigned&#39;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ontic.schema_type</span> <span class="kn">import</span> <span class="n">SchemaType</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">my_schema</span> <span class="o">=</span> <span class="n">SchemaType</span><span class="p">(</span><span class="n">p</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="o">=</span><span class="s1">&#39;str&#39;</span><span class="p">,</span> <span class="s1">&#39;default&#39;</span><span class="o">=</span><span class="s1">&#39;NotAssigned&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The created schema type defines that an object should have a property <em>p</em>. In
-addition the property <em>p</em> has a default value of &#8220;NotAssigned&#8221;.</p>
+addition the property <em>p</em> has a default value of “NotAssigned”.</p>
 <p>A more complex example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ontic.schema_type</span> <span class="kn">import</span> <span class="n">SchemaType</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ontic.schema_type</span> <span class="kn">import</span> <span class="n">SchemaType</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">person_schema</span> <span class="o">=</span> <span class="n">SchemaType</span><span class="p">({</span>
-<span class="gp">... </span>  <span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;str&#39;</span><span class="p">,</span> <span class="s">&#39;required&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span> <span class="s">&#39;min&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
-<span class="gp">... </span>  <span class="s">&#39;age&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;int&#39;</span><span class="p">,</span> <span class="s">&#39;min&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span>
-<span class="gp">... </span>  <span class="s">&#39;gender&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;str&#39;</span><span class="p">,</span> <span class="s">&#39;enum&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;M&#39;</span><span class="p">,</span><span class="s">&#39;F&#39;</span><span class="p">,</span> <span class="s">&#39;NA&#39;</span><span class="p">},</span> <span class="s">&#39;default&#39;</span><span class="p">:</span><span class="s">&#39;NA&#39;</span><span class="p">},</span>
+<span class="gp">... </span>  <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;str&#39;</span><span class="p">,</span> <span class="s1">&#39;required&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+<span class="gp">... </span>  <span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;int&#39;</span><span class="p">,</span> <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span>
+<span class="gp">... </span>  <span class="s1">&#39;gender&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;str&#39;</span><span class="p">,</span> <span class="s1">&#39;enum&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;M&#39;</span><span class="p">,</span><span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="s1">&#39;NA&#39;</span><span class="p">},</span> <span class="s1">&#39;default&#39;</span><span class="p">:</span><span class="s1">&#39;NA&#39;</span><span class="p">},</span>
 <span class="gp">... </span><span class="p">})</span>
 </pre></div>
 </div>
 <p>For a more extensive description of schema settings see
-<a class="reference internal" href="ontic.meta_type.html#property-schema-settings-table"><em>Available Property Schema Settings</em></a></p>
-</div>
-<div class="section" id="class-style-type-definitions">
-<h3><a class="toc-backref" href="#id7">Class-style Type Definitions</a><a class="headerlink" href="#class-style-type-definitions" title="Permalink to this headline">¶</a></h3>
+<a class="reference internal" href="ontic.property.html#property-schema-settings-table"><span class="std std-ref">Available Property Schema Settings</span></a></p>
+</section>
+<section id="class-style-type-definitions">
+<h3><a class="toc-backref" href="#id8">Class-style Type Definitions</a><a class="headerlink" href="#class-style-type-definitions" title="Permalink to this headline">¶</a></h3>
 <p>To declare a <em>OnticType</em> with a <em>SchemaType</em> definition,
 you need to set the <em>ONTIC_SCHEMA</em> class attribute with a <em>SchemaType</em>
 instance. Such as:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">OnticType</span><span class="p">):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">OnticType</span><span class="p">):</span>
   <span class="n">ONTIC_SCHEMA</span> <span class="o">=</span> <span class="n">SchemaType</span><span class="p">({</span>
-    <span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;str&#39;</span><span class="p">,</span> <span class="s">&#39;required&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span> <span class="s">&#39;min&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
-    <span class="s">&#39;age&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;int&#39;</span><span class="p">,</span> <span class="s">&#39;min&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span>
-    <span class="s">&#39;gender&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;str&#39;</span><span class="p">,</span> <span class="s">&#39;enum&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;M&#39;</span><span class="p">,</span><span class="s">&#39;F&#39;</span><span class="p">,</span> <span class="s">&#39;NA&#39;</span><span class="p">},</span> <span class="s">&#39;default&#39;</span><span class="p">:</span><span class="s">&#39;NA&#39;</span><span class="p">},</span>
+    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;str&#39;</span><span class="p">,</span> <span class="s1">&#39;required&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+    <span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;int&#39;</span><span class="p">,</span> <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span>
+    <span class="s1">&#39;gender&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;str&#39;</span><span class="p">,</span> <span class="s1">&#39;enum&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;M&#39;</span><span class="p">,</span><span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="s1">&#39;NA&#39;</span><span class="p">},</span> <span class="s1">&#39;default&#39;</span><span class="p">:</span><span class="s1">&#39;NA&#39;</span><span class="p">},</span>
   <span class="p">})</span>
 </pre></div>
 </div>
 <p>The <em>Person</em> class can now be used to create instances:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="n">person</span> <span class="o">=</span> <span class="n">Person</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;Sal&#39;</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">gender</span><span class="o">=</span><span class="s">&#39;M&#39;</span><span class="p">)</span>
-<span class="c"># or</span>
-<span class="n">person</span> <span class="o">=</span> <span class="n">Person</span><span class="p">({</span><span class="s">&#39;name&#39;</span><span class="p">:</span><span class="s">&#39;Sal&#39;</span><span class="p">,</span> <span class="s">&#39;age&#39;</span><span class="p">:</span><span class="mi">32</span><span class="p">,</span> <span class="s">&#39;gender&#39;</span><span class="p">:</span><span class="s">&#39;M&#39;</span><span class="p">})</span>
-<span class="c"># and also</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">person</span> <span class="o">=</span> <span class="n">Person</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Sal&#39;</span><span class="p">,</span> <span class="n">age</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span> <span class="n">gender</span><span class="o">=</span><span class="s1">&#39;M&#39;</span><span class="p">)</span>
+<span class="c1"># or</span>
+<span class="n">person</span> <span class="o">=</span> <span class="n">Person</span><span class="p">({</span><span class="s1">&#39;name&#39;</span><span class="p">:</span><span class="s1">&#39;Sal&#39;</span><span class="p">,</span> <span class="s1">&#39;age&#39;</span><span class="p">:</span><span class="mi">32</span><span class="p">,</span> <span class="s1">&#39;gender&#39;</span><span class="p">:</span><span class="s1">&#39;M&#39;</span><span class="p">})</span>
+<span class="c1"># and also</span>
 <span class="n">person</span> <span class="o">=</span> <span class="n">Person</span><span class="p">()</span>
-<span class="n">person</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s">&#39;Sal&#39;</span>
+<span class="n">person</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s1">&#39;Sal&#39;</span>
 <span class="n">person</span><span class="o">.</span><span class="n">age</span> <span class="o">=</span> <span class="mi">32</span>
-<span class="n">person</span><span class="p">[</span><span class="s">&#39;gender&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s">&#39;M&#39;</span>
+<span class="n">person</span><span class="p">[</span><span class="s1">&#39;gender&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;M&#39;</span>
 </pre></div>
 </div>
-</div>
-<div class="section" id="dynamic-type-definitions">
-<h3><a class="toc-backref" href="#id8">Dynamic Type Definitions</a><a class="headerlink" href="#dynamic-type-definitions" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="dynamic-type-definitions">
+<h3><a class="toc-backref" href="#id9">Dynamic Type Definitions</a><a class="headerlink" href="#dynamic-type-definitions" title="Permalink to this headline">¶</a></h3>
 <p>It is also possible to define a type dynamically, with the use of the
 <em>ontic.ontic_type.create_ontic_type</em> function. Such as:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="kn">from</span> <span class="nn">ontic.ontic_type</span> <span class="kn">import</span> <span class="n">create_ontic_type</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ontic.ontic_type</span> <span class="kn">import</span> <span class="n">create_ontic_type</span>
 <span class="n">Person</span> <span class="o">=</span> <span class="n">create_ontic_type</span><span class="p">(</span>
-  <span class="s">&#39;Person&#39;</span><span class="p">,</span>
+  <span class="s1">&#39;Person&#39;</span><span class="p">,</span>
   <span class="p">{</span>
-    <span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span><span class="s">&#39;str&#39;</span><span class="p">,</span> <span class="s">&#39;required&#39;</span><span class="p">:</span><span class="bp">True</span><span class="p">,</span> <span class="s">&#39;min&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">},</span>
-    <span class="s">&#39;age&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span><span class="s">&#39;int&#39;</span><span class="p">,</span> <span class="s">&#39;min&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">},</span>
-    <span class="s">&#39;gender&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span><span class="s">&#39;str&#39;</span><span class="p">,</span> <span class="s">&#39;enum&#39;</span><span class="p">:{</span><span class="s">&#39;M&#39;</span><span class="p">,</span><span class="s">&#39;F&#39;</span><span class="p">,</span><span class="s">&#39;NA&#39;</span><span class="p">},</span> <span class="s">&#39;default&#39;</span><span class="p">:</span><span class="s">&#39;NA&#39;</span><span class="p">},</span>
+    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span><span class="s1">&#39;str&#39;</span><span class="p">,</span> <span class="s1">&#39;required&#39;</span><span class="p">:</span><span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;min&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">},</span>
+    <span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span><span class="s1">&#39;int&#39;</span><span class="p">,</span> <span class="s1">&#39;min&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">},</span>
+    <span class="s1">&#39;gender&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span><span class="s1">&#39;str&#39;</span><span class="p">,</span> <span class="s1">&#39;enum&#39;</span><span class="p">:{</span><span class="s1">&#39;M&#39;</span><span class="p">,</span><span class="s1">&#39;F&#39;</span><span class="p">,</span><span class="s1">&#39;NA&#39;</span><span class="p">},</span> <span class="s1">&#39;default&#39;</span><span class="p">:</span><span class="s1">&#39;NA&#39;</span><span class="p">},</span>
   <span class="p">}</span>
 <span class="p">)</span>
 <span class="n">person</span> <span class="o">=</span> <span class="n">Person</span><span class="p">()</span>
@@ -276,39 +307,40 @@ instance. Such as:</p>
 </div>
 <p>The <em>create_ontic_type</em> function also accepts a <em>SchemaType</em> as a schema
 definition parameter.  As in:</p>
-<div class="highlight-python"><pre>from ontic.ontic_type import create_ontic_type
-from ontic.schema_type import SchemaType
-schema = SchemaType({
-  'name': {'type':'str', 'required':True, 'min':1},
-  'age': {'type':'int', 'min':0},
-  'gender': {'type':'str', 'enum':{'M','F','NA'}, 'default':'NA'},
-})
-Person = create_ontic_type('Person', schema)
-person = Person(name='Santos', height=)</pre>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">ontic.ontic_type</span> <span class="kn">import</span> <span class="n">create_ontic_type</span>
+<span class="kn">from</span> <span class="nn">ontic.schema_type</span> <span class="kn">import</span> <span class="n">SchemaType</span>
+<span class="n">schema</span> <span class="o">=</span> <span class="n">SchemaType</span><span class="p">({</span>
+  <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span><span class="s1">&#39;str&#39;</span><span class="p">,</span> <span class="s1">&#39;required&#39;</span><span class="p">:</span><span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;min&#39;</span><span class="p">:</span><span class="mi">1</span><span class="p">},</span>
+  <span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span><span class="s1">&#39;int&#39;</span><span class="p">,</span> <span class="s1">&#39;min&#39;</span><span class="p">:</span><span class="mi">0</span><span class="p">},</span>
+  <span class="s1">&#39;gender&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span><span class="s1">&#39;str&#39;</span><span class="p">,</span> <span class="s1">&#39;enum&#39;</span><span class="p">:{</span><span class="s1">&#39;M&#39;</span><span class="p">,</span><span class="s1">&#39;F&#39;</span><span class="p">,</span><span class="s1">&#39;NA&#39;</span><span class="p">},</span> <span class="s1">&#39;default&#39;</span><span class="p">:</span><span class="s1">&#39;NA&#39;</span><span class="p">},</span>
+<span class="p">})</span>
+<span class="n">Person</span> <span class="o">=</span> <span class="n">create_ontic_type</span><span class="p">(</span><span class="s1">&#39;Person&#39;</span><span class="p">,</span> <span class="n">schema</span><span class="p">)</span>
+<span class="n">person</span> <span class="o">=</span> <span class="n">Person</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Santos&#39;</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="p">)</span>
+</pre></div>
 </div>
 <p>Checkout the API documentation for <em>SchemaType</em> for advanced schema handling
 features.</p>
-</div>
-</div>
-<div class="section" id="working-with-ontic-objects">
-<h2><a class="toc-backref" href="#id9">Working with Ontic Objects</a><a class="headerlink" href="#working-with-ontic-objects" title="Permalink to this headline">¶</a></h2>
-<div class="section" id="perfect">
-<h3><a class="toc-backref" href="#id10">Perfect</a><a class="headerlink" href="#perfect" title="Permalink to this headline">¶</a></h3>
+</section>
+</section>
+<section id="working-with-ontic-objects">
+<h2><a class="toc-backref" href="#id10">Working with Ontic Objects</a><a class="headerlink" href="#working-with-ontic-objects" title="Permalink to this headline">¶</a></h2>
+<section id="perfect">
+<h3><a class="toc-backref" href="#id11">Perfect</a><a class="headerlink" href="#perfect" title="Permalink to this headline">¶</a></h3>
 <p>Perfecting am <em>OnticType</em> instance, is to strip out any additional values that
 may have been assigned to the object, and to ensure the existence of all
 properties defined in the schema.</p>
 <p>Perfecting an <em>OnticType</em> object is done with the
-<em>ontic.ontic_type.perfect_object</em> function. Let&#8217;s assume:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">OnticType</span><span class="p">):</span>
+<em>ontic.ontic_type.perfect_object</em> function. Let’s assume:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">OnticType</span><span class="p">):</span>
   <span class="n">ONTIC_SCHEMA</span> <span class="o">=</span> <span class="n">SchemaType</span><span class="p">({</span>
-    <span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;str&#39;</span><span class="p">,</span> <span class="s">&#39;required&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span> <span class="s">&#39;min&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
-    <span class="s">&#39;age&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;int&#39;</span><span class="p">,</span> <span class="s">&#39;min&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span>
-    <span class="s">&#39;gender&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;str&#39;</span><span class="p">,</span> <span class="s">&#39;enum&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;M&#39;</span><span class="p">,</span><span class="s">&#39;F&#39;</span><span class="p">,</span> <span class="s">&#39;NA&#39;</span><span class="p">},</span> <span class="s">&#39;default&#39;</span><span class="p">:</span><span class="s">&#39;NA&#39;</span><span class="p">},</span>
+    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;str&#39;</span><span class="p">,</span> <span class="s1">&#39;required&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+    <span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;int&#39;</span><span class="p">,</span> <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span>
+    <span class="s1">&#39;gender&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;str&#39;</span><span class="p">,</span> <span class="s1">&#39;enum&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;M&#39;</span><span class="p">,</span><span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="s1">&#39;NA&#39;</span><span class="p">},</span> <span class="s1">&#39;default&#39;</span><span class="p">:</span><span class="s1">&#39;NA&#39;</span><span class="p">},</span>
   <span class="p">})</span>
 </pre></div>
 </div>
 <p>Then the following demonstrates the use of the <em>perfect_object</em> function:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">person</span> <span class="o">=</span> <span class="n">Person</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s">&#39;Santos&#39;</span><span class="p">,</span><span class="n">height</span><span class="o">=</span><span class="mi">67</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">person</span> <span class="o">=</span> <span class="n">Person</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s1">&#39;Santos&#39;</span><span class="p">,</span><span class="n">height</span><span class="o">=</span><span class="mi">67</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">person</span>
 <span class="go">{&#39;name&#39;: &#39;Santos&#39;, &#39;height&#39;: 67}</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">perfect_object</span><span class="p">(</span><span class="n">person</span><span class="p">)</span>
@@ -323,9 +355,9 @@ default setting, which was applied.</p>
 <p>For the collection type (dict, list, set), the <em>perfect_object</em> method will
 deepcopy the default value. This is to ensure that not all perfected objects
 will share a pointer to the same collection instance.</p>
-</div>
-<div class="section" id="validate">
-<h3><a class="toc-backref" href="#id11">Validate</a><a class="headerlink" href="#validate" title="Permalink to this headline">¶</a></h3>
+</section>
+<section id="validate">
+<h3><a class="toc-backref" href="#id12">Validate</a><a class="headerlink" href="#validate" title="Permalink to this headline">¶</a></h3>
 <p><strong>Ontic</strong> provides two methods for executing validation against a given
 <em>OnticType</em> object, backed by a schema definition. There are the
 <em>ontic.ontic_type.validate_object</em> and <em>ontic.ontic_type.validate_value</em>
@@ -333,16 +365,16 @@ functions. Both function will throw a
 <em>ontic.validation_exception.ValidateException</em>, if an validation exception is
 found.</p>
 <p>For the validation examples, assume:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">OnticType</span><span class="p">):</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">Person</span><span class="p">(</span><span class="n">OnticType</span><span class="p">):</span>
   <span class="n">ONTIC_SCHEMA</span> <span class="o">=</span> <span class="n">SchemaType</span><span class="p">({</span>
-    <span class="s">&#39;name&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;str&#39;</span><span class="p">,</span> <span class="s">&#39;required&#39;</span><span class="p">:</span> <span class="bp">True</span><span class="p">,</span> <span class="s">&#39;min&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
-    <span class="s">&#39;age&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;int&#39;</span><span class="p">,</span> <span class="s">&#39;min&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span>
-    <span class="s">&#39;gender&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;type&#39;</span><span class="p">:</span> <span class="s">&#39;str&#39;</span><span class="p">,</span> <span class="s">&#39;enum&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s">&#39;M&#39;</span><span class="p">,</span><span class="s">&#39;F&#39;</span><span class="p">,</span> <span class="s">&#39;NA&#39;</span><span class="p">},</span> <span class="s">&#39;default&#39;</span><span class="p">:</span><span class="s">&#39;NA&#39;</span><span class="p">},</span>
+    <span class="s1">&#39;name&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;str&#39;</span><span class="p">,</span> <span class="s1">&#39;required&#39;</span><span class="p">:</span> <span class="kc">True</span><span class="p">,</span> <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+    <span class="s1">&#39;age&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;int&#39;</span><span class="p">,</span> <span class="s1">&#39;min&#39;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span>
+    <span class="s1">&#39;gender&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;type&#39;</span><span class="p">:</span> <span class="s1">&#39;str&#39;</span><span class="p">,</span> <span class="s1">&#39;enum&#39;</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;M&#39;</span><span class="p">,</span><span class="s1">&#39;F&#39;</span><span class="p">,</span> <span class="s1">&#39;NA&#39;</span><span class="p">},</span> <span class="s1">&#39;default&#39;</span><span class="p">:</span><span class="s1">&#39;NA&#39;</span><span class="p">},</span>
   <span class="p">})</span>
 </pre></div>
 </div>
 <p>To validate an <em>OnticType</em> instance:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">person</span> <span class="o">=</span> <span class="n">Person</span><span class="p">(</span><span class="n">age</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span><span class="n">gender</span><span class="o">=</span><span class="s">&#39;W&#39;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">person</span> <span class="o">=</span> <span class="n">Person</span><span class="p">(</span><span class="n">age</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span><span class="n">gender</span><span class="o">=</span><span class="s1">&#39;W&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ontic.ontic_type</span> <span class="kn">import</span> <span class="n">validate_object</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">validate_object</span><span class="p">(</span><span class="n">person</span><span class="p">)</span>
 <span class="gt">Traceback (most recent call last):</span>
@@ -359,7 +391,7 @@ determine all validation failures. The <em>ValidationException.message</em> will
 the validation failures as a new-line delimited list. There is also a list of
 strings available from the <em>ValidationException.validation_errors</em> for
 structured access to the validation failures. To demonstrate:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="k">try</span><span class="p">:</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">try</span><span class="p">:</span>
 <span class="gp">... </span>    <span class="n">validate_object</span><span class="p">(</span><span class="n">person</span><span class="p">)</span>
 <span class="gp">... </span><span class="k">except</span> <span class="n">ValidationException</span> <span class="k">as</span> <span class="n">ve</span><span class="p">:</span>
 <span class="gp">... </span>    <span class="n">ve</span><span class="o">.</span><span class="n">message</span>
@@ -370,9 +402,9 @@ structured access to the validation failures. To demonstrate:</p>
 </div>
 <p>The <em>validate_value</em> function operates over a single property by passing a
 key name for the property. Example:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">person</span> <span class="o">=</span> <span class="n">Person</span><span class="p">(</span><span class="n">age</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span><span class="n">gender</span><span class="o">=</span><span class="s">&#39;W&#39;</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">person</span> <span class="o">=</span> <span class="n">Person</span><span class="p">(</span><span class="n">age</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span><span class="n">gender</span><span class="o">=</span><span class="s1">&#39;W&#39;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span> <span class="nn">ontic.ontic_type</span> <span class="kn">import</span> <span class="n">validate_value</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">validate_value</span><span class="p">(</span><span class="s">&#39;gender&#39;</span><span class="p">,</span> <span class="n">person</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">validate_value</span><span class="p">(</span><span class="s1">&#39;gender&#39;</span><span class="p">,</span> <span class="n">person</span><span class="p">)</span>
 <span class="gt">Traceback (most recent call last):</span>
   File <span class="nb">&quot;&lt;stdin&gt;&quot;</span>, line <span class="m">1</span>, in <span class="n">&lt;module&gt;</span>
   File <span class="nb">&quot;ontic/ontic_type.py&quot;</span>, line <span class="m">174</span>, in <span class="n">validate_object</span>
@@ -385,29 +417,30 @@ key name for the property. Example:</p>
 <em>raise_validation_exception</em> parameter. If the <em>raise_validation_exception</em>
 parameter is set to False, then the functions will return a list of value
 failures. Demonstrated by:</p>
-<div class="highlight-python"><div class="highlight"><pre><span class="gp">&gt;&gt;&gt; </span><span class="n">validate_object</span><span class="p">(</span><span class="n">person</span><span class="p">,</span> <span class="n">raise_validation_exception</span><span class="o">=</span><span class="bp">False</span><span class="p">)</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">validate_object</span><span class="p">(</span><span class="n">person</span><span class="p">,</span> <span class="n">raise_validation_exception</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="go">[&#39;The value &quot;W&quot; for &quot;gender&quot; not in enumeration [\&#39;NA\&#39;, \&#39;M\&#39;, \&#39;F\&#39;].&#39;,</span>
 <span class="go">&#39;The value for &quot;name&quot; is required.&#39;]</span>
 </pre></div>
 </div>
-</div>
-</div>
-</div>
+</section>
+</section>
+</section>
 
 
+            <div class="clearer"></div>
           </div>
         </div>
       </div>
-      <div class="sphinxsidebar">
-        <div class="sphinxsidebarwrapper">
-  <h3><a href="index.html">Table Of Contents</a></h3>
-  <ul>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="sphinx-toc sphinxlocaltoc">
+    <h3><a href="contents.html">Page contents</a></h3>
+    <ul>
 <li><a class="reference internal" href="#">Getting Started with Ontic</a><ul>
 <li><a class="reference internal" href="#creating-a-simple-ontictype-object">Creating a Simple OnticType Object</a><ul>
 <li><a class="reference internal" href="#dict-style-initialization">Dict Style Initialization</a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#creation-of-ontic-types">Creation of Ontic Types</a><ul>
+<li><a class="reference internal" href="#ontic-type-schema-definition">Ontic Type Schema Definition</a><ul>
 <li><a class="reference internal" href="#creation-of-schema-definitions">Creation of Schema Definitions</a></li>
 <li><a class="reference internal" href="#class-style-type-definitions">Class-style Type Definitions</a></li>
 <li><a class="reference internal" href="#dynamic-type-definitions">Dynamic Type Definitions</a></li>
@@ -422,35 +455,58 @@ failures. Demonstrated by:</p>
 </li>
 </ul>
 
-  <h4>Previous topic</h4>
-  <p class="topless"><a href="index.html"
-                        title="previous chapter">Ontic - of or relating to entities and the facts about them</a></p>
-  <h4>Next topic</h4>
-  <p class="topless"><a href="ontic.meta_type.html"
-                        title="next chapter">CoreType, MetaType, and PropertySchema Module</a></p>
-  <h3>This Page</h3>
-  <ul class="this-page-menu">
-    <li><a href="_sources/ontic.txt"
-           rel="nofollow">Show Source</a></li>
-  </ul>
-<div id="searchbox" style="display: none">
-  <h3>Quick search</h3>
+  </div>
+  <div class="sphinxprev">
+    <h4>Previous page</h4>
+    <p class="topless"><a href="index.html"
+                          title="Previous page">&larr; Ontic - Of or Relating to Entities and the Facts about Them</a></p>
+  </div>
+  <div class="sphinxnext">
+    <h4>Next page</h4>
+    <p class="topless"><a href="advanced.html"
+                          title="Next page">&rarr; Advanced Ontic</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/ontic.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
     <form class="search" action="search.html" method="get">
-      <input type="text" name="q" />
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
       <input type="submit" value="Go" />
-      <input type="hidden" name="check_keywords" value="yes" />
-      <input type="hidden" name="area" value="default" />
     </form>
-    <p class="searchtip" style="font-size: 90%">
-    Enter search terms or a module, class or function name.
-    </p>
+    </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
         </div>
       </div>
+    
+    
+        <div class="sidebar-toggle-group no-js">
+            
+            <button class="sidebar-toggle" id="sidebar-hide" title="Hide the sidebar menu">
+                 «
+                <span class="show-for-small">hide menu</span>
+                
+            </button>
+            <button class="sidebar-toggle" id="sidebar-show" title="Show the sidebar menu">
+                
+                <span class="show-for-small">menu</span>
+                <span class="hide-for-small">sidebar</span>
+                 »
+            </button>
+        </div>
+    
       <div class="clearer"></div>
     </div>
-    <div class="related">
+    <div class="relbar-bottom">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
       <h3>Navigation</h3>
       <ul>
         <li class="right" style="margin-right: 10px">
@@ -458,19 +514,27 @@ failures. Demonstrated by:</p>
              >index</a></li>
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
-             >modules</a> |</li>
+             >modules</a> &nbsp; &nbsp;</li>
         <li class="right" >
-          <a href="ontic.meta_type.html" title="CoreType, MetaType, and PropertySchema Module"
-             >next</a> |</li>
+          <a href="contents.html" title="Table Of Contents"
+             >toc</a> &nbsp; &nbsp;</li>
         <li class="right" >
-          <a href="index.html" title="Ontic - of or relating to entities and the facts about them"
-             >previous</a> |</li>
-        <li><a href="index.html">Ontic 0.0.4 Documentation</a> &raquo;</li> 
+          <a href="advanced.html" title="Advanced Ontic"
+             >next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="index.html" title="Ontic - Of or Relating to Entities and the Facts about Them"
+             >previous</a> &nbsp; &nbsp;</li>
+    <li><a href="index.html">Ontic 1.0.0 Documentation</a> &#187;</li>
+
+        <li class="nav-item nav-item-this"><a href="">Getting Started with Ontic</a></li> 
       </ul>
     </div>
-    <div class="footer">
-        &copy; Copyright 2014, Raul Gonzalez.
-      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.
     </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2015, Raul Gonzalez.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.1.1.
+    </div>
+    <!-- cloud_sptheme 1.4 -->
   </body>
 </html>
