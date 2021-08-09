@@ -53,6 +53,7 @@ and :meth:`validate_schema`.
 
 """
 import logging
+from typing import NoReturn
 
 from ontic import core
 from ontic import property
@@ -105,11 +106,10 @@ class Schema(core.Core):
                         'Exception while converting "%s" to OnticProperty', key)
                     raise
 
-    def add(self, property_type):
+    def add(self, property_type: 'OnticProperty') -> NoReturn:
         """ Add a property definition to a schema.
 
         :param property_type:
-        :type property_type: [dict, ontic_property.OnticProperty]
         """
         if not isinstance(property_type, (dict, property.OnticProperty)):
             raise ValueError(
@@ -121,18 +121,17 @@ class Schema(core.Core):
             ontic_prop = property.OnticProperty(property_type)
             self[ontic_prop.name] = ontic_prop
 
-    def perfect(self):
+    def perfect(self) -> NoReturn:
         """Method to clean and perfect a given schema.
 
         The *perfect* will fill in any missing schema settings for each of
         the :class:`OnticProperty`. This function should be used to ensure
         property schema completeness.
-
-        :rtype: None
         """
         perfect_schema(self)
 
-    def validate(self, raise_validation_exception=True):
+    def validate(self,
+                 raise_validation_exception: bool = True) -> (None, list[str]):
         """Validate a given :class:`Schema`.
 
         This method will iterate through all of the
@@ -156,7 +155,7 @@ class Schema(core.Core):
         return validate_schema(self, raise_validation_exception)
 
 
-def perfect_schema(ontic_schema):
+def perfect_schema(ontic_schema: 'OnticProperty') -> NoReturn:
     """Method to clean and perfect a given schema.
 
     The *perfect_schema* will fill in any missing schema setting for each of
@@ -164,8 +163,6 @@ def perfect_schema(ontic_schema):
     property schema completeness.
 
     :param ontic_schema: The schema that is to be perfected.
-    :type ontic_schema: :class:`Schema`
-    :rtype: None
     """
     if ontic_schema is None:
         raise ValueError('"ontic_schema" must be provided.')
@@ -175,7 +172,9 @@ def perfect_schema(ontic_schema):
     [property_schema.perfect() for property_schema in ontic_schema.values()]
 
 
-def validate_schema(ontic_schema, raise_validation_exception=True):
+def validate_schema(
+        ontic_schema: 'OnticProperty',
+        raise_validation_exception: bool = True) -> (None, list[str]):
     """Validate a given :class:`Schema`.
 
     This method will iterate through all of the :class:`OnticProperty` and
@@ -185,13 +184,10 @@ def validate_schema(ontic_schema, raise_validation_exception=True):
     behavior is determined by the *raise_validation_exception*
 
     :param ontic_schema: The schema to be validated.
-    :type ontic_schema: :class:`Schema`
     :param raise_validation_exception: If True, then *validate_schema* will
         throw a *ValidationException* upon validation failure. If False, then a
         list of validation errors is returned. Defaults to True.
-    :type raise_validation_exception: bool
     :return: List of errors found. Empty of no errors found.
-    :rtype: list<str>
     :raises ValueError: *ontic_schema* is None, or not of type
         :class:`Schema`.
     :raises ValidationException: A property of *ontic_schema* does not

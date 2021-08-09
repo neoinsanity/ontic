@@ -51,6 +51,7 @@ with the use of the :meth:`create_ontic_type` function.
 
 """
 from copy import deepcopy
+from typing import NoReturn
 
 import ontic
 from ontic import meta
@@ -66,7 +67,7 @@ class OnticType(Meta):
     derived **Ontic** type instance.
     """
 
-    def perfect(self):
+    def perfect(self) -> NoReturn:
         """Function to ensure complete attribute settings for a given object.
 
         Perfecting an object instance will strip out any properties not
@@ -83,33 +84,32 @@ class OnticType(Meta):
         """
         perfect_object(self)
 
-    def validate(self, raise_validation_exception=True):
+    def validate(self,
+                 raise_validation_exception: bool = True) -> (None, list[str]):
         """Validate the given OnticType instance against it's defined schema.
 
         :param raise_validation_exception: If True, then *validate_object* will
             throw a *ValueException* upon validation failure. If False, then a
             list of validation errors is returned. Defaults to True.
-        :type raise_validation_exception: bool
         :return: If no validation errors are found, then *None* is
             returned. If validation fails, then a list of the errors is returned
             if the *raise_validation_exception* is set to True.
-        :rtype: list<str>, None
         """
         return validate_object(self, raise_validation_exception)
 
-    def validate_value(self, value_name, raise_validation_exception=True):
+    def validate_value(
+            self,
+            value_name: str,
+            raise_validation_exception: bool = True) -> (None, list[str]):
         """Validate a target value of a given ontic object.
 
         :param value_name: The value name to validate.
-        :type value_name: str
         :param raise_validation_exception: If True, then *validate_object* will
             throw a *ValueException* upon validation failure. If False, then a
             list of validation errors is returned. Defaults to True.
-        :type raise_validation_exception: bool
         :return: If no validation errors are found, then *None* is
             returned. If validation fails, then a list of the errors is returned
             if the *raise_validation_exception* is set to True.
-        :rtype: list<str>, None
         """
         return validate_value(value_name, self, raise_validation_exception)
 
@@ -130,11 +130,8 @@ def create_ontic_type(name: str, schema: (dict, Schema)) -> OnticType:
 
     :param name: The name to apply to the created class, with
         :class:`OnticType` as parent.
-    :type name: str
     :param schema: A representation of the schema in dictionary format.
-    :type schema: dict, :class:`ontic.schema_type.SchemaType`
     :return: A class whose base is :class:`OnticType`.
-    :rtype: ClassType
     :raises ValueError: String name required. Dict or
         :class:`ontic.Schema` schema required.
     """
@@ -155,7 +152,7 @@ def create_ontic_type(name: str, schema: (dict, Schema)) -> OnticType:
     return ontic_type
 
 
-def perfect_object(the_object):
+def perfect_object(the_object: OnticType) -> NoReturn:
     """Function to ensure complete attribute settings for a given object.
 
     Perfecting an object instance will strip out any properties not defined in
@@ -167,8 +164,6 @@ def perfect_object(the_object):
     copied.
 
     :param the_object: Ab object instance that is to be perfected.
-    :type the_object: :class:`ontic.type.OnticType`
-    :rtype: None
     """
     if the_object is None:
         raise ValueError('"the_object" must be provided.')
@@ -200,7 +195,9 @@ def perfect_object(the_object):
             value.perfect()
 
 
-def validate_object(the_object, raise_validation_exception=True):
+def validate_object(
+        the_object: OnticType,
+        raise_validation_exception: bool = True) -> (None, list[str]):
     """Function that will validate if an object meets the schema requirements.
 
     :param the_object: An object instant to be validity tested.
@@ -208,11 +205,9 @@ def validate_object(the_object, raise_validation_exception=True):
     :param raise_validation_exception: If True, then *validate_object* will
         throw a *ValueException* upon validation failure. If False, then a
         list of validation errors is returned. Defaults to True.
-    :type raise_validation_exception: bool
     :return: If no validation errors are found, then *None* is
         returned. If validation fails, then a list of the errors is returned
         if the *raise_validation_exception* is set to True.
-    :rtype: list<str>, None
     :raises ValueError: If *the_object* is None or not of type
         :class:`~ontic.ontic_type.OnticType`.
     :raises ValidationException: A property of *the_object* does not meet
@@ -235,24 +230,20 @@ def validate_object(the_object, raise_validation_exception=True):
 
 
 def validate_value(
-        property_name,
-        ontic_object,
-        raise_validation_exception=False):
+        property_name: str,
+        ontic_object: OnticType,
+        raise_validation_exception: bool = False) -> (None, list[str]):
     """Validate a specific value of a given :class:`OnticType` instance.
 
     :param property_name: The value to be validated against the given
         **PropertyType**.
-    :type property_name: str
     :param ontic_object: Ontic defined object to be validated.
-    :type ontic_object: type.OnticType
     :param raise_validation_exception: If True, then *validate_object* will
         throw a *ValueException* upon validation failure. If False, then a
         list of validation errors is returned. Defaults to True.
-    :type raise_validation_exception: bool
     :return: If no validation errors are found, then *None* is
         returned. If validation fails, then a list of the errors is returned
         if the *raise_validation_exception* is set to True.
-    :rtype: list<str>, None
     :raises ValueError: If *property_name* is not provided or is not a valid
         string.
     :raises ValueError: If *ontic_object* is None, or not instance of

@@ -58,9 +58,9 @@ class Core(dict):
 
         self.__dict__ = self
 
-    def __copy__(self):
+    def __copy__(self) -> 'Core':
         return type(self)(copy(dict(self)))
 
-    def __deepcopy__(self, memo):
+    def __deepcopy__(self, memo) -> 'Core':
         the_copy = dict(self.__dict__)
         return type(self)(deepcopy(the_copy, memo))

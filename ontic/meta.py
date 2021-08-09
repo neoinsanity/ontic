@@ -7,9 +7,11 @@
 """
 import re
 from datetime import date, datetime, time
+from typing import Any, NoReturn, Callable
 
 import ontic
 from ontic import core
+from ontic.schema import Schema
 
 
 class Meta(core.Core):
@@ -35,7 +37,7 @@ class Meta(core.Core):
     ONTIC_SCHEMA = core.Core()
 
     @classmethod
-    def get_schema(cls):
+    def get_schema(cls) -> Schema:
         """Returns the schema object for the a given type definition.
 
         :return: The schema metadata definition for a :class:`PropertySchema`
@@ -101,17 +103,14 @@ TYPE_SET = (
 )
 
 
-def validate_value(property_schema, value):
+def validate_value(property_schema: 'OnticProperty', value: Any) -> list[str]:
     """Method to validate a given value against a given property schema.
 
     :param property_schema: The property schema that contains the validation
         rules.
-    :type property_schema: :class:`ontic.OnticProperty`
     :param value: The value that is to be validated.
-    :type value: object
     :return: A list that is utilized to collect the errors found
         during schema validation.
-    :rtype: list<str>
     """
     value_errors = []
     # required: True | False
@@ -126,7 +125,10 @@ def validate_value(property_schema, value):
     return value_errors
 
 
-def validate_non_none_value(property_schema, value, value_errors):
+def validate_non_none_value(
+        property_schema: 'OnticProperty',
+        value: Any,
+        value_errors: list[str]) -> NoReturn:
     """Validates an **Ontic** object value that is not None.
 
     This method validates singular and collection values. This method
@@ -170,7 +172,10 @@ def validate_non_none_value(property_schema, value, value_errors):
                 property_schema, value, value_errors)
 
 
-def validate_collection_members(property_schema, value, value_errors):
+def validate_collection_members(
+        property_schema: 'OnticProperty',
+        value: Any,
+        value_errors: list[str]) -> NoReturn:
     """Method to validate the members of a collection.
 
     This method only operates on *list* and *set* collection types.
@@ -216,38 +221,35 @@ def validate_collection_members(property_schema, value, value_errors):
 
 
 def execute_collection_validators(
-        member_value, property_schema, validators, value_errors):
+        member_value: [str, int, float, date, datetime, time],
+        property_schema: 'OnticProperty',
+        validators: list[Callable],
+        value_errors: list[str]) -> NoReturn:
     """Method to execute a list of validators on a given collection.
 
     :param member_value: The member of the collection property to validate.
-    :type member_value: str, int, float, date, datetime, time
     :param property_schema: The property schema to utilize for validation.
-    :type property_schema: :class:`ontic.OnticProperty`
     :param validators: A list of validation methods to execute.
-    :type validators: list<types.MethodType>
     :param value_errors: A list of errors found for a given value. If any
         given validator method fails, it will append it error message to
         the value_errors list.
-    :type value_errors: list<str>
-    :rtype: None
     """
     for validator in validators:
         validator(member_value, property_schema, value_errors)
 
 
-def validate_member_enum(member_value, property_schema, value_errors):
+def validate_member_enum(
+        member_value: [str, int, float, date, datetime, time],
+        property_schema: 'OnticProperty',
+        value_errors: list[str]) -> NoReturn:
     """Validate a member of a collection is within a defined enumeration.
 
     :param member_value: The member of the collection property to
         validate.
-    :type member_value: str, int, float, date, datetime, time
     :param property_schema: The property schema to utilize for validation.
-    :type property_schema: :class:`ontic.OnticProperty`
     :param value_errors: A list of errors found for a given value. If the
         validate fails, then an error message is added to the
         value_errors list.
-    :type value_errors: list<str>
-    :rtype: None
     """
     if not enum_validation(property_schema, member_value):
         value_errors.append(
@@ -256,7 +258,10 @@ def validate_member_enum(member_value, property_schema, value_errors):
                 property_schema.enum)))
 
 
-def validate_member_type(member_value, property_schema, value_errors):
+def validate_member_type(
+        member_value: [str, int, float, date, datetime, time],
+        property_schema: 'OnticProperty',
+        value_errors: list[str]) -> NoReturn:
     """Validate a member of a collection is of a given type.
 
     :param member_value: The member value of the collection property to
@@ -277,19 +282,18 @@ def validate_member_type(member_value, property_schema, value_errors):
              property_schema.member_type))
 
 
-def validate_member_regex(member_value, property_schema, value_errors):
+def validate_member_regex(
+        member_value: [str, int, float, date, datetime, time],
+        property_schema: 'OnticProperty',
+        value_errors: list[str]) -> NoReturn:
     """Validate a member of a collection against a defined regex.
 
     :param member_value: The member value of the collection property to
         validate.
-    :type member_value: str
     :param property_schema: The property schema to utilize for validation.
-    :type property_schema: :class:`ontic.OnticProperty`
     :param value_errors: A list of errors found for a given value. If the
         validation fails, then an error message is added to the
         value_errors list.
-    :type value_errors: list<str>
-    :rtype: None
     """
     if not re.match(property_schema.regex, member_value):
         value_errors.append(
@@ -297,19 +301,18 @@ def validate_member_regex(member_value, property_schema, value_errors):
             (member_value, property_schema.name, property_schema.regex))
 
 
-def validate_member_min(member_value, property_schema, value_errors):
+def validate_member_min(
+        member_value: [str, int, float, date, datetime, time],
+        property_schema: 'OnticProperty',
+        value_errors: list[str]) -> NoReturn:
     """Validate a member of a collection for minimum allowable value.
 
     :param member_value: The member value of the collection property to
         validate.
-    :type member_value: str, int, float, date, datetime, time
     :param property_schema: The property schema to utilize for validation.
-    :type property_schema: :class:`ontic.OnticProperty`
     :param value_errors: A list of errors found for a given value. If the
         validation fails, then an error message is added to the
         value_errors list.
-    :type value_errors: list<str>
-    :rtype: None
     """
     if property_schema.member_type is str:
         if len(member_value) < property_schema.member_min:
@@ -326,19 +329,17 @@ def validate_member_min(member_value, property_schema, value_errors):
                  property_schema.member_min))
 
 
-def validate_member_max(member_value, property_schema, value_errors):
+def validate_member_max(member_value: [str, int, float, date, datetime, time],
+                        property_schema: 'OnticProperty',
+                        value_errors: list[str]) -> NoReturn:
     """Validate a member of a collection for maximum allowable value.
 
     :param member_value: The member value of the collection property to
         validate.
-    :type member_value: str, int, float, date, datetime, time
     :param property_schema: The property schema to utilize for validation.
-    :type property_schema: :class:`ontic.OnticProperty`
     :param value_errors: A list of errors found for a given value. If the
         validation fails, then an error message is added to the
         value_errors list.
-    :type value_errors: list<str>
-    :rtype: None
     """
     if property_schema.member_type is str:
         if len(member_value) > property_schema.member_max:
@@ -355,15 +356,14 @@ def validate_member_max(member_value, property_schema, value_errors):
                  property_schema.member_max))
 
 
-def enum_validation(property_schema, value):
+def enum_validation(
+        property_schema: 'OnticProperty',
+        value: [str, int, float, date, datetime, time]) -> bool:
     """Validate a non-collection property for value in an enumeration set.
 
     :param property_schema: The property schema to utilize for validation.
-    :type property_schema: :class:`ontic.OnticProperty`
     :param value: The value of the property to be validated.
-    :type value: object
     :return: True if the validation is successful, else False.
-    :rtype: bool
     """
     if property_schema.enum:
         if value not in property_schema.enum:
@@ -371,15 +371,14 @@ def enum_validation(property_schema, value):
     return True
 
 
-def min_validation(property_schema, value):
+def min_validation(
+        property_schema: 'OnticProperty',
+        value: [str, int, float, date, datetime, time]) -> bool:
     """Validate a non-collection property for minimum allowable value.
 
     :param property_schema: The property schema to utilize for validation.
-    :type property_schema: :class:`ontic.OnticProperty`
     :param value: The value of the property to be validated.
-    :type value: str, int, float, date, datetime, time, dict, list, set
     :return: True if the validation is successful, else False.
-    :rtype: bool
     """
     if property_schema.min:
         if property_schema.type in BOUNDABLE_TYPES:
@@ -392,15 +391,14 @@ def min_validation(property_schema, value):
     return True
 
 
-def max_validation(property_schema, value):
+def max_validation(
+        property_schema: 'OnticProperty',
+        value: [str, int, float, date, datetime, time]) -> bool:
     """Validates a non-collection property for maximum allowable value.
 
     :param property_schema: The property schema to utilize for validation.
-    :type property_schema: :class:`ontic.OnticProperty`
     :param value: The value of the property to be validated.
-    :type value: str, int, float, date, datetime, time, dict, list, set
     :return: True if the validation is successful, else False.
-    :rtype: bool
     """
     if property_schema.max:
         if property_schema.type in BOUNDABLE_TYPES:
@@ -413,20 +411,19 @@ def max_validation(property_schema, value):
     return True
 
 
-def non_none_singular_validation(property_schema, value, value_errors):
+def non_none_singular_validation(
+        property_schema: 'OnticProperty',
+        value: [str, int, float, date, datetime, time],
+        value_errors: list[str]) -> NoReturn:
     """Method to validate an object value meets schema requirements.
 
     This method validates non-collection properties. The method should
     only be used for non-None values.
 
     :param property_schema: The schema definition for the target property.
-    :type property_schema: :class:`ontic.OnticProperty`
     :param value: The value to be tested against the given schema.
-    :type value: str, int, float, date, datetime, time, dict, list, set
     :param value_errors: A list of the validation errors discovered. The
         value errors will be added to if the given value fails validation.
-    :type value_errors: list<str>
-    :rtype: None
     """
     # enum
     if not enum_validation(property_schema, value):
@@ -453,14 +450,10 @@ def non_none_singular_validation(property_schema, value, value_errors):
                     (value, property_schema.name, property_schema.regex))
 
 
-def _generate_sorted_list(some_collection):
+def _generate_sorted_list(some_collection: list[Any]) -> list[Any]:
     """Attempt to generate a sorted list from a collection.
 
     :param some_collection: A collection that will attempt to be sorted.
     :return: The sorted collection if possible, else return original collection.
     """
     return sorted(some_collection, key=lambda x: (x is None, str(x)))
-
-
-def _generate_sorted_type_list(some_type_collection):
-    return sorted(some_type_collection, key=lambda x: (x is None, str(x)))
