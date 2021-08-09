@@ -241,11 +241,11 @@ class ValidateSchemaTestCase(BaseTestCase):
 
     def test_bad_validate_schema(self):
         """ValueError testing of validate_schema."""
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValueError,
             r""""ontic_schema" argument must be provided.""",
             o_schema.validate_schema, None)
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValueError,
             r""""ontic_schema" argument must be of Schema type.""",
             o_schema.validate_schema, "not a oschema")
@@ -272,15 +272,15 @@ class ValidateSchemaTestCase(BaseTestCase):
         schema_instance = Schema()
         schema_instance.add(property_schema)
 
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValidationException,
             r"""The value for "required" is not """
-            r"""of type "<type 'bool'>": UNDEFINED""",
+            r"""of type "<class 'bool'>": UNDEFINED""",
             o_schema.validate_schema, schema_instance)
 
         expected_errors_list = [
             """The value for "required" is not of """
-            """type "<type 'bool'>": UNDEFINED"""]
+            """type "<class 'bool'>": UNDEFINED"""]
         try:
             o_schema.validate_schema(schema_instance)
             self.fail('A ValidationException should have been thrown.')
@@ -376,12 +376,12 @@ class PerfectSchemaTestCase(BaseTestCase):
 
     def test_bad_perfect_schema(self):
         """Validate proper error handling in 'perfect_schema' method."""
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValueError,
             r""""ontic_schema" must be provided.""",
             o_schema.perfect_schema, None)
 
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValueError,
             r""""ontic_schema" argument must be of Schema type.""",
             o_schema.perfect_schema, {})

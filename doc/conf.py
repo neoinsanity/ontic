@@ -21,7 +21,7 @@ import cloud_sptheme as csp
 
 # Added package for autodoc generation of documentation
 _abs_path = os.path.abspath('..')
-print '===== _abs_path:', _abs_path
+print('===== _abs_path:', _abs_path)
 sys.path.insert(0, _abs_path)
 
 # -- General configuration -----------------------------------------------------

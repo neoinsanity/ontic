@@ -68,7 +68,7 @@ class OnticPropertyTest(BaseTestCase):
 
         self.assertIsNotNone(result)
         expected_list = [
-            'The value for "dudete" is not of type "<type \'int\'>": some string']
+            'The value for "dudete" is not of type "<class \'int\'>": some string']
         self.assertListEqual(expected_list, result)
 
     def test_validate_value_w_validation_exception(self):
@@ -82,9 +82,9 @@ class OnticPropertyTest(BaseTestCase):
             }
         )
 
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValidationException,
-            r'The value for "dudete" is not of type "<type \'int\'>": some string',
+            r'The value for "dudete" is not of type "<class \'int\'>": some string',
             ontic_property.validate_value,
             'some string',
             raise_validation_exception=True)
@@ -139,7 +139,7 @@ class OnticPropertyTest(BaseTestCase):
 
         bad_schema_test_case = {'type': 'UNDEFINED'}
 
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValueError,
             r"""Illegal type declaration: UNDEFINED""",
             OnticProperty, bad_schema_test_case)
@@ -149,7 +149,7 @@ class OnticPropertyTest(BaseTestCase):
 
         bad_schema_test_case = {'type': UNDEFINED}
 
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValueError,
             r"""Illegal type declaration: %s""" % UNDEFINED,
             OnticProperty, bad_schema_test_case)
@@ -352,12 +352,12 @@ class PerfectSchemaPropertyTestCase(BaseTestCase):
     def test_bad_perfect_schema_property(self):
         """Validate error handling for bad schemas passed to
         perfect_property."""
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValueError,
             '"ontic_property" must be provided.',
             perfect_property, None)
 
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValueError,
             '"ontic_property" must be OnticProperty type.',
             perfect_property, {})
@@ -368,12 +368,12 @@ class ValidateSchemaProperty(BaseTestCase):
 
     def test_bad_validate_schema_property_call(self):
         """Test bad use cases of validate_property_type function call."""
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValueError,
             '"ontic_property" must be provided.',
             validate_property, None, list())
 
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValueError,
             '"ontic_property" must be OnticProperty type.',
             validate_property, dict(), list())
@@ -384,7 +384,7 @@ class ValidateSchemaProperty(BaseTestCase):
         invalid_property_schema.type = 'UNKNOWN'
 
         self.maxDiff = None
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValidationException,
             r"""The value "UNKNOWN" for "type" not in enumeration \[.*\].""",
             validate_property, invalid_property_schema)
@@ -403,13 +403,11 @@ class ValidateSchemaProperty(BaseTestCase):
         invalid_property_schema.member_type = 'UNKNOWN'
 
         self.maxDiff = None
-        self.assertRaisesRegexp(
+        self.assertRaisesRegex(
             ValidationException,
-            r"""The value \"UNKNOWN\" for \"member_type\" not in enumeration """
-            r"""\[None, <type 'datetime.date'>, <type 'datetime.datetime'>, """
-            r"""<type 'datetime.time'>, <type 'bool'>, <type 'complex'>, """
-            r"""<type 'float'>, <type 'int'>, <type 'list'>, <type 'dict'>, """
-            r"""<type 'set'>, <type 'str'>, <type 'tuple'>\].""",
+            r"""The value "UNKNOWN" for "member_type" not in enumeration \[<class 'bool'>, <class 'complex'>, """
+            r"""<class 'datetime.date'>, <class 'datetime.datetime'>, <class 'datetime.time'>, <class 'dict'>"""
+            r""", <class 'float'>, <class 'int'>, <class 'list'>, <class 'set'>, <class 'str'>, <class 'tuple'>, None\].""",
             validate_property, invalid_property_schema)
 
         value_errors = validate_property(
@@ -417,9 +415,7 @@ class ValidateSchemaProperty(BaseTestCase):
             raise_validation_exception=False)
         self.assertEqual(1, len(value_errors))
         self.assertEqual(
-            value_errors[0],
-            """The value "UNKNOWN" for "member_type" not in enumeration """
-            """[None, <type \'datetime.date\'>, <type \'datetime.datetime\'>,"""
-            """ <type \'datetime.time\'>, <type \'bool\'>, <type \'complex\'>"""
-            """, <type \'float\'>, <type \'int\'>, <type \'list\'>, <type """
-            """\'dict\'>, <type \'set\'>, <type \'str\'>, <type \'tuple\'>].""")
+            """The value "UNKNOWN" for "member_type" not in enumeration [<class 'bool'>, <class 'complex'>, """
+            """<class 'datetime.date'>, <class 'datetime.datetime'>, <class 'datetime.time'>, <class 'dict'>, """
+            """<class 'float'>, <class 'int'>, <class 'list'>, <class 'set'>, <class 'str'>, <class 'tuple'>, None].""",
+        value_errors[0])

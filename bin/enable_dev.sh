@@ -30,4 +30,4 @@ then
 fi
 
 # enable the virtual environment
-source venv/bin/activate
+source .venv/bin/activate

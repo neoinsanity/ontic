@@ -220,6 +220,7 @@ after the table.
     that the value is not more than the maximum.
 
 """
+from typing import NoReturn, Any
 
 from ontic import meta
 from ontic import validation_exception
@@ -381,7 +382,7 @@ class OnticProperty(meta.Meta):
         self.perfect()
         self.validate()
 
-    def perfect(self):
+    def perfect(self) -> NoReturn:
         """Method to ensure the completeness of a given schema property.
 
         :rtype: None
@@ -392,18 +393,16 @@ class OnticProperty(meta.Meta):
 
     def validate(
             self,
-            raise_validation_exception=True):
+            raise_validation_exception: bool = True) -> (None, list[str]):
         """Method to validate a property schema definition.
 
         :param raise_validation_exception: If True, then
             *validate_property_type* will throw a *ValueException* upon
             validation failure. If False, then a list of validation errors is
             returned. Defaults to True.
-        :type raise_validation_exception: bool
         :return: If no validation errors are found, then *None* is returned.
             If validation fails, then a list of the errors is returned if the
             *raise_validation_exception* is set to True.
-        :rtype: list<str>
         :raises ValueError: *the_candidate_schema_property* is not an
             :class:`OnticProperty`.
         :raises ValidationException: A property of *candidate_property_type*
@@ -412,9 +411,9 @@ class OnticProperty(meta.Meta):
         return validate_property(self, raise_validation_exception)
 
     def validate_value(self,
-                       value,
-                       raise_validation_exception=False):
-        """"""
+                       value: Any,
+                       raise_validation_exception: bool = False) -> NoReturn:
+        """Method that validates a value against the current schema."""
         value_errors = meta.validate_value(self, value)
 
         if value_errors and raise_validation_exception:
@@ -423,7 +422,7 @@ class OnticProperty(meta.Meta):
         return value_errors
 
 
-def perfect_property(ontic_property):
+def perfect_property(ontic_property: 'OnticProperty') -> NoReturn:
     """Method to ensure the completeness of a given schema property.
 
     This method ensures completeness by stripping out any properties that
@@ -468,20 +467,17 @@ def perfect_property(ontic_property):
 
 
 def validate_property(
-        ontic_property,
-        raise_validation_exception=True):
+        ontic_property: 'OnticProperty',
+        raise_validation_exception: bool = True) -> (None, list[str]):
     """Method to validate a property schema definition.
 
     :param ontic_property: The schema property to be validated.
-    :type ontic_property: :class:`OnticProperty`
     :param raise_validation_exception: If True, then *validate_property_type*
         will throw a *ValueException* upon validation failure. If False,
         then a list of validation errors is returned. Defaults to True.
-    :type raise_validation_exception: bool
     :return: If no validation errors are found, then *None* is
         returned. If validation fails, then a list of the errors is returned
         if the *raise_validation_exception* is set to True.
-    :rtype: list<str>, None
     :raises ValueError: *the_candidate_schema_property* is not an
         :class:`~ontic.ontic_type.OnticType`.
     :raises ValidationException: A property of *ontic_property*
@@ -512,7 +508,7 @@ def validate_property(
     return value_errors
 
 
-def _perfect_type_setting(ontic_property):
+def _perfect_type_setting(ontic_property: 'OnticProperty') -> None:
     """Perfect the type setting for a given candidate property schema."""
     if ontic_property.type is None:
         return
@@ -534,7 +530,7 @@ def _perfect_type_setting(ontic_property):
         raise ValueError('Illegal type declaration: %s' % str(candidate_type))
 
 
-def _perfect_member_type_setting(ontic_property):
+def _perfect_member_type_setting(ontic_property: 'OnticProperty') -> NoReturn:
     """Perfect the member_type setting for a given candidate property schema."""
     if ontic_property.member_type is None:
         return

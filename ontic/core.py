@@ -28,7 +28,7 @@ class Core(dict):
             for k, v in iterable:
                 d[k] = v
 
-        Core(\*\*kwargs) -> new Core initialized with the
+        Core(**kwargs) -> new Core initialized with the
         name=value pairs in the keyword argument list.  For example::
 
             Core(one=1, two=2)
@@ -58,9 +58,9 @@ class Core(dict):
 
         self.__dict__ = self
 
-    def __copy__(self):
+    def __copy__(self) -> 'Core':
         return type(self)(copy(dict(self)))
 
-    def __deepcopy__(self, memo):
+    def __deepcopy__(self, memo) -> 'Core':
         the_copy = dict(self.__dict__)
-        return type(self)(deepcopy(the_copy, memo))
+        return type(self)(deepcopy(the_copy))
